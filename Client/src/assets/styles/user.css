@@ -1,0 +1,36 @@
+/* UserIcon.css */
+
+.user-container {
+    display: flex;
+    /* gap: 2rem; */
+    justify-content: space-between;
+}
+
+.user-icon-wrapper {
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 .7rem;
+    padding: 0 .5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.user-icon-wrapper:hover {
+    
+    transform: scale(1.1);
+}
+
+.user-icon-wrapper:active {
+    transform: scale(0.95);
+}
+
+/* Ocultar tooltips en mobile */
+@media (max-width: 768px) {
+    .user-container .MuiTooltip-popper {
+        display: none !important;
+    }
+
+}

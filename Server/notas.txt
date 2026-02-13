@@ -1,0 +1,28 @@
+Modelos de crud:
+    Nombre del producto
+    Marca del producto
+    Tipo de mascota (Perro - Gato)
+    Descripcion 
+    Edad (Senior - mini adulto - adulto - cachorro - urinary - control de peso - derma control - criadores - lata - pouch )
+    Kilos
+    precio
+    categorias (alimentos - accesorios - higiene - indumentaria - colchonetas)
+    condicion de stok (vigente - sin stock - descuento )
+
+Carta del producto frontal:
+    imagen
+    Nombre del producto
+    kilos
+    precio
+    hover con boton de ver más
+    condicion: 
+                vigente (sin nada)
+                si stock (tachado)
+                descuento (precio especificado con Efectivo)
+
+Carta del producto ver más: 
+    Nombre del producto
+    Descripcion 
+
+    
+

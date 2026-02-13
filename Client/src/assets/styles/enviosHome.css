@@ -1,0 +1,137 @@
+/* ShippingSection.css */
+
+.shipping-section {
+    margin: 4rem auto;
+    background: rgba(224, 223, 224, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem;
+    /* max-width: 1200px; */
+    color: rgb(1, 1, 1);
+}
+
+.shipping-container {
+  display: flex;
+  flex-direction: column;
+ align-items: center;
+  gap: 1.5rem;
+}
+
+.shipping-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  align-items: center;
+}
+
+.shipping-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 280px;
+}
+
+.shipping-icon {
+  background-color: white;
+  color: #5f5d5d;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.shipping-icon:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+}
+
+.shipping-title {
+  font-size: 1rem;
+  color: #5f5d5d;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+}
+
+.shipping-description {
+  font-size: 1rem;
+  margin: 0;
+  opacity: 0.95;
+}
+
+.shipping-connector {
+  width: 3px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
+}
+
+.shipping-button {
+  background-color: white;
+  color: #f97316;
+  border: none;
+  /* padding: 1rem 3rem; */
+  border-radius: 3rem;
+  font-size: 1.125rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.shipping-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+}
+
+.shipping-button:active {
+  transform: translateY(-1px);
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .shipping-steps {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .shipping-connector {
+    width: 80px;
+    height: 3px;
+    margin: 0 1rem;
+  }
+
+  .shipping-icon {
+    width: 90px;
+    height: 90px;
+  }
+
+  .shipping-title {
+    font-size: 1.2rem;
+  }
+
+  .shipping-description {
+    margin: .5rem auto;
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shipping-section {
+    padding: 2.5rem;
+  }
+
+  .shipping-connector {
+    width: 120px;
+    margin: 0 2rem;
+  }
+}

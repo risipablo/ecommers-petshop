@@ -1,0 +1,133 @@
+/* ConsultaHome.css */
+
+.consulta-home-container {
+  padding: 3rem 1.5rem;
+  margin: 4rem auto;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.consulta-home-text {
+  text-align: center;
+  max-width: 500px;
+}
+
+.consulta-home-title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #722b8f;;
+  margin: 0 0 1.8rem 0;
+  
+  line-height: 1.3;
+}
+
+.consulta-home-subtitle {
+  font-size: 1.125rem;
+  color: #722b8f;
+  margin: 0 0 2rem 0;
+  line-height: 1.6;
+}
+
+.consulta-home-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  object-fit: contain;
+  animation: float 3s ease-in-out infinite;
+}
+
+.consulta-home-button {
+  background-color: #f97316;
+  color: white;
+  border: none;
+  padding: 1rem 3rem;
+  border-radius: 3rem;
+  font-size: 1.125rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.consulta-home-button:hover {
+  background-color: #ea580c;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+}
+
+.consulta-home-button:active {
+  transform: translateY(-1px);
+}
+
+/* Animación flotante para la imagen */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .consulta-home-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4rem 3rem;
+    gap: 3rem;
+  }
+
+  .consulta-home-text {
+    text-align: left;
+    flex: 1;
+    max-width: 600px;
+  }
+
+  .consulta-home-title {
+    font-size: 1rem;
+  }
+
+  .consulta-home-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .consulta-home-image {
+    max-width: 350px;
+    flex-shrink: 0;
+  }
+
+  .consulta-home-button {
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .consulta-home-container {
+    padding: 5rem 4rem;
+  }
+
+  .consulta-home-title {
+    font-size: 1.8rem;
+    
+  }
+
+  .consulta-home-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .consulta-home-image {
+    max-width: 350px;
+  }
+
+  .consulta-home-button {
+    padding: 1.125rem 2.5rem;
+    font-size: 1rem;
+  }
+}

@@ -1,0 +1,147 @@
+.container-marcas {
+    margin: 4rem auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem;
+    color: rgb(1, 1, 1);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.container-marcas h1 {
+    color: #722b8f;;
+    font-size: 34px;
+    font-weight: 700;
+    margin: 2.5rem auto;
+}
+
+.marcas-slider-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.marcas-slider-wrapper::before,
+.marcas-slider-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.marcas-slider-wrapper::before {
+    left: 0;
+    background: linear-gradient(to right, #f9fafb, transparent);
+}
+
+.marcas-slider-wrapper::after {
+    right: 0;
+    background: linear-gradient(to left, #f9fafb, transparent);
+}
+
+.marcas-slider {
+    margin: 1.5rem auto;
+    display: flex;
+    gap: 3rem;
+    animation: scroll 40s linear infinite;
+    width: fit-content;
+}
+
+.marcas-slider:hover {
+    animation-play-state: paused;
+}
+
+.category-btn {
+    height: 80px;
+    width: 120px;
+    margin: 0 1.2rem;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: grayscale(100%);
+    opacity: 0.7;
+    transition: all 0.4s ease;
+    cursor: pointer;
+}
+
+.category-btn:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Animación ajustada para continuidad perfecta */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        /* Cambiamos el cálculo para que sea continuo */
+        transform: translateX(calc(-50% - 1.5rem)); /* -50% porque tenemos 2 copias */
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container-marcas {
+        padding: 2rem 0;
+    }
+
+    .container-marcas h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .marcas-slider {
+        gap: 2rem;
+        animation: scroll 25s linear infinite;
+    }
+
+    .category-btn {
+        height: 60px;
+    }
+
+    .marcas-slider-wrapper::before,
+    .marcas-slider-wrapper::after {
+        width: 50px;
+    }
+    
+    /* Ajuste responsive de la animación */
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(calc(-50% - 1rem));
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .container-marcas h1 {
+        font-size: 1.25rem;
+    }
+
+    .marcas-slider {
+        gap: 1.5rem;
+    }
+
+    .category-btn {
+        height: 50px;
+    }
+    
+    /* Ajuste responsive de la animación */
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(calc(-50% - 0.75rem));
+        }
+    }
+}

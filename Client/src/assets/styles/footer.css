@@ -1,0 +1,166 @@
+
+
+/* Footer */
+
+footer{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #82119f;
+    background-color: rgb(237,240,243);;
+    margin-top: 4.2rem;
+      
+      
+
+    a{
+        list-style: none;
+        /* font-weight: bold; */
+        color: rgb(134, 31, 230);
+        font-size: .7rem;
+        padding: 0px 9px;
+
+        &:hover{
+            transition: .6s;
+            color:rgb(241,31,24);
+            cursor: pointer;
+        }
+        
+    }
+    
+}
+
+.pie-pagina,
+
+.grupo-1{
+    
+        
+        color: #82119f;
+
+    h3{
+        color: #82119f;
+        display:flex;
+        padding: 0px 6px;
+        font-size: 1.1rem;
+        font-weight: 700px;
+        margin: 1.5rem auto 2.5rem;
+    }
+
+        li{
+            margin-bottom: 8px;
+            padding: 0px 6px;
+        }
+
+    .red-social i{
+        width: 40px;
+        height: 40px;
+        margin: 0px 0px 20px 0px;
+        line-height: 10px;
+        font-size: 2.1em;
+        text-align: center;
+        border: 30px;
+    }
+
+    .btn-insta i:hover{
+        transition: .7s;
+        color:#e9471f;
+    }
+
+    .btn-face i:hover{
+        transition: .7s;
+        color: #080bb1;
+    }
+    
+}
+
+
+/* Derechos reservados */
+
+.grupo-2{
+    background-color: #82119f;
+    color: rgb(237,240,243);
+    text-align: center;
+    font-weight: 8px;
+    padding: 12px 6px;
+
+}
+
+/* whatsapp*/
+
+.btn-wsp{
+    position: fixed;
+    width: 45px;
+    height: 45px;
+    line-height: 50px;
+    bottom: 30px;
+    right: 30px;
+    background-color: #2fec32;
+    color: rgb(255, 255, 255);
+    border-radius: 30px;
+    text-align: center;
+    font-size: 25px;
+    box-shadow: 0px 1px 6px rgb(0,0,0,3);
+    z-index: 80;
+
+    i{
+        font-size: 1.2em;
+    }
+
+    &:hover{
+        text-decoration: none;
+        transition: .9s;
+        background-color: white;
+        color:#2fec32;
+        }
+        
+}
+
+
+
+
+@media only screen and (min-width:800px){
+    footer {
+        a {
+        font-size: 14px;
+        }
+    }
+
+    .pie-pagina .grupo-1{
+        display: grid;
+        grid-template-columns: repeat(3, 9fr); 
+        padding: 10px;
+        margin: 8px 28px;
+        line-height: 10px;
+
+        h2{
+            padding-bottom: 8px;
+            margin-block-start: 1.33em;
+            margin-block-end: 1.33em;
+            font-size: 22px;
+            font-weight: 700px;
+            line-height: 30px;
+            
+        }
+
+        li{
+
+            margin-bottom: 38px;
+        }
+
+    .red-social i{
+            letter-spacing: 8px;
+            width: 40px;
+            height: 40px;
+            margin: 0px 20px 10px 0px;
+            line-height: 10px;
+            font-size: 30px;
+            border: 30px;
+        }
+    }
+
+    .grupo-2{
+        text-align:left;
+        padding: 12px 6px;
+        text-align: center;
+    }
+
+}

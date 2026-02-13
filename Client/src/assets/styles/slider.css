@@ -1,0 +1,236 @@
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  
+}
+
+/* Slides wrapper */
+.carousel-slides {
+  display: flex;
+  height: 100%;
+  transition: transform 700ms ease-in-out;
+}
+
+/* Slide individual */
+.carousel-slide {
+  min-width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Imagen del slide */
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Overlay oscuro */
+.carousel-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Contenido del slide */
+.carousel-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-text {
+  text-align: center;
+  color: white;
+  padding: 0 1rem;
+  max-width: 56rem;
+}
+
+/* Título */
+.carousel-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  animation: fade-in 0.8s ease-out;
+}
+
+/* Subtítulo */
+.carousel-subtitle {
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+  animation: fade-in 0.8s ease-out 0.2s both;
+}
+
+/* Botón CTA */
+.carousel-button {
+  background-color: #f97316;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  animation: fade-in 0.8s ease-out 0.4s both;
+}
+
+.carousel-button:hover {
+  background-color: #ea580c;
+  transform: scale(1.05);
+}
+
+/* Botones de navegación */
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 10;
+}
+
+.carousel-nav:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.carousel-nav-left {
+  left: 1rem;
+}
+
+.carousel-nav-right {
+  right: 1rem;
+}
+
+.carousel-nav-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Indicadores (dots) */
+.carousel-indicators {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.carousel-dot {
+  height: 0.5rem;
+  width: 0.5rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.carousel-dot:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.carousel-dot-active {
+  width: 2rem;
+  background-color: white;
+}
+
+/* Contador */
+.carousel-counter {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+}
+
+/* Animaciones */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive - Tablet */
+@media (min-width: 768px) {
+  .carousel-container {
+    height: 400px;
+  }
+
+  .carousel-title {
+    font-size: 3rem;
+  }
+
+  .carousel-subtitle {
+    font-size: 1.25rem;
+  }
+
+  .carousel-button {
+    padding: 1rem 2.5rem;
+    font-size: 1.125rem;
+  }
+
+  .carousel-nav {
+    padding: 0.75rem;
+  }
+
+  .carousel-nav-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .carousel-indicators {
+    bottom: 2rem;
+    gap: 0.75rem;
+  }
+
+  .carousel-dot {
+    height: 0.75rem;
+    width: 0.75rem;
+  }
+
+  .carousel-dot-active {
+    width: 3rem;
+  }
+
+  .carousel-counter {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Responsive - Desktop */
+@media (min-width: 1024px) {
+  .carousel-container {
+    height: 500px;
+  }
+
+  .carousel-title {
+    font-size: 3.75rem;
+  }
+
+  .carousel-subtitle {
+    font-size: 1.5rem;
+  }
+}

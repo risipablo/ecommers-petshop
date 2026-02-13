@@ -1,0 +1,57 @@
+    const [captcha, setCaptcha] = useState(generateCaptcha());
+    const [captchaInput, setCaptchaInput] = useState('');
+    const [captchaValid, setCaptchaValid] = useState(false);
+    
+function generateCaptcha() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+        let result = '';
+        for (let i = 0; i < 6; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+
+    const refreshCaptcha = () => {
+        setCaptcha(generateCaptcha());
+        setCaptchaInput('');
+        setCaptchaValid(false);
+    };
+
+    const handleCaptchaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setCaptchaInput(value);
+        setCaptchaValid(value === captcha);
+    };
+
+
+    
+                        {/* Captcha */}
+                        <div className="captcha-container">
+                            <label>Verificación de seguridad</label>
+                            <div className="captcha-wrapper">
+                                <div className="captcha-display">
+                                    {captcha}
+                                </div>
+                                <button 
+                                    type="button" 
+                                    onClick={refreshCaptcha}
+                                    className="captcha-refresh"
+                                    aria-label="Generar nuevo código"
+                                >
+                                    <RefreshCw size={18} />
+                                </button>
+                            </div>
+                            <input 
+                                type="text" 
+                                placeholder="Ingresa el código de arriba"
+                                value={captchaInput}
+                                onChange={handleCaptchaChange}
+                                className={captchaValid ? 'captcha-valid' : ''}
+                                required
+                            />
+                            {captchaInput && (
+                                <span className={`captcha-feedback ${captchaValid ? 'valid' : 'invalid'}`}>
+                                    {captchaValid ? '✓ Código correcto' : '✗ Código incorrecto'}
+                                </span>
+                            )}
+                        </div>

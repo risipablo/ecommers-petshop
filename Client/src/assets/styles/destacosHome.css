@@ -1,0 +1,261 @@
+/* destacosHome.css */
+
+.featured-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 4rem auto;
+}
+
+.featured-section h1 {
+    color: #722b8f;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 2rem 0;
+    text-align: center;
+}
+
+.featured-carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.featured-carousel {
+    overflow: hidden;
+    flex: 1;
+}
+
+.featured-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.featured-card {
+    padding: 0 0.5rem;
+    box-sizing: border-box;
+}
+
+.featured-card > div:first-of-type {
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.featured-card:hover > div:first-of-type {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.featured-image {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    padding: 0.5rem;
+}
+
+.featured-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.4s ease;
+}
+
+.featured-card:hover .featured-image img {
+    transform: scale(1.02);
+}
+
+.product-divider {
+    height: 3px;
+    background: #722b8f;
+    width: 100%;
+}
+
+.featured-name {
+      font-size: 1.125rem;
+    font-weight: 400;
+    color: #4b505a;
+    margin: 1.2rem auto 0.9rem;
+    /* line-height: 1.4; */
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    /* min-height: 3rem; */
+}
+
+.featured-nav {
+    background-color: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.featured-nav:hover:not(:disabled) {
+    background-color: #f97316;
+    border-color: #f97316;
+    color: white;
+}
+
+.featured-nav:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.featured-nav svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Tablet */
+@media (min-width: 480px) {
+    .featured-section h1 {
+        font-size: 2rem;
+    }
+
+    .featured-image {
+        height: 220px;
+    }
+
+    .featured-name {
+        font-size: 0.8125rem;
+        min-height: 2.25rem;
+    }
+
+    .featured-card > div:first-of-type {
+        padding: 0.875rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .featured-section {
+        padding: 2rem;
+    }
+
+    .featured-section h1 {
+        font-size: 2.25rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .featured-carousel-wrapper {
+        gap: 1rem;
+    }
+
+    .featured-card {
+        padding: 0 0.75rem;
+    }
+
+    .featured-card > div:first-of-type {
+        padding: 1rem;
+    }
+
+    .featured-image {
+        height: 240px;
+    }
+
+    .featured-name {
+        font-size: 0.875rem;
+        min-height: 2.5rem;
+    }
+
+    .featured-nav {
+        width: 48px;
+        height: 48px;
+    }
+
+    .featured-nav svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .featured-section {
+        margin: 5rem auto;
+    }
+
+    .featured-section h1 {
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .featured-image {
+        height: 260px;
+        padding: 0.75rem;
+    }
+
+    .featured-name {
+        font-size: 0.9375rem;
+        min-height: 2.75rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .featured-section {
+        max-width: 1400px;
+    }
+
+    .featured-image {
+        height: 280px;
+    }
+
+    .featured-name {
+        font-size: 1rem;
+    }
+}
+
+/* Mobile pequeño */
+@media (max-width: 380px) {
+    .featured-section {
+        padding: 1.5rem 0.5rem;
+    }
+
+    .featured-section h1 {
+        font-size: 1.5rem;
+    }
+
+    .featured-card > div:first-of-type {
+        padding: 0.625rem;
+    }
+
+    .featured-image {
+        height: 160px;
+    }
+
+    .featured-name {
+        font-size: 0.6875rem;
+        min-height: 1.75rem;
+    }
+
+    .featured-nav {
+        width: 36px;
+        height: 36px;
+    }
+
+    .featured-nav svg {
+        width: 18px;
+        height: 18px;
+    }
+}
