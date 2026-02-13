@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
+const serverFront = "https://ecommers-petshop.vercel.app/"
 
 export const ProductsProvider = ({ children }: { children: ReactNode }) => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -15,7 +16,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
 
     // Cargar productos iniciales
     useEffect(() => {
-        axios.get('http://localhost:3001/api/products')
+        axios.get(`${serverFront}api/products`)
             .then(response => {
                 setProducts(response.data);
                 setFilteredProducts(response.data);
@@ -99,7 +100,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
 
     // Función para añadir producto
     const addProduct = (name: string, brand: string, pet: string, category: string, description: string, age: string, condition: string, price: string, kg: string) => {
-        axios.post('http://localhost:3001/api/products', {
+        axios.post(`${serverFront}api/products`, {
             name, brand, pet, category, age, price, description, condition, kg
         })
         .then(response => {
