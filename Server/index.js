@@ -11,7 +11,7 @@ const app = express()
 
 
 const corsOption = {
-    origin: ['http://localhost:5173','http://localhost:5174'],
+    origin: ['http://localhost:5173','http://localhost:5174','https://ecommers-petshop.onrender.com',"https://ecommers-petshop.vercel.app"],
     optionsSuccessStatus: 200,
     methods: 'GET,POST,DELETE,PUT,PATCH',
     credentials: true,
