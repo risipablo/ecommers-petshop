@@ -68,10 +68,9 @@ export function ProductDetail() {
         setBackText('Volver al inicio');
     }, [location.state, product, id]);
 
-    // Guardar la ruta actual cuando el componente se desmonte (opcional)
+    // Guardar la ruta actual cuando el componente se desmonte
     useEffect(() => {
         return () => {
-            // Si venimos de una lista y hay una ruta guardada, mantenerla
             if (location.state?.from) {
                 sessionStorage.setItem('lastProductListPath', location.state.from);
             }
@@ -109,7 +108,7 @@ export function ProductDetail() {
                 <div className="product-image-section">
                     <div className="main-image-wrapper">
                         <img 
-                            src={product.image || 'https://via.placeholder.com/500x500?text=Sin+Imagen'} 
+                            src={product.imageUrl || 'https://via.placeholder.com/500x500?text=Sin+Imagen'} 
                             alt={product.name} 
                             className="main-image" 
                         />
@@ -118,8 +117,8 @@ export function ProductDetail() {
                     <div className="thumbnails-wrapper">
                         <div className="thumbnail active">
                             <img 
-                                src={product.image || 'https://via.placeholder.com/100x100?text=Sin+Imagen'} 
-                                alt="Vista principal" 
+                                src={product.imageUrl || 'https://via.placeholder.com/100x100?text=Sin+Imagen'} 
+                                alt={product.name} 
                             />
                         </div>
                     </div>
@@ -130,7 +129,7 @@ export function ProductDetail() {
                     <h1 className="product-title">{product.name}</h1>
 
                     <div className="price-section">
-                        <span className="current-price">${product.price}</span>
+                        <span className="current-price">${typeof product.price === 'number' ? product.price : parseFloat(product.price)}</span>
                     </div>
 
                     <div className="details-grid">
@@ -197,7 +196,7 @@ export function ProductDetail() {
                                 <div key={relatedProduct._id} className="related-product-card">
                                     <div className="related-image-wrapper">
                                         <img 
-                                            src={relatedProduct.image || 'https://via.placeholder.com/300x300?text=Sin+Imagen'} 
+                                            src={relatedProduct.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'} 
                                             alt={relatedProduct.name} 
                                         />
                                     </div>
@@ -205,11 +204,11 @@ export function ProductDetail() {
                                     <div className="related-content">
                                         <h3 className="related-name">{relatedProduct.name}</h3>
                                         <div className="related-footer">
-                                            <span className="related-price">${relatedProduct.price}</span>
+                                            <span className="related-price">${typeof relatedProduct.price === 'number' ? relatedProduct.price : parseFloat(relatedProduct.price)}</span>
                                             <Link 
                                                 className="related-view-btn" 
                                                 to={`/item/${relatedProduct._id}`}
-                                                state={{ from: backPath }} // Pasar la ruta actual para mantener contexto
+                                                state={{ from: backPath }}
                                             >
                                                 <Eye size={16} />
                                                 Ver

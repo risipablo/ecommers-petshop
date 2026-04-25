@@ -69,11 +69,14 @@ export const ProductList = () => {
                 {filteredProducts.map(product => (
                     <div key={product._id} className="product-card">
                         <div className="product-image-wrapper">
-                            <img 
-                                src={product.image || 'https://via.placeholder.com/300x300?text=Sin+Imagen'} 
-                                alt={product.name} 
-                                className="product-image"
-                            />
+                          <img 
+                                        src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'} 
+                                        alt={product.name} 
+                                        className="product-image"
+                                    />
+
+
+<span className="current-price">${typeof product.price === 'number' ? product.price : parseFloat(product.price)}</span>
                         </div>
                         
                         <div className="product-divider"></div>

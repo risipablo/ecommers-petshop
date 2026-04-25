@@ -1,57 +1,44 @@
+// features/components/buscador.tsx (Search component)
+
 import { useState, useEffect } from 'react';
-import type { SearchProps } from '../types/types';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useProducts } from '../hooks/useProducts';
 import '../../assets/styles/search.css';
+import type { SearchProps } from '../types/product.type';
 
 export const Search = ({ placeholder, filterData }: SearchProps) => {
     const [inputValue, setInputValue] = useState('');
-    
-    const [searchTerms, setSearchTerms] = useState<string[]>([]);
-    const { clearSearch, searchQuery } = useProducts();
+    const { searchQuery, clearSearch } = useProducts();
 
-    // Sincronizar con searchQuery del contexto
     useEffect(() => {
         if (searchQuery) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setInputValue(searchQuery);
-            setSearchTerms([searchQuery]);
-            console.log('searchQuery changed:', searchTerms);
         } else {
             setInputValue('');
-            setSearchTerms([]);
         }
     }, [searchQuery]);
-    
+
+    const performSearch = (value: string) => {
+        if (value.trim()) {
+            const terms = value.trim().split(/\s+/);
+            filterData(terms);
+        } else {
+            filterData([]);
+            clearSearch();
+        }
+    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setInputValue(value);
-        
-        if (value.trim() === '') {
-            clearSearch();
-            setSearchTerms([]);
-        }
-    };
-
-    const handleSearch = () => {
-        if (inputValue.trim()) {
-            const terms = inputValue.trim().split(/\s+/);
-            setSearchTerms(terms);
-            filterData(terms);
-        }
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            handleSearch();
-        }
+        performSearch(value);
     };
 
     const handleClear = () => {
         setInputValue('');
-        setSearchTerms([]);
+        filterData([]);
         clearSearch();
     };
 
@@ -62,7 +49,6 @@ export const Search = ({ placeholder, filterData }: SearchProps) => {
                     type="text"
                     value={inputValue}
                     onChange={handleInputChange}
-                    onKeyDown={handleKeyDown}
                     placeholder={placeholder}
                     className="search-input"
                 />
@@ -77,7 +63,7 @@ export const Search = ({ placeholder, filterData }: SearchProps) => {
                         </button>
                     )}
                     <button 
-                        onClick={handleSearch} 
+                        onClick={() => performSearch(inputValue)} 
                         className="search-button"
                         aria-label="Buscar"
                     >

@@ -7,6 +7,7 @@ import { Crud } from "../features/components/crud";
 import Footer from "../components/layout/footer";
 import { Contacto } from "../components/layout/contacto";
 import { SearchResultsPage } from "./searchResultsPage";
+import { EditProduct } from "../features/components/editProduct";
 
 export function Home() {
     return (
@@ -18,6 +19,7 @@ export function Home() {
                 <Route path="/:category" element={<ProductList />} />
                 <Route path="/item/:id" element={<ProductDetail />} />
                 <Route path="/crud" element={<Crud />} />
+                  <Route path="/edit-product/:id" element={<EditProduct />} />
                 <Route path="/contacto" element={<Contacto />} />   
             </Routes>
             <Footer />

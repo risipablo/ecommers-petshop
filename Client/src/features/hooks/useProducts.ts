@@ -1,3 +1,4 @@
+// features/hooks/useProducts.ts
 import { useProductContext } from "../../context/productsProvider";
 
 export const useProducts = () => {
@@ -8,18 +9,22 @@ export const useProducts = () => {
         filteredProducts: context.filteredProducts,
         setFilteredProducts: context.setFilteredProducts,
         addProduct: context.addProduct,
+        updateProduct: context.updateProduct,  // 🔥 Agregado
+        deleteProduct: context.deleteProduct,  // 🔥 Agregado
         setSearchTerms: context.setSearchTerms,
         searchTerms: context.searchTerms,
         handleSearch: context.handleSearch,
         clearSearch: context.clearSearch,
-        searchQuery: context.searchQuery || ''
+        searchQuery: context.searchQuery || '',
+        isLoading: context.isLoading,
+        error: context.error,
+        fetchProducts: context.fetchProducts
     };
 };
 
-// Get product by id
 export const useProduct = (id: string) => {
-    const { products } = useProductContext();
-    const product = products.find(p => p._id === id) || null;
+    const { products, isLoading } = useProductContext();
+    const product = products.find((p: { _id: string; }) => p._id === id) || null;
     
-     return { product, loading: !product && products.length > 0 };
+    return { product, loading: isLoading || (!product && products.length > 0) };
 };

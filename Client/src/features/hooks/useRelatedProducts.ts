@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import type { Product } from "../types/types"
+import type { Product } from "../types/product.type";
+
 
 const serverFront = "https://ecommers-petshop.onrender.com"
 

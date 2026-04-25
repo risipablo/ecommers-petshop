@@ -1,6 +1,7 @@
 import { useState } from "react"
-import type { IDestacados } from "../types/types"
+
 import { destacado } from "../../components/data/destacados"
+import type { IDestacados } from "../types/product.type"
 
 export const UseDestacados = () => {
     const [products, setProducts] = useState<IDestacados[]>([])

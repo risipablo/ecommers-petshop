@@ -1,17 +1,18 @@
 
 const express = require('express')
 const cors = require('cors')
-const Db = require("./config/database")
+const DB = require('./config/database')
 const productRoutes = require ('./routes/routerProducts')
 
 require('dotenv').config()
 
 const app = express()
 
+DB()
 
 
 const corsOption = {
-    origin: ['http://localhost:5173','http://localhost:5174','https://ecommers-petshop.onrender.com',"https://ecommers-petshop.vercel.app"],
+    origin: ['http://localhost:5173','http://localhost:5174',"https://ecommers-petshop.vercel.app"],
     optionsSuccessStatus: 200,
     methods: 'GET,POST,DELETE,PUT,PATCH',
     credentials: true,
@@ -21,9 +22,14 @@ const corsOption = {
 app.use(express.json()) 
 app.use(cors(corsOption))
 
-Db()
+
 
 app.use('/api',productRoutes)
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ success: false, error: err.message });
+});
 
 app.listen(3001,() => {
     console.log("Servidor corriendo en el local")
