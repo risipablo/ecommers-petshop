@@ -18,7 +18,6 @@ export const ProductList = () => {
         }
         
         if (categoryPath && categoryPath !== 'todos' && categoryPath !== 'search') {
-            // Capitalizar la primera letra
             const categoryName = categoryPath.charAt(0).toUpperCase() + categoryPath.slice(1);
             return `Productos de ${categoryName}`;
         }
@@ -35,10 +34,11 @@ export const ProductList = () => {
         sessionStorage.setItem('lastProductListPath', location.pathname);
     };
 
+    // Estado: No hay resultados en búsqueda
     if (searchTerms && filteredProducts.length === 0 && currentPath === '/search') {
         return (
             <div className="no-results">
-                <SearchOffIcon sx={{ fontSize: 80, color: '#9ca3af' }} />
+                <SearchOffIcon sx={{ fontSize: 80, color: '#0d9488' }} />
                 <h2>No se encontró ningún producto</h2>
                 <p>Intenta con otros términos de búsqueda</p>
                 {searchQuery && (
@@ -51,9 +51,11 @@ export const ProductList = () => {
         );
     }
 
+    // Estado: Categoría sin productos
     if (filteredProducts.length === 0) {
         return (
             <div className="no-results">
+                <SearchOffIcon sx={{ fontSize: 80, color: '#0d9488' }} />
                 <h2>No hay productos disponibles en esta categoría</h2>
                 <Link to="/" className="back-to-home">
                     Volver al inicio
@@ -62,28 +64,31 @@ export const ProductList = () => {
         );
     }
 
+    // Renderizado: Lista de productos
     return (
         <div className="product-list-container">
             <h1 className="product-list-title">{getTitle()}</h1>
             <div className="product-grid">
                 {filteredProducts.map(product => (
                     <div key={product._id} className="product-card">
+                        {/* Sección Imagen */}
                         <div className="product-image-wrapper">
-                          <img 
-                                        src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'} 
-                                        alt={product.name} 
-                                        className="product-image"
-                                    />
-
-
-<span className="current-price">${typeof product.price === 'number' ? product.price : parseFloat(product.price)}</span>
+                            <img 
+                                src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'} 
+                                alt={product.name} 
+                                className="product-image"
+                                loading="lazy"
+                            />
                         </div>
-                        
+
+                        {/* Divider Violeta */}
                         <div className="product-divider"></div>
                         
+                        {/* Contenido */}
                         <div className="product-content">
                             <h3 className="product-name">{product.name}</h3>
                             
+                            {/* Footer: Precio + Botón */}
                             <div className="product-footer">
                                 <span className="current-price">${product.price}</span>
                                 <Link 
@@ -91,8 +96,9 @@ export const ProductList = () => {
                                     to={`/item/${product._id}`}
                                     state={{ from: location.pathname }}
                                     onClick={handleProductClick}
+                                    title={`Ver detalles de ${product.name}`}
                                 >
-                                    <Eye size={18} />
+                                    <Eye size={18} strokeWidth={2.5} />
                                     Ver
                                 </Link>
                             </div>
