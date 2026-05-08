@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+const API_URL = "https://ecommers-petshop.onrender.com/api"
 
 export const ProductsProvider = ({ children }: { children: ReactNode }) => {
     const [products, setProducts] = useState<Product[]>([]);
