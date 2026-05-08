@@ -1,5 +1,5 @@
 // Server/controllers/productController.js
-const ProductModel = require('../models/Product');
+const ProductModel = require('../models/product');
 const { uploadToSupabase, deleteFromSupabase } = require('../middleware/supabaseUpload');
 
 exports.getProducts = async (req, res) => {

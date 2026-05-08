@@ -1,34 +1,22 @@
 // components/admin/AdminGuard.tsx
-import {  useEffect, useState, type ReactNode } from 'react';
+
 import { Navigate } from 'react-router-dom';
+
+import type { ReactNode } from 'react';
+import { useAuth } from '../../context/authProvider';
 
 interface AdminGuardProps {
     children: ReactNode;
 }
 
 export const AdminGuard = ({ children }: AdminGuardProps) => {
-    const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+    const { isAuthenticated, isAdmin, isLoading } = useAuth();
 
-    useEffect(() => {
-        // Verificar si es admin
-        const checkAdmin = () => {
-            // Opción 1: Variable de entorno
-            const adminStatus = localStorage.getItem('isAdmin') === 'true';
-            
-            // Opción 2: Token o autenticación
-            // const token = localStorage.getItem('adminToken');
-            
-            setIsAdmin(adminStatus);
-        };
-
-        checkAdmin();
-    }, []);
-
-    if (isAdmin === null) {
+    if (isLoading) {
         return <div className="loading-container">Verificando permisos...</div>;
     }
 
-    if (!isAdmin) {
+    if (!isAuthenticated || !isAdmin) {
         return <Navigate to="/" replace />;
     }
 

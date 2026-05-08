@@ -178,3 +178,24 @@
     order: 1;
   }
 }
+
+/* Agregar a header.css */
+.user-greeting {
+  font-size: 0.875rem;
+  color: #722b8f;
+  font-weight: 500;
+  margin-left: 1rem;
+}
+
+.promo-bar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .user-greeting {
+    display: none;
+  }
+}

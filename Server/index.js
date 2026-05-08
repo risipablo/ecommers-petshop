@@ -3,12 +3,15 @@ const express = require('express')
 const cors = require('cors')
 const DB = require('./config/database')
 const productRoutes = require ('./routes/routerProducts')
+const authRoutes = require ('./routes/authRoutes')
 
 require('dotenv').config()
 
 const app = express()
 
 DB()
+
+
 
 
 const corsOption = {
@@ -25,6 +28,8 @@ app.use(cors(corsOption))
 
 
 app.use('/api',productRoutes)
+app.use('/api/auth',authRoutes)
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
