@@ -6,7 +6,6 @@ const productRoutes = require ('./routes/routerProducts')
 const authRoutes = require ('./routes/authRoutes')
 
 require('dotenv').config()
-
 const app = express()
 
 DB()
