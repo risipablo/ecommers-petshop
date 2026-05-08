@@ -12,7 +12,7 @@ DB()
 
 
 const corsOption = {
-    origin: ['http://localhost:5173','http://localhost:5174',"https://ecommers-petshop.vercel.app"],
+    origin: ['http://localhost:5173','http://localhost:5174',"https://ecommers-petshop.vercel.app","https://ecommers-petshop.onrender.com"],
     optionsSuccessStatus: 200,
     methods: 'GET,POST,DELETE,PUT,PATCH',
     credentials: true,
