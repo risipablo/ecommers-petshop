@@ -2,24 +2,13 @@ import { Link, useLocation } from 'react-router-dom';
 import '../../assets/styles/navbar.css';
 import { useState, useEffect } from 'react';
 import { useProducts } from '../../features/hooks/useProducts';
-
-import {
-    Shield,
-    Package,
-    Plus,
-    Images,
-    LayoutDashboard,
-    Shirt,
-    Heart,
-    Phone,
-    ShoppingBag
-} from 'lucide-react';
+import { Shield, Package, Plus, Images, LayoutDashboard } from 'lucide-react';
 
 const Navbar = () => {
     const location = useLocation();
     const { clearSearch } = useProducts();
-
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
@@ -28,13 +17,35 @@ const Navbar = () => {
         setIsAdmin(adminStatus);
     }, []);
 
+    // Cerrar menú al cambiar ruta
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsMenuOpen(false);
+        setIsAdminMenuOpen(false);
     }, [location.pathname]);
 
+    const categories = [
+        { path: '/alimentos', label: 'Alimentos' },
+        { path: '/accesorios', label: 'Accesorios' },
+        { path: '/higiene', label: 'Higiene' },
+        { path: '/indumentaria', label: 'Indumentaria' },
+        { path: '/articulos', label: 'Artículos' },
+        { path: '/contacto', label: 'Contacto' }
+    ];
+
+    const adminLinks = [
+        { path: '/admin/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
+        { path: '/admin/products', label: 'Productos', icon: <Package size={18} /> },
+        { path: '/admin/products/new', label: 'Nuevo Producto', icon: <Plus size={18} /> },
+        { path: '/admin/images', label: 'Gestionar Imágenes', icon: <Images size={18} /> }
+    ];
+
     const toggleMenu = () => {
-        setIsMenuOpen(prev => !prev);
+        setIsMenuOpen(!isMenuOpen);
+    };
+
+    const toggleAdminMenu = () => {
+        setIsAdminMenuOpen(!isAdminMenuOpen);
     };
 
     const handleNavClick = () => {
@@ -42,74 +53,82 @@ const Navbar = () => {
         setIsMenuOpen(false);
     };
 
-    const categories = [
-        { path: '/alimentos', label: 'Alimentos', icon: <ShoppingBag size={18} /> },
-        { path: '/accesorios', label: 'Accesorios', icon: <Package size={18} /> },
-        { path: '/higiene', label: 'Higiene', icon: <Heart size={18} /> },
-        { path: '/indumentaria', label: 'Indumentaria', icon: <Shirt size={18} /> },
-        { path: '/articulos', label: 'Artículos', icon: <Package size={18} /> },
-        { path: '/contacto', label: 'Contacto', icon: <Phone size={18} /> }
-    ];
-
-    const adminLinks = [
-        { path: '/admin/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
-        { path: '/admin/products', label: 'Productos', icon: <Package size={18} /> },
-        { path: '/admin/products/new', label: 'Nuevo Producto', icon: <Plus size={18} /> },
-        { path: '/admin/images', label: 'Imágenes', icon: <Images size={18} /> }
-    ];
+    const handleAdminClick = () => {
+        setIsAdminMenuOpen(false);
+    };
 
     return (
-        <>
-            {/* OVERLAY */}
-            <div
-                className={`overlay ${isMenuOpen ? 'open' : ''}`}
-                onClick={() => setIsMenuOpen(false)}
-            />
+        <nav className='navbar-container'>
+            {/* Icono Hamburguesa */}
+            <div 
+                className={`menu-icon ${isMenuOpen ? 'open' : ''}`} 
+                onClick={toggleMenu}
+                aria-label="Toggle menu"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
 
-            <nav className="navbar-container">
-
-                {/* BOTÓN HAMBURGUESA */}
-                <div
-                    className={`menu-icon ${isMenuOpen ? 'open' : ''}`}
-                    onClick={toggleMenu}
-                >
-                    <span></span>
-                    <span></span>
-                    <span></span>
+            {/* Menú Lateral */}
+            <div className={`menu ${isMenuOpen ? 'open' : ''}`}>
+                {/* Sección Categorías */}
+                <div className="menu-section">
+                    {categories.map(item => (
+                        <Link 
+                            key={item.path}
+                            to={item.path}
+                            onClick={handleNavClick}
+                            className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+                        >
+                            {item.label}
+                        </Link>
+                    ))}
                 </div>
 
-                {/* MENÚ */}
-                <div className={`menu ${isMenuOpen ? 'open' : ''}`}>
-
-                    {/* CATEGORÍAS */}
-                    <div className="menu-section">
-                        {categories.map(item => (
-                            <Link
+                {/* Sección Admin (solo si es admin) */}
+                {isAdmin && (
+                    <div className="menu-section admin-section">
+                        <div className="section-title admin-title">
+                            <Shield size={16} />
+                            Administración
+                        </div>
+                        {adminLinks.map(item => (
+                            <Link 
                                 key={item.path}
                                 to={item.path}
-                                onClick={handleNavClick}
-                                className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+                                onClick={handleAdminClick}
+                                className={`nav-link admin-link ${location.pathname === item.path ? 'active' : ''}`}
                             >
                                 {item.icon}
                                 <span>{item.label}</span>
                             </Link>
                         ))}
                     </div>
+                )}
 
-                    {/* ADMIN */}
-                    {isAdmin && (
-                        <div className="menu-section">
-                            <div className="section-title">
-                                <Shield size={14} />
-                                Administración
-                            </div>
+                {/* Link Home */}
+                <Link 
+                    to="/"
+                    onClick={handleNavClick}
+                    className={`nav-link home-link ${location.pathname === '/' ? 'active' : ''}`}
+                >
+                    Inicio
+                </Link>
+            </div>
 
+            {/* Botón FAB Admin (solo en móvil) */}
+            {isAdmin && (
+                <div className="admin-fab" onClick={toggleAdminMenu} aria-label="Admin menu">
+                    <Shield size={24} />
+                    {isAdminMenuOpen && (
+                        <div className="admin-fab-menu">
                             {adminLinks.map(item => (
                                 <Link
                                     key={item.path}
                                     to={item.path}
-                                    onClick={handleNavClick}
-                                    className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+                                    onClick={handleAdminClick}
+                                    className="fab-link"
                                 >
                                     {item.icon}
                                     <span>{item.label}</span>
@@ -117,20 +136,9 @@ const Navbar = () => {
                             ))}
                         </div>
                     )}
-
-                    {/* HOME */}
-                    <Link
-                        to="/"
-                        onClick={handleNavClick}
-                        className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
-                    >
-                        <LayoutDashboard size={18} />
-                        <span>Inicio</span>
-                    </Link>
-
                 </div>
-            </nav>
-        </>
+            )}
+        </nav>
     );
 };
 

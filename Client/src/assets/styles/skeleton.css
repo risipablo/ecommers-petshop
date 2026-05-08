@@ -1,0 +1,85 @@
+/* Agrega esto al final de productList.css */
+
+/* Skeleton Loader */
+.skeleton {
+    pointer-events: none;
+}
+
+.skeleton-loading {
+    background: linear-gradient(
+        90deg,
+        #f0f0f0 25%,
+        #e0e0e0 50%,
+        #f0f0f0 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton-image {
+    background-color: #f9fafb;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.skeleton-image .skeleton-loading {
+    width: 80%;
+    height: 80%;
+    border-radius: 8px;
+}
+
+.skeleton-divider {
+    background: #e5e7eb;
+    margin: 0.75rem 0;
+}
+
+.skeleton-title {
+    width: 85%;
+    height: 20px;
+    margin: 0 auto 1rem;
+    border-radius: 4px;
+}
+
+.skeleton-price {
+    width: 60px;
+    height: 24px;
+    border-radius: 4px;
+}
+
+.skeleton-button {
+    width: 60px;
+    height: 32px;
+    border-radius: 8px;
+}
+
+@media (min-width: 768px) {
+    .skeleton-image {
+        min-height: 240px;
+    }
+    
+    .skeleton-title {
+        height: 24px;
+    }
+    
+    .skeleton-price {
+        width: 70px;
+        height: 28px;
+    }
+    
+    .skeleton-button {
+        width: 70px;
+        height: 36px;
+    }
+}

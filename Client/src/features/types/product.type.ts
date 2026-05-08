@@ -23,6 +23,7 @@ export interface ProductsContextType {
 
 
 export interface Product {
+    images: unknown;
     condition: string;
     _id: string;
     name: string;

@@ -1,166 +1,574 @@
-
-
 /* Footer */
 
-footer{
-    display:flex;
+footer {
+    display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     color: #82119f;
-    background-color: rgb(237,240,243);;
-    margin-top: 4.2rem;
-      
-      
-
-    a{
-        list-style: none;
-        /* font-weight: bold; */
-        color: rgb(134, 31, 230);
-        font-size: .7rem;
-        padding: 0px 9px;
-
-        &:hover{
-            transition: .6s;
-            color:rgb(241,31,24);
-            cursor: pointer;
-        }
-        
-    }
-    
+    background-color: rgb(237, 240, 243);
+    margin: 4.2rem 0 0 0;
 }
+
+footer a {
+    list-style: none;
+    color: rgb(134, 31, 230);
+    font-size: 0.7rem;
+    padding: 0px 9px;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+footer a::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 9px;
+    width: 0;
+    height: 2px;
+    background: rgb(241, 31, 24);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+footer a:hover {
+    color: rgb(241, 31, 24);
+    cursor: pointer;
+}
+
+footer a:hover::before {
+    width: calc(100% - 18px);
+}
+
+/* Pie Página y Grupo 1 */
 
 .pie-pagina,
-
-.grupo-1{
-    
-        
-        color: #82119f;
-
-    h3{
-        color: #82119f;
-        display:flex;
-        padding: 0px 6px;
-        font-size: 1.1rem;
-        font-weight: 700px;
-        margin: 1.5rem auto 2.5rem;
-    }
-
-        li{
-            margin-bottom: 8px;
-            padding: 0px 6px;
-        }
-
-    .red-social i{
-        width: 40px;
-        height: 40px;
-        margin: 0px 0px 20px 0px;
-        line-height: 10px;
-        font-size: 2.1em;
-        text-align: center;
-        border: 30px;
-    }
-
-    .btn-insta i:hover{
-        transition: .7s;
-        color:#e9471f;
-    }
-
-    .btn-face i:hover{
-        transition: .7s;
-        color: #080bb1;
-    }
-    
+.grupo-1 {
+    color: #82119f;
 }
 
+.grupo-1 h3 {
+    color: #82119f;
+    display: flex;
+    padding: 0px 6px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 2rem auto 1rem;
+}
+
+.grupo-1 li {
+    margin-bottom: 8px;
+    padding: 0px 6px;
+}
+
+.grupo-1 .red-social i {
+    width: 40px;
+    height: 40px;
+    margin: 0px 0px 20px 0px;
+    line-height: 10px;
+    font-size: 2.1em;
+    text-align: center;
+    border: 30px;
+}
+
+.grupo-1 .btn-insta i:hover {
+    transition: 0.7s;
+    color: #e9471f;
+}
+
+.grupo-1 .btn-face i:hover {
+    transition: 0.7s;
+    color: #080bb1;
+}
+
+/* Redes Sociales */
+
+.red-social {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-top: 0.5rem;
+}
+
+.btn-insta,
+.btn-face {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    color: #ffffff;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+}
+
+.btn-insta {
+    background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcaf45 100%);
+}
+
+.btn-insta:hover {
+    transform: translateY(-4px) scale(1.1);
+    box-shadow: 0 8px 20px rgba(253, 29, 29, 0.4);
+}
+
+.btn-face {
+    background: linear-gradient(135deg, #1877f2 0%, #0a66c2 100%);
+}
+
+.btn-face:hover {
+    transform: translateY(-4px) scale(1.1);
+    box-shadow: 0 8px 20px rgba(24, 119, 242, 0.4);
+}
+
+.btn-insta svg,
+.btn-face svg {
+    transition: transform 0.3s ease;
+}
+
+.btn-insta:hover svg,
+.btn-face:hover svg {
+    transform: rotate(10deg);
+}
 
 /* Derechos reservados */
 
-.grupo-2{
+.grupo-2 {
     background-color: #82119f;
-    color: rgb(237,240,243);
+    color: rgb(237, 240, 243);
     text-align: center;
     font-weight: 8px;
     padding: 12px 6px;
-
 }
 
-/* whatsapp*/
+/* WhatsApp */
 
-.btn-wsp{
+.btn-wsp {
     position: fixed;
     width: 45px;
     height: 45px;
     line-height: 50px;
     bottom: 30px;
     right: 30px;
-    background-color: #2fec32;
+    background: linear-gradient(135deg, #25d366 0%, #20ba61 100%);
     color: rgb(255, 255, 255);
     border-radius: 30px;
     text-align: center;
     font-size: 25px;
-    box-shadow: 0px 1px 6px rgb(0,0,0,3);
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.3);
     z-index: 80;
-
-    i{
-        font-size: 1.2em;
-    }
-
-    &:hover{
-        text-decoration: none;
-        transition: .9s;
-        background-color: white;
-        color:#2fec32;
-        }
-        
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.btn-wsp i {
+    font-size: 1.2em;
+}
 
+.btn-wsp:hover {
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(-6px) scale(1.1);
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
+}
 
+.btn-wsp svg {
+    transition: transform 0.3s ease;
+}
 
-@media only screen and (min-width:800px){
-    footer {
-        a {
-        font-size: 14px;
-        }
+.btn-wsp:hover svg {
+    transform: rotate(15deg) scale(1.1);
+}
+
+/* ==========================================
+   RESPONSIVE - MÓVIL PEQUEÑO (360px)
+   ========================================== */
+
+@media (max-width: 360px) {
+    footer a {
+        font-size: 0.65rem;
+        padding: 0px 6px;
     }
 
-    .pie-pagina .grupo-1{
-        display: grid;
-        grid-template-columns: repeat(3, 9fr); 
-        padding: 10px;
-        margin: 8px 28px;
-        line-height: 10px;
-
-        h2{
-            padding-bottom: 8px;
-            margin-block-start: 1.33em;
-            margin-block-end: 1.33em;
-            font-size: 22px;
-            font-weight: 700px;
-            line-height: 30px;
-            
-        }
-
-        li{
-
-            margin-bottom: 38px;
-        }
-
-    .red-social i{
-            letter-spacing: 8px;
-            width: 40px;
-            height: 40px;
-            margin: 0px 20px 10px 0px;
-            line-height: 10px;
-            font-size: 30px;
-            border: 30px;
-        }
+    .grupo-1 h3 {
+        font-size: 1rem;
+        margin: 0 auto 0.875rem;
     }
 
-    .grupo-2{
-        text-align:left;
+    .grupo-1 li {
+        margin-bottom: 6px;
+    }
+
+    .btn-wsp {
+        width: 45px;
+        height: 45px;
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+
+    .grupo-2 {
+        padding: 10px 4px;
+        font-size: 0.75rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - MÓVIL (480px)
+   ========================================== */
+
+@media (max-width: 480px) {
+    footer a {
+        font-size: 0.7rem;
+        padding: 0px 8px;
+    }
+
+    .grupo-1 h3 {
+        font-size: 1.05rem;
+        margin: 0 auto 1rem;
+        padding: 0px 6px;
+    }
+
+    .grupo-1 li {
+        margin-bottom: 8px;
+        padding: 0px 6px;
+    }
+
+    .red-social {
+        gap: 0.875rem;
+        padding-top: 0.5rem;
+    }
+
+    .btn-insta,
+    .btn-face {
+        width: 44px;
+        height: 44px;
+    }
+
+    .btn-wsp {
+        width: 48px;
+        height: 48px;
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+
+    .grupo-2 {
         padding: 12px 6px;
-        text-align: center;
+        font-size: 0.8rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - TABLET PEQUEÑO (600px)
+   ========================================== */
+
+@media (max-width: 600px) {
+    footer a {
+        font-size: 0.75rem;
     }
 
+    .grupo-1 h3 {
+        font-size: 1.1rem;
+        margin: 0 auto 1rem;
+    }
+
+    .grupo-1 li {
+        margin-bottom: 10px;
+    }
+
+    .red-social {
+        gap: 1rem;
+    }
+
+    .btn-insta,
+    .btn-face {
+        width: 46px;
+        height: 46px;
+    }
+
+    .btn-wsp {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - TABLET (768px) - 3 COLUMNAS
+   ========================================== */
+
+@media only screen and (min-width: 601px) and (max-width: 1024px) {
+    footer a {
+        font-size: 14px;
+    }
+
+    .pie-pagina .grupo-1 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        padding: 20px 28px;
+        margin: 8px auto;
+        gap: 2rem;
+    }
+
+    .pie-pagina .grupo-1 h3 {
+        font-size: 1.15rem;
+        margin: 0 auto 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid rgba(130, 17, 159, 0.2);
+    }
+
+    .pie-pagina .grupo-1 li {
+        margin-bottom: 12px;
+        padding: 0;
+    }
+
+    .red-social {
+        gap: 1.25rem;
+    }
+
+    .btn-insta,
+    .btn-face {
+        width: 50px;
+        height: 50px;
+    }
+
+    .red-social i {
+        letter-spacing: 8px;
+        width: 40px;
+        height: 40px;
+        margin: 0px 20px 10px 0px;
+        line-height: 10px;
+        font-size: 30px;
+        border: 30px;
+    }
+
+    .grupo-2 {
+        text-align: center;
+        padding: 12px 6px;
+        font-size: 0.95rem;
+    }
+
+    .btn-wsp {
+        width: 52px;
+        height: 52px;
+        bottom: 2rem;
+        right: 2rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - TABLET GRANDE (900px)
+   ========================================== */
+
+@media (min-width: 900px) and (max-width: 1024px) {
+    .pie-pagina .grupo-1 {
+        padding: 25px 35px;
+        gap: 2.5rem;
+    }
+
+    .pie-pagina .grupo-1 h3 {
+        font-size: 1.2rem;
+        margin: 0 auto 1rem;
+    }
+
+    .pie-pagina .grupo-1 li {
+        margin-bottom: 14px;
+    }
+
+    .btn-insta,
+    .btn-face {
+        width: 52px;
+        height: 52px;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - DESKTOP (1025px)
+   ========================================== */
+
+@media only screen and (min-width: 1025px) {
+    footer a {
+        font-size: 14px;
+    }
+
+    .pie-pagina .grupo-1 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        padding: 30px 40px;
+        margin: 0 auto;
+        gap: 3rem;
+    }
+
+    .pie-pagina .grupo-1 h3 {
+        font-size: 1.25rem;
+        margin: 0 auto 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid rgba(130, 17, 159, 0.2);
+    }
+
+    .pie-pagina .grupo-1 h2 {
+        padding-bottom: 8px;
+        margin-block-start: 1.33em;
+        margin-block-end: 1.33em;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 30px;
+    }
+
+    .pie-pagina .grupo-1 li {
+        margin-bottom: 16px;
+        padding: 0;
+    }
+
+    .red-social {
+        gap: 1.5rem;
+        padding-top: 0.75rem;
+    }
+
+    .btn-insta,
+    .btn-face {
+        width: 54px;
+        height: 54px;
+    }
+
+    .red-social i {
+        letter-spacing: 8px;
+        width: 40px;
+        height: 40px;
+        margin: 0px 20px 10px 0px;
+        line-height: 10px;
+        font-size: 30px;
+        border: 30px;
+    }
+
+    .grupo-2 {
+        text-align: center;
+        padding: 16px 8px;
+        font-size: 1rem;
+    }
+
+    .btn-wsp {
+        width: 56px;
+        height: 56px;
+        bottom: 2.5rem;
+        right: 2.5rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - DESKTOP GRANDE (1440px)
+   ========================================== */
+
+@media (min-width: 1440px) {
+    .pie-pagina .grupo-1 {
+        padding: 35px 50px;
+        gap: 3.5rem;
+    }
+
+    .pie-pagina .grupo-1 h3 {
+        font-size: 1.375rem;
+        margin: 0 auto 1.25rem;
+    }
+
+    .pie-pagina .grupo-1 li {
+        margin-bottom: 18px;
+    }
+
+    footer a {
+        font-size: 15px;
+    }
+
+    .btn-insta,
+    .btn-face {
+        width: 56px;
+        height: 56px;
+    }
+
+    .btn-wsp {
+        width: 60px;
+        height: 60px;
+        bottom: 3rem;
+        right: 3rem;
+    }
+
+    .grupo-2 {
+        padding: 18px 10px;
+        font-size: 1.0625rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - DESKTOP ULTRA (1920px+)
+   ========================================== */
+
+@media (min-width: 1920px) {
+    .pie-pagina .grupo-1 {
+        padding: 40px 60px;
+        gap: 4rem;
+    }
+
+    .pie-pagina .grupo-1 h3 {
+        font-size: 1.5rem;
+        margin: 0 auto 1.5rem;
+    }
+
+    .pie-pagina .grupo-1 li {
+        margin-bottom: 20px;
+    }
+
+    footer a {
+        font-size: 16px;
+    }
+
+    .btn-insta,
+    .btn-face {
+        width: 60px;
+        height: 60px;
+    }
+
+    .btn-wsp {
+        width: 64px;
+        height: 64px;
+        bottom: 3.5rem;
+        right: 3.5rem;
+    }
+
+    .grupo-2 {
+        padding: 20px 12px;
+        font-size: 1.125rem;
+    }
+}
+
+/* ==========================================
+   IMPRESIÓN
+   ========================================== */
+
+@media print {
+    footer {
+        margin-top: 2rem;
+    }
+
+    .btn-wsp {
+        display: none;
+    }
+
+    .red-social {
+        display: none;
+    }
+}
+
+/* ==========================================
+   ACCESIBILIDAD
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    footer a,
+    .btn-insta,
+    .btn-face,
+    .btn-wsp {
+        transition: none;
+    }
 }

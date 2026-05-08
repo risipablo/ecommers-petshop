@@ -6,19 +6,19 @@ const {
   createProduct, 
   updateProduct, 
   deleteProduct,
-  deleteProductImage  
-  
+  deleteProductImage,
+  setMainImage
 } = require('../controllers/productController');
-const { uploadSingle, uploadMultiple } = require('../middleware/upload');
+const { uploadMultiple } = require('../middleware/upload');
 
 const router = express.Router();
 
 router.get('/products', getProducts);
 router.get('/products/:id', getProductById);
-
 router.post('/products', uploadMultiple, createProduct);
 router.put('/products/:id', uploadMultiple, updateProduct);
 router.delete('/products/:id', deleteProduct);
-router.delete('/products/:productId/images/:imageId', deleteProductImage); // 🔥 Eliminar imagen específica
+router.delete('/products/:productId/images/:imageId', deleteProductImage);
+router.patch('/products/:productId/main-image/:imageId', setMainImage);
 
 module.exports = router;

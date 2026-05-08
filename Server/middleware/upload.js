@@ -1,7 +1,6 @@
 // Server/middleware/upload.js
 const multer = require('multer');
 
-// Configuración para MemoryStorage
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
@@ -15,14 +14,11 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB por imagen
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: fileFilter
 });
 
-// 🔥 Para múltiples imágenes
-const uploadMultiple = upload.array('images', 10); // máximo 10 imágenes
-
-// Para una sola imagen (mantener compatibilidad)
+const uploadMultiple = upload.array('images', 10);
 const uploadSingle = upload.single('image');
 
 module.exports = { uploadSingle, uploadMultiple };

@@ -1,10 +1,10 @@
-// controllers/productController.js
+// Server/controllers/productController.js
 const ProductModel = require('../models/Product');
 const { uploadToSupabase, deleteFromSupabase } = require('../middleware/supabaseUpload');
 
 exports.getProducts = async (req, res) => {
   try {
-    const products = await ProductModel.find();
+    const products = await ProductModel.find().sort({ createdAt: -1 });
     res.json({ success: true, data: products });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -26,10 +26,10 @@ exports.getProductById = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const { 
-      name, brand, pet, category, age, price, description, kg, special 
+      name, brand, pet, category, age, price, description, condition, kg, special 
     } = req.body;
 
-    const requiredFields = ['name', 'brand', 'pet', 'category', 'age', 'price', 'description'];
+    const requiredFields = ['name', 'brand', 'pet', 'category', 'age', 'price', 'description', 'condition'];
     const missingFields = requiredFields.filter(field => !req.body[field]);
     
     if (missingFields.length > 0) {
@@ -44,7 +44,6 @@ exports.createProduct = async (req, res) => {
       return res.status(400).json({ success: false, error: 'El precio debe ser un número válido' });
     }
 
-    // 🔥 Subir múltiples imágenes a Supabase
     const images = [];
     if (req.files && req.files.length > 0) {
       for (let i = 0; i < req.files.length; i++) {
@@ -53,7 +52,7 @@ exports.createProduct = async (req, res) => {
         images.push({
           url: imageData.url,
           publicId: imageData.path,
-          isMain: i === 0, // La primera imagen es la principal
+          isMain: i === 0,
           order: i
         });
       }
@@ -67,6 +66,7 @@ exports.createProduct = async (req, res) => {
       age: String(age).toLowerCase(),
       price: priceNumber,
       description,
+      condition,
       kg: kg || null,
       images: images,
       imageUrl: images[0]?.url || null,
@@ -88,15 +88,16 @@ exports.createProduct = async (req, res) => {
     
   } catch (err) {
     console.error('Error al crear producto:', err);
+    
     if (err.name === 'ValidationError') {
-      const errors = Object.values(err.errors).map((e) => e.message);
+      const errors = Object.values(err.errors).map(e => e.message);
       return res.status(400).json({ success: false, error: errors.join(', ') });
     }
+    
     res.status(500).json({ success: false, error: err.message });
   }
 };
 
-// Actualizar producto con múltiples imágenes
 exports.updateProduct = async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
@@ -104,7 +105,6 @@ exports.updateProduct = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Producto no encontrado' });
     }
     
-    // 🔥 Si vienen nuevas imágenes, agregarlas
     if (req.files && req.files.length > 0) {
       const newImages = [];
       const currentImageCount = product.images.length;
@@ -115,14 +115,13 @@ exports.updateProduct = async (req, res) => {
         newImages.push({
           url: imageData.url,
           publicId: imageData.path,
-          isMain: currentImageCount === 0 && i === 0,
+          isMain: currentImageCount === 0 && i === 0 && product.images.length === 0,
           order: currentImageCount + i
         });
       }
       
       product.images.push(...newImages);
       
-      // Actualizar imagen principal si no había ninguna
       if (product.images.length > 0 && !product.imageUrl) {
         const mainImage = product.images.find(img => img.isMain) || product.images[0];
         product.imageUrl = mainImage.url;
@@ -130,7 +129,6 @@ exports.updateProduct = async (req, res) => {
       }
     }
     
-    // Actualizar otros campos
     if (req.body.price) req.body.price = Number(req.body.price);
     if (req.body.age) req.body.age = req.body.age.toLowerCase();
     
@@ -144,7 +142,32 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-// Eliminar una imagen específica del producto
+exports.deleteProduct = async (req, res) => {
+  try {
+    const product = await ProductModel.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Producto no encontrado' });
+    }
+    
+    for (const image of product.images) {
+      if (image.publicId) {
+        await deleteFromSupabase(image.publicId);
+      }
+    }
+    
+    if (product.imagePublicId) {
+      await deleteFromSupabase(product.imagePublicId);
+    }
+    
+    await ProductModel.findByIdAndDelete(req.params.id);
+    
+    res.json({ success: true, message: 'Producto eliminado correctamente' });
+  } catch (error) {
+    console.error('Error al eliminar:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 exports.deleteProductImage = async (req, res) => {
   try {
     const { productId, imageId } = req.params;
@@ -159,18 +182,13 @@ exports.deleteProductImage = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Imagen no encontrada' });
     }
     
-    // Eliminar de Supabase
     await deleteFromSupabase(imageToDelete.publicId);
-    
-    // Eliminar del array
     imageToDelete.deleteOne();
     
-    // Reordenar imágenes restantes
     product.images.forEach((img, idx) => {
       img.order = idx;
     });
     
-    // Actualizar imagen principal si es necesario
     if (imageToDelete.isMain && product.images.length > 0) {
       product.images[0].isMain = true;
       product.imageUrl = product.images[0].url;
@@ -185,23 +203,29 @@ exports.deleteProductImage = async (req, res) => {
   }
 };
 
-exports.deleteProduct = async (req, res) => {
+exports.setMainImage = async (req, res) => {
   try {
-    const product = await ProductModel.findById(req.params.id);
+    const { productId, imageId } = req.params;
+    const product = await ProductModel.findById(productId);
+    
     if (!product) {
       return res.status(404).json({ success: false, message: 'Producto no encontrado' });
     }
     
-    // Eliminar imagen de Supabase
-    if (product.imagePublicId) {
-      await deleteFromSupabase(product.imagePublicId);
+    product.images.forEach(img => {
+      img.isMain = img._id.toString() === imageId;
+    });
+    
+    const mainImage = product.images.find(img => img.isMain);
+    if (mainImage) {
+      product.imageUrl = mainImage.url;
+      product.imagePublicId = mainImage.publicId;
     }
     
-    await ProductModel.findByIdAndDelete(req.params.id);
+    await product.save();
     
-    res.json({ success: true, message: 'Producto eliminado correctamente' });
+    res.json({ success: true, data: product, message: 'Imagen principal actualizada' });
   } catch (error) {
-    console.error('Error al eliminar:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };

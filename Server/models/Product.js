@@ -25,15 +25,18 @@ const productSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   special: {
     type: String, 
-    required: false,  
+    required: false,
     enum: ['derma adulto', 'derma mini adulto', 'urinary', 'castrado', 'light'],
-    default: null     
+    default: null
   }, 
   kg: { type: String, required: false },
   description: { type: String, required: true },
+  condition: { type: String, required: true },
   images: [imageSchema],
-  imageUrl: { type: String, required: false }, 
-  imagePublicId: { type: String, required: false } 
+  imageUrl: { type: String, required: false },
+  imagePublicId: { type: String, required: false }
+}, {
+  timestamps: true
 });
 
 productSchema.pre('save', function(next) {

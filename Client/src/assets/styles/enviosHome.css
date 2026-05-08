@@ -1,137 +1,588 @@
-/* ShippingSection.css */
+/* ==========================================
+   SHIPPING SECTION - TOTALMENTE RESPONSIVE
+   ========================================== */
+
+/* ==========================================
+   CONTENEDOR PRINCIPAL
+   ========================================== */
 
 .shipping-section {
-    margin: 4rem auto;
-    background: rgba(224, 223, 224, 0.7);
+    margin: 3rem auto;
+    background: linear-gradient(135deg, rgba(224, 223, 224, 0.7) 0%, rgba(235, 234, 235, 0.5) 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2.5rem;
-    /* max-width: 1200px; */
-    color: rgb(1, 1, 1);
+    padding: 2rem 1rem;
+    color: #1f2937;
+    border-radius: 1rem;
+    max-width: 100%;
 }
+
+/* ==========================================
+   CONTENEDOR DE PASOS
+   ========================================== */
 
 .shipping-container {
-  display: flex;
-  flex-direction: column;
- align-items: center;
-  gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1200px;
 }
+
+/* ==========================================
+   GRID DE PASOS
+   ========================================== */
 
 .shipping-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  width: 100%;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
+
+/* ==========================================
+   PASO INDIVIDUAL
+   ========================================== */
 
 .shipping-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  max-width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 200px;
+    animation: fadeInUp 0.6s ease-out;
 }
 
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================
+   ICONO CIRCULAR
+   ========================================== */
+
 .shipping-icon {
-  background-color: white;
-  color: #5f5d5d;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+    color: #5f5d5d;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid rgba(130, 17, 159, 0.1);
 }
 
 .shipping-icon:hover {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+    transform: scale(1.12) rotate(5deg);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+    border-color: rgba(130, 17, 159, 0.3);
+    background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
 }
+
+.shipping-icon svg {
+    transition: all 0.3s ease;
+}
+
+.shipping-icon:hover svg {
+    color: #82119f;
+}
+
+/* ==========================================
+   TÍTULO DEL PASO
+   ========================================== */
 
 .shipping-title {
-  font-size: 1rem;
-  color: #5f5d5d;
-  font-weight: bold;
-  margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: #2d3748;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
 }
+
+/* ==========================================
+   DESCRIPCIÓN DEL PASO
+   ========================================== */
 
 .shipping-description {
-  font-size: 1rem;
-  margin: 0;
-  opacity: 0.95;
+    font-size: 0.875rem;
+    margin: 0;
+    color: #6b7280;
+    line-height: 1.5;
+    opacity: 0.9;
 }
+
+/* ==========================================
+   CONECTOR VISUAL
+   ========================================== */
 
 .shipping-connector {
-  width: 3px;
-  height: 40px;
-  background-color: rgba(255, 255, 255, 0.4);
-  border-radius: 2px;
+    width: 2px;
+    height: 30px;
+    background: linear-gradient(180deg, rgba(130, 17, 159, 0.3) 0%, rgba(130, 17, 159, 0.1) 100%);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+.shipping-connector::after {
+    content: '↓';
+    color: rgba(130, 17, 159, 0.3);
+    font-weight: bold;
+    font-size: 0.75rem;
+}
+
+/* ==========================================
+   BOTÓN CTA
+   ========================================== */
+
 .shipping-button {
-  background-color: white;
-  color: #f97316;
-  border: none;
-  /* padding: 1rem 3rem; */
-  border-radius: 3rem;
-  font-size: 1.125rem;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+    color: #f97316;
+    border: 2px solid #f97316;
+    padding: 0.75rem 2rem;
+    border-radius: 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
 }
 
 .shipping-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  background-color: #fff;
+    background: #f97316;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
 }
 
 .shipping-button:active {
-  transform: translateY(-1px);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
 }
 
-/* Desktop */
-@media (min-width: 768px) {
-  .shipping-steps {
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
+/* ==========================================
+   RESPONSIVE - MÓVIL PEQUEÑO (360px)
+   ========================================== */
 
-  .shipping-connector {
-    width: 80px;
-    height: 3px;
-    margin: 0 1rem;
-  }
+@media (max-width: 360px) {
+    .shipping-section {
+        margin: 2rem auto;
+        padding: 1.5rem 0.75rem;
+        border-radius: 0.75rem;
+    }
 
-  .shipping-icon {
-    width: 90px;
-    height: 90px;
-  }
+    .shipping-icon {
+        width: 70px;
+        height: 70px;
+    }
 
-  .shipping-title {
-    font-size: 1.2rem;
-  }
+    .shipping-icon svg {
+        font-size: 36px !important;
+    }
 
-  .shipping-description {
-    margin: .5rem auto;
-    font-size: 1rem;
-  }
+    .shipping-title {
+        font-size: 0.9rem;
+    }
+
+    .shipping-description {
+        font-size: 0.8rem;
+    }
+
+    .shipping-connector {
+        height: 25px;
+    }
+
+    .shipping-button {
+        padding: 0.625rem 1.5rem;
+        font-size: 0.875rem;
+        margin-top: 0.75rem;
+    }
 }
 
-@media (min-width: 1024px) {
-  .shipping-section {
-    padding: 2.5rem;
-  }
+/* ==========================================
+   RESPONSIVE - MÓVIL (480px)
+   ========================================== */
 
-  .shipping-connector {
-    width: 120px;
-    margin: 0 2rem;
-  }
+@media (max-width: 480px) {
+    .shipping-section {
+        margin: 2.5rem auto;
+        padding: 1.75rem 1rem;
+        border-radius: 0.875rem;
+    }
+
+    .shipping-steps {
+        gap: 1.25rem;
+    }
+
+    .shipping-step {
+        max-width: 220px;
+    }
+
+    .shipping-icon {
+        width: 75px;
+        height: 75px;
+    }
+
+    .shipping-icon svg {
+        font-size: 40px !important;
+    }
+
+    .shipping-title {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .shipping-description {
+        font-size: 0.875rem;
+    }
+
+    .shipping-connector {
+        height: 28px;
+    }
+
+    .shipping-button {
+        padding: 0.675rem 1.75rem;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - TABLET PEQUEÑO (600px)
+   ========================================== */
+
+@media (max-width: 600px) {
+    .shipping-section {
+        margin: 3rem auto;
+        padding: 2rem 1rem;
+    }
+
+    .shipping-steps {
+        gap: 1.5rem;
+    }
+
+    .shipping-step {
+        max-width: 240px;
+    }
+
+    .shipping-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .shipping-icon svg {
+        font-size: 44px !important;
+    }
+
+    .shipping-title {
+        font-size: 1.05rem;
+    }
+
+    .shipping-description {
+        font-size: 0.9rem;
+    }
+
+    .shipping-connector {
+        height: 32px;
+    }
+
+    .shipping-button {
+        padding: 0.75rem 2rem;
+        font-size: 0.95rem;
+        margin-top: 1.25rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - TABLET (768px) - HORIZONTAL
+   ========================================== */
+
+@media (min-width: 601px) and (max-width: 1024px) {
+    .shipping-section {
+        margin: 3.5rem auto;
+        padding: 2.5rem 2rem;
+        border-radius: 1.25rem;
+    }
+
+    .shipping-steps {
+        flex-direction: row;
+        gap: 0;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .shipping-step {
+        max-width: 200px;
+        flex: 0 1 auto;
+    }
+
+    .shipping-connector {
+        width: 50px;
+        height: 3px;
+        margin: 0 1rem;
+        transform: rotate(0deg);
+    }
+
+    .shipping-connector::after {
+        content: '→';
+        transform: translateY(2px);
+    }
+
+    .shipping-icon {
+        width: 85px;
+        height: 85px;
+    }
+
+    .shipping-icon svg {
+        font-size: 46px !important;
+    }
+
+    .shipping-title {
+        font-size: 1.125rem;
+    }
+
+    .shipping-description {
+        font-size: 0.95rem;
+    }
+
+    .shipping-button {
+        padding: 0.8rem 2.25rem;
+        font-size: 1rem;
+        margin-top: 1.5rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - TABLET GRANDE (900px)
+   ========================================== */
+
+@media (min-width: 900px) and (max-width: 1024px) {
+    .shipping-section {
+        padding: 3rem 2.5rem;
+    }
+
+    .shipping-connector {
+        width: 70px;
+        margin: 0 1.5rem;
+    }
+
+    .shipping-icon {
+        width: 90px;
+        height: 90px;
+    }
+
+    .shipping-icon svg {
+        font-size: 48px !important;
+    }
+
+    .shipping-title {
+        font-size: 1.2rem;
+    }
+
+    .shipping-description {
+        font-size: 1rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - DESKTOP (1025px)
+   ========================================== */
+
+@media (min-width: 1025px) {
+    .shipping-section {
+        margin: 4rem auto;
+        padding: 3.5rem 3rem;
+        border-radius: 1.5rem;
+    }
+
+    .shipping-steps {
+        flex-direction: row;
+        gap: 0;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .shipping-step {
+        max-width: 240px;
+        flex: 0 1 auto;
+    }
+
+    .shipping-connector {
+        width: 100px;
+        height: 3px;
+        margin: 0 2rem;
+    }
+
+    .shipping-connector::after {
+        content: '→';
+        font-size: 1rem;
+    }
+
+    .shipping-icon {
+        width: 100px;
+        height: 100px;
+    }
+
+    .shipping-icon svg {
+        font-size: 50px !important;
+    }
+
+    .shipping-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .shipping-description {
+        font-size: 1.0625rem;
+    }
+
+    .shipping-button {
+        padding: 0.875rem 2.75rem;
+        font-size: 1.0625rem;
+        margin-top: 2rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - DESKTOP GRANDE (1440px)
+   ========================================== */
+
+@media (min-width: 1440px) {
+    .shipping-section {
+        margin: 5rem auto;
+        padding: 4rem 4rem;
+    }
+
+    .shipping-steps {
+        gap: 0;
+    }
+
+    .shipping-step {
+        max-width: 280px;
+    }
+
+    .shipping-connector {
+        width: 120px;
+        margin: 0 2.5rem;
+    }
+
+    .shipping-icon {
+        width: 110px;
+        height: 110px;
+    }
+
+    .shipping-icon svg {
+        font-size: 54px !important;
+    }
+
+    .shipping-title {
+        font-size: 1.375rem;
+    }
+
+    .shipping-description {
+        font-size: 1.125rem;
+    }
+
+    .shipping-button {
+        padding: 1rem 3rem;
+        font-size: 1.125rem;
+        margin-top: 2.25rem;
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - DESKTOP ULTRA (1920px+)
+   ========================================== */
+
+@media (min-width: 1920px) {
+    .shipping-section {
+        margin: 6rem auto;
+        padding: 4.5rem 5rem;
+    }
+
+    .shipping-step {
+        max-width: 300px;
+    }
+
+    .shipping-connector {
+        width: 150px;
+        margin: 0 3rem;
+    }
+
+    .shipping-icon {
+        width: 120px;
+        height: 120px;
+    }
+
+    .shipping-icon svg {
+        font-size: 58px !important;
+    }
+
+    .shipping-title {
+        font-size: 1.5rem;
+    }
+
+    .shipping-description {
+        font-size: 1.25rem;
+    }
+
+    .shipping-button {
+        padding: 1.125rem 3.5rem;
+        font-size: 1.25rem;
+        margin-top: 2.5rem;
+    }
+}
+
+/* ==========================================
+   IMPRESIÓN
+   ========================================== */
+
+@media print {
+    .shipping-section {
+        margin: 2rem auto;
+        padding: 2rem;
+        box-shadow: none;
+    }
+
+    .shipping-button {
+        display: none;
+    }
+}
+
+/* ==========================================
+   ACCESIBILIDAD
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .shipping-step,
+    .shipping-icon,
+    .shipping-button {
+        animation: none;
+        transition: none;
+    }
 }
