@@ -1,4 +1,4 @@
-import type { IDestacados } from "../../features/types/types";
+
 import image1 from "../../assets/images/panda,jpg.jpg"
 import image2 from "../../assets/images/biopet.png"
 import image3 from "../../assets/images/botella.png"
@@ -7,6 +7,7 @@ import image5 from "../../assets/images/excegato.jpg"
 import image6 from "../../assets/images/cordero-removebg-preview.png"
 import image7 from "../../assets/images/nido.jpg"
 import image8 from "../../assets/images/colchonetasenti-removebg-preview.png"
+import type { IDestacados } from "../../features/types/product.type"
 
 
 export const destacado:IDestacados[] = [
