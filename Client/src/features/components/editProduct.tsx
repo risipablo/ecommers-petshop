@@ -1,238 +1,318 @@
-// // features/components/EditProduct.tsx
-// import { useState, useEffect } from "react";
-// import { useProducts } from "../hooks/useProducts";
-// import { useNavigate, useParams } from "react-router-dom";
-// import { useProduct } from "../hooks/useProducts";
+// features/components/EditProduct.tsx
+import { useState, useEffect } from "react";
+import { useProducts } from "../hooks/useProducts";
+import { useNavigate, useParams } from "react-router-dom";
+import { useProduct } from "../hooks/useProducts";
+import { ArrowLeft, Save, X } from "lucide-react";
 
-// export const EditProduct = () => {
-//     const { id } = useParams<{ id: string }>();
-//     const { updateProduct, isLoading, error } = useProducts();
-//     const { product, loading } = useProduct(id || "");
-//     const navigate = useNavigate();
+interface ProductFormState {
+    name: string;
+    brand: string;
+    pet: string;
+    category: string;
+    description: string;
+    age: string;
+    condition: string;
+    price: string;
+    kg: string;
+    special: string;
+}
 
-//     const [formData, setFormData] = useState({
-//         name: "", brand: "", pet: "", category: "", description: "",
-//         age: "", price: "", kg: "", special: ""
-//     });
-//     const [imageFile, setImageFile] = useState<File | null>(null);
-//     const [imagePreview, setImagePreview] = useState<string | null>(null);
+interface ProductData {
+    name?: string;
+    brand?: string;
+    pet?: string;
+    category?: string;
+    description?: string;
+    age?: string;
+    condition?: string;
+    price?: number | string;
+    kg?: string;
+    special?: string;
+}
 
-//     // Cargar datos del producto al montar
-//     useEffect(() => {
-//         if (product) {
-//             // eslint-disable-next-line react-hooks/set-state-in-effect
-//             setFormData({
-//                 name: product.name || "",
-//                 brand: product.brand || "",
-//                 pet: product.pet || "",
-//                 category: product.category || "",
-//                 description: product.description || "",
-//                 age: product.age || "",
-//                 price: String(product.price) || "",
-//                 kg: product.kg || "",
-//                 special: product.special || ""
-//             });
-//             if (product.imageUrl) {
-//                 setImagePreview(product.imageUrl);
-//             }
-//         }
-//     }, [product]);
+export const EditProduct = () => {
+    const { id } = useParams<{ id: string }>();
+    const { updateProduct, isLoading, error } = useProducts();
+    const { product, loading } = useProduct(id || "") as {
+        product: ProductData | null;
+        loading: boolean;
+    };
+    const navigate = useNavigate();
 
-//     const handleInputChange = (field: string, value: string) => {
-//         setFormData(prev => ({ ...prev, [field]: value }));
-//     };
+    const [formData, setFormData] = useState<ProductFormState>({
+        name: "", brand: "", pet: "", category: "", description: "",
+        age: "", condition: "", price: "", kg: "", special: ""
+    });
+    const [imageFiles, setImageFiles] = useState<File[]>([]);
+    const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+    const [isSaving, setIsSaving] = useState(false);
 
-//     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//         const file = e.target.files?.[0];
-//         if (file) {
-//             if (!['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.type)) {
-//                 alert('Solo se permiten imágenes JPG, PNG o WEBP');
-//                 return;
-//             }
-//             if (file.size > 5 * 1024 * 1024) {
-//                 alert('La imagen no puede superar los 5MB');
-//                 return;
-//             }
-//             setImageFile(file);
-//             const reader = new FileReader();
-//             reader.onloadend = () => setImagePreview(reader.result as string);
-//             reader.readAsDataURL(file);
-//         }
-//     };
+    useEffect(() => {
+        if (product) {
+            setFormData({
+                name: product.name || "",
+                brand: product.brand || "",
+                pet: product.pet || "",
+                category: product.category || "",
+                description: product.description || "",
+                age: product.age || "",
+                condition: product.condition || "",
+                price: String(product.price) || "",
+                kg: product.kg || "",
+                special: product.special || ""
+            });
+        }
+    }, [product]);
 
-//     const handleSubmit = async (e: React.FormEvent) => {
-//         e.preventDefault();
+    const handleInputChange = (field: string, value: string) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+    };
+
+    const handleImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
         
-//         const requiredFields = ['name', 'brand', 'pet', 'category', 'description', 'age', 'condition', 'price'];
-//         const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
+        const validFiles = files.filter(file => {
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                alert(`Formato no válido: ${file.name}`);
+                return false;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                alert(`Imagen muy grande (máx 5MB): ${file.name}`);
+                return false;
+            }
+            return true;
+        });
+
+        const newPreviews = validFiles.map(file => URL.createObjectURL(file));
+        setImageFiles([...imageFiles, ...validFiles]);
+        setImagePreviews([...imagePreviews, ...newPreviews]);
+    };
+
+    const removeNewImage = (index: number) => {
+        URL.revokeObjectURL(imagePreviews[index]);
+        setImageFiles(imageFiles.filter((_, i) => i !== index));
+        setImagePreviews(imagePreviews.filter((_, i) => i !== index));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         
-//         if (missingFields.length > 0) {
-//             alert(`Faltan campos: ${missingFields.join(', ')}`);
-//             return;
-//         }
-
-//         const formDataToSend = new FormData();
-//         Object.entries(formData).forEach(([key, value]) => {
-//             if (value && key !== 'special') formDataToSend.append(key, value);
-//         });
+        const requiredFields = ['name', 'brand', 'pet', 'category', 'description', 'age', 'condition', 'price'];
+        const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
         
-//         if (formData.special && formData.special.trim() !== '') {
-//             formDataToSend.append('special', formData.special);
-//         }
+        if (missingFields.length > 0) {
+            alert(`Faltan campos: ${missingFields.join(', ')}`);
+            return;
+        }
+
+        setIsSaving(true);
+        const formDataToSend = new FormData();
         
-//         if (imageFile) {
-//             formDataToSend.append('image', imageFile);
-//         }
+        Object.entries(formData).forEach(([key, value]) => {
+            if (value) formDataToSend.append(key, value);
+        });
+        
+        imageFiles.forEach(file => {
+            formDataToSend.append('images', file);
+        });
 
-//         try {
-//             await updateProduct(id!, formDataToSend);
-//             alert('✅ Producto actualizado exitosamente');
-//             navigate('/crud');
-//         } catch (err) {
-//             console.error('Error:', err);
-//         }
-//     };
+        try {
+            await updateProduct(id!, formDataToSend);
+            alert('✅ Producto actualizado exitosamente');
+            navigate('/admin/products');
+        } catch (err) {
+            console.error('Error:', err);
+            alert('❌ Error al actualizar el producto');
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
-//     if (loading) {
-//         return <div className="loading-container">Cargando producto...</div>;
-//     }
+    if (loading) return <div className="loading-container">Cargando producto...</div>;
+    if (!product) return <div className="not-found-container">Producto no encontrado</div>;
 
-//     if (!product) {
-//         return <div className="not-found-container">Producto no encontrado</div>;
-//     }
+    return (
+        <div className="edit-product-container">
+            <div className="edit-header">
+                <button className="back-btn" onClick={() => navigate('/admin/products')}>
+                    <ArrowLeft size={20} />
+                    Volver
+                </button>
+                <h1>Editar Producto: {product.name}</h1>
+            </div>
 
-//     return (
-//         <div className="product-list-container">
-//             <h2>Editar Producto</h2>
-            
-//             {error && <div className="error-message">❌ {error}</div>}
-            
-//             <form onSubmit={handleSubmit}>
-//                 <input 
-//                     type="text" 
-//                     placeholder="Nombre *" 
-//                     value={formData.name} 
-//                     onChange={(e) => handleInputChange('name', e.target.value)}
-//                     disabled={isLoading}
-//                 />
-                
-//                 <input 
-//                     type="text" 
-//                     placeholder="Marca *" 
-//                     value={formData.brand} 
-//                     onChange={(e) => handleInputChange('brand', e.target.value)}
-//                     disabled={isLoading}
-//                 />
-                
-//                 <select 
-//                     value={formData.pet} 
-//                     onChange={(e) => handleInputChange('pet', e.target.value)}
-//                     disabled={isLoading}
-//                 >
-//                     <option value="">Seleccionar mascota *</option>
-//                     <option value="gato">Gato</option>
-//                     <option value="perro">Perro</option>
-//                     <option value="ambos">Ambos</option>
-//                 </select>
+            {error && <div className="error-message">❌ {error}</div>}
 
-//                 <select 
-//                     value={formData.category} 
-//                     onChange={(e) => handleInputChange('category', e.target.value)}
-//                     disabled={isLoading}
-//                 >
-//                     <option value="">Seleccionar categoría *</option>
-//                     <option value="alimentos">Alimentos</option>
-//                     <option value="accesorios">Accesorios</option>
-//                     <option value="higiene">Higiene</option>
-//                     <option value="indumentaria">Indumentaria</option>
-//                     <option value="colchonetas">Colchonetas</option>
-//                 </select>
+            <form onSubmit={handleSubmit} className="edit-form">
+                <div className="form-grid">
+                    <div className="form-group">
+                        <label>Nombre *</label>
+                        <input 
+                            type="text" 
+                            value={formData.name} 
+                            onChange={(e) => handleInputChange('name', e.target.value)}
+                            required
+                        />
+                    </div>
 
-//                 <textarea 
-//                     placeholder="Descripción *" 
-//                     value={formData.description} 
-//                     onChange={(e) => handleInputChange('description', e.target.value)}
-//                     disabled={isLoading}
-//                     rows={3}
-//                 />
-                
-//                 <select 
-//                     value={formData.age} 
-//                     onChange={(e) => handleInputChange('age', e.target.value)}
-//                     disabled={isLoading}
-//                 >
-//                     <option value="">Seleccionar edad *</option>
-//                     <option value="cachorro">Cachorro</option>
-//                     <option value="mini adulto">Mini Adulto</option>
-//                     <option value="adulto">Adulto</option>
-//                     <option value="senior">Senior</option>
-//                     <option value="otro">Otro</option>
-//                 </select>
-                
-                
-//                 <input 
-//                     type="number" 
-//                     placeholder="Precio *" 
-//                     value={formData.price} 
-//                     onChange={(e) => handleInputChange('price', e.target.value)}
-//                     disabled={isLoading}
-//                 />
-                
-//                 <input 
-//                     type="text" 
-//                     placeholder="Kg (opcional)" 
-//                     value={formData.kg} 
-//                     onChange={(e) => handleInputChange('kg', e.target.value)}
-//                     disabled={isLoading}
-//                 />
+                    <div className="form-group">
+                        <label>Marca *</label>
+                        <input 
+                            type="text" 
+                            value={formData.brand} 
+                            onChange={(e) => handleInputChange('brand', e.target.value)}
+                            required
+                        />
+                    </div>
 
-//                 <select 
-//                     value={formData.special} 
-//                     onChange={(e) => handleInputChange('special', e.target.value)}
-//                     disabled={isLoading}
-//                 >
-//                     <option value="">Especial (opcional)</option>
-//                     <option value="derma adulto">Derma Adulto</option>
-//                     <option value="derma mini adulto">Derma Mini Adulto</option>
-//                     <option value="urinary">Urinary</option>
-//                     <option value="castrado">Castrado</option>
-//                     <option value="light">Light</option>
-//                 </select>
+                    <div className="form-group">
+                        <label>Mascota *</label>
+                        <select 
+                            value={formData.pet} 
+                            onChange={(e) => handleInputChange('pet', e.target.value)}
+                            required
+                        >
+                            <option value="">Seleccionar</option>
+                            <option value="gato">Gato</option>
+                            <option value="perro">Perro</option>
+                            <option value="ambos">Ambos</option>
+                        </select>
+                    </div>
 
-//                 <div className="image-upload-container">
-//                     <input
-//                         type="file"
-//                         accept="image/jpeg,image/jpg,image/png,image/webp"
-//                         onChange={handleImageChange}
-//                         disabled={isLoading}
-//                     />
-//                     <small>Dejar vacío para mantener imagen actual</small>
-                    
-//                     {imagePreview && (
-//                         <div className="image-preview">
-//                             <img src={imagePreview} alt="Preview" />
-//                             <button 
-//                                 type="button" 
-//                                 onClick={() => {
-//                                     setImageFile(null);
-//                                     setImagePreview(product.imageUrl || null);
-//                                 }}
-//                             >
-//                                 ✖
-//                             </button>
-//                         </div>
-//                     )}
-//                 </div>
+                    <div className="form-group">
+                        <label>Categoría *</label>
+                        <select 
+                            value={formData.category} 
+                            onChange={(e) => handleInputChange('category', e.target.value)}
+                            required
+                        >
+                            <option value="">Seleccionar</option>
+                            <option value="alimentos">Alimentos</option>
+                            <option value="accesorios">Accesorios</option>
+                            <option value="higiene">Higiene</option>
+                            <option value="indumentaria">Indumentaria</option>
+                            <option value="colchonetas">Colchonetas</option>
+                        </select>
+                    </div>
 
-//                 <div className="form-buttons">
-//                     <button type="submit" disabled={isLoading}>
-//                         {isLoading ? '🔄 Actualizando...' : '💾 Actualizar Producto'}
-//                     </button>
-//                     <button type="button" onClick={() => navigate('/crud')}>
-//                         Cancelar
-//                     </button>
-//                 </div>
-//             </form>
-//         </div>
-//     );
-// };
+                    <div className="form-group full-width">
+                        <label>Descripción *</label>
+                        <textarea 
+                            value={formData.description} 
+                            onChange={(e) => handleInputChange('description', e.target.value)}
+                            rows={3}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Edad *</label>
+                        <select 
+                            value={formData.age} 
+                            onChange={(e) => handleInputChange('age', e.target.value)}
+                            required
+                        >
+                            <option value="">Seleccionar</option>
+                            <option value="cachorro">Cachorro</option>
+                            <option value="mini adulto">Mini Adulto</option>
+                            <option value="adulto">Adulto</option>
+                            <option value="senior">Senior</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Condición *</label>
+                        <select 
+                            value={formData.condition} 
+                            onChange={(e) => handleInputChange('condition', e.target.value)}
+                            required
+                        >
+                            <option value="">Seleccionar</option>
+                            <option value="nuevo">Nuevo</option>
+                            <option value="usado">Usado</option>
+                            <option value="reacondicionado">Reacondicionado</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Precio *</label>
+                        <input 
+                            type="number" 
+                            value={formData.price} 
+                            onChange={(e) => handleInputChange('price', e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Kg (opcional)</label>
+                        <input 
+                            type="text" 
+                            value={formData.kg} 
+                            onChange={(e) => handleInputChange('kg', e.target.value)}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Especial (opcional)</label>
+                        <select 
+                            value={formData.special} 
+                            onChange={(e) => handleInputChange('special', e.target.value)}
+                        >
+                            <option value="">Ninguno</option>
+                            <option value="derma adulto">Derma Adulto</option>
+                            <option value="derma mini adulto">Derma Mini Adulto</option>
+                            <option value="urinary">Urinary</option>
+                            <option value="castrado">Castrado</option>
+                            <option value="light">Light</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group full-width">
+                        <label>Agregar nuevas imágenes (opcional)</label>
+                        <input 
+                            type="file" 
+                            accept="image/jpeg,image/jpg,image/png,image/webp"
+                            onChange={handleImagesChange}
+                            multiple
+                        />
+                        <small>Puedes agregar más imágenes al producto</small>
+                        
+                        {imagePreviews.length > 0 && (
+                            <div className="new-images-preview">
+                                <h4>Nuevas imágenes a subir:</h4>
+                                <div className="images-grid">
+                                    {imagePreviews.map((preview, index) => (
+                                        <div key={index} className="image-preview-item">
+                                            <img src={preview} alt={`Nueva ${index + 1}`} />
+                                            <button 
+                                                type="button"
+                                                className="remove-new-image"
+                                                onClick={() => removeNewImage(index)}
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="form-actions">
+                    <button type="submit" className="btn-save" disabled={isSaving || isLoading}>
+                        <Save size={18} />
+                        {isSaving ? 'Guardando...' : 'Guardar Cambios'}
+                    </button>
+                    <button type="button" className="btn-cancel" onClick={() => navigate('/admin/products')}>
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+};

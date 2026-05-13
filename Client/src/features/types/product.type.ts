@@ -21,6 +21,13 @@ export interface ProductsContextType {
     fetchProducts: () => Promise<void>;
 }
 
+export interface ProductImage {
+    _id: string;
+    url: string;
+    publicId: string;
+    isMain: boolean;
+    order: number;
+}
 
 export interface Product {
     images: unknown;
@@ -34,7 +41,6 @@ export interface Product {
     age: string;
     price: number;
     kg?: string;
-    special?: string | null;
     imageUrl?: string;
     imagePublicId?: string;
 }

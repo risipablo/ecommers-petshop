@@ -6,13 +6,11 @@ import { Logo } from "./logo"
 import { Box } from "@mui/material"
 import { Facebook, Instagram } from "lucide-react"
 import { useEffect, useState } from "react"
-
-import { useAuth } from "../../context/authProvider"
-import { AuthButtons } from "../auth/authButtons"
+import { UserIcon } from "../common/userIcon"
 
 export const Header = () => {
   const [scrolled, setScrolled] = useState(false)
-  const { isAuthenticated, user } = useAuth()
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,9 +39,7 @@ export const Header = () => {
               </a>
             </div>
             <p className="promo-text">Bambina Petshop</p>
-            {isAuthenticated && (
-              <span className="user-greeting">¡Hola, {user?.name?.split(' ')[0]}!</span>
-            )}
+       
           </div>
         </Box>
       )}
@@ -56,7 +52,7 @@ export const Header = () => {
               <SearchWrapper />
             </Box>
             <Box className="user-wrapper-main">
-              <AuthButtons />
+              <UserIcon />
             </Box>
             <div className="navbar-wrapper-main">
               <Navbar />

@@ -1,6 +1,7 @@
 
 const express = require('express')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 const DB = require('./config/database')
 const productRoutes = require ('./routes/routerProducts')
 const authRoutes = require ('./routes/authRoutes')
@@ -15,12 +16,21 @@ const corsOption = {
     optionsSuccessStatus: 200,
     methods: 'GET,POST,DELETE,PUT,PATCH',
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    exposedHeaders: ['Set-Cookie'],
 }
 
 
 app.use(express.json()) 
+app.use(cookieParser())
 app.use(cors(corsOption))
 
+
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`)
+    console.log('Headers:', req.headers)
+    next()
+})
 
 
 app.use('/api',productRoutes)

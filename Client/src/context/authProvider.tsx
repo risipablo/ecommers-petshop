@@ -1,9 +1,10 @@
-// context/AuthProvider.tsx
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+// context/authProvider.tsx
+import{ createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import axios from 'axios';
-import type { User, AuthContextType, LoginCredentials, RegisterCredentials } from '../features/types/auth.types'
+import type { AuthContextType, LoginCredentials, RegisterCredentials, User } from '../features/types/auth.types';
 
-const API_URL = "https://ecommers-petshop.onrender.com/api" 
+
+const API_URL = "https://ecommers-petshop.onrender.com/api"
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -16,20 +17,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     axios.defaults.withCredentials = true;
 
     const checkAuth = async () => {
-        setIsLoading(true);
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+            setIsLoading(false);
+            setIsAuthenticated(false);
+            setUser(null);
+            return;
+        }
+
         try {
-            const response = await axios.get(`${API_URL}/auth/me`);
+            const response = await axios.get(`${API_URL}/auth/me`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            
             if (response.data.success && response.data.data) {
                 setUser(response.data.data);
                 setIsAuthenticated(true);
+                // Actualizar token si es necesario
+                if (response.data.token) {
+                    localStorage.setItem('token', response.data.token);
+                }
             } else {
                 setUser(null);
                 setIsAuthenticated(false);
+                localStorage.removeItem('token');
             }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (err) {
+            console.error('Error verificando auth:', err);
             setUser(null);
             setIsAuthenticated(false);
+            localStorage.removeItem('token');
         } finally {
             setIsLoading(false);
         }
@@ -43,8 +63,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             if (response.data.success) {
                 setUser(response.data.data);
                 setIsAuthenticated(true);
-                // Guardar token en localStorage para persistencia
-                localStorage.setItem('token', response.data.token);
+                // Guardar token en localStorage
+                if (response.data.token) {
+                    localStorage.setItem('token', response.data.token);
+                }
                 return response.data;
             }
         } catch (err: unknown) {
@@ -64,7 +86,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             if (response.data.success) {
                 setUser(response.data.data);
                 setIsAuthenticated(true);
-                localStorage.setItem('token', response.data.token);
+                // Guardar token en localStorage
+                if (response.data.token) {
+                    localStorage.setItem('token', response.data.token);
+                }
                 return response.data;
             }
         } catch (err: unknown) {
@@ -83,8 +108,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setUser(null);
             setIsAuthenticated(false);
             localStorage.removeItem('token');
-        } catch (err: unknown) {
-            console.error('Error al cerrar sesión:', (err as Error).message);
+        } catch (err) {
+            console.error('Error al cerrar sesión:', err);
         } finally {
             setIsLoading(false);
         }

@@ -1,22 +1,29 @@
 // features/components/productDetail.tsx
-import { useParams, Link, useLocation } from 'react-router-dom';
-import { ArrowLeft, Eye, ChevronLeft, ChevronRight, ZoomIn, X } from 'lucide-react';
+import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Eye, ChevronLeft, ChevronRight, ZoomIn, X, Edit, Trash2 } from 'lucide-react';
 import '../../assets/styles/producDetail.css';
 import { useProduct } from '../hooks/useProducts';
 import { useRelatedProducts } from '../hooks/useRelatedProducts';
 import { useEffect, useState } from 'react';
+import { useAuth } from '../../context/authProvider';
+import axios from 'axios';
 import type { Product } from '../types/product.type';
+
+const API_URL = "https://ecommers-petshop.onrender.com/api"
 
 export function ProductDetail() {
     const { id } = useParams<{ id: string }>();
     const location = useLocation();
-    const { product, loading } = useProduct(id || '');
+    const navigate = useNavigate();
+    const { product: productData, loading } = useProduct(id || '') as { product: Product | null; loading: boolean };
+    const product = productData as Product | null;
     const { relatedProducts, loading: loadingRelated } = useRelatedProducts(
         id || '', 
-         (product as Product) ?.category || '',
-         (product as Product)?.pet,
-         (product as Product)?.brand
+        product?.category || '',
+        product?.pet,
+        product?.brand
     );
+    const { isAdmin } = useAuth();
     const [backPath, setBackPath] = useState<string>('/');
     const [backText, setBackText] = useState<string>('Volver');
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -24,11 +31,11 @@ export function ProductDetail() {
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
     const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    const typedProduct = product as Product;
-    const images: { url: string; publicId: string; isMain: boolean; order: number }[] = Array.isArray(typedProduct?.images) && typedProduct.images.length > 0 
-        ? (typedProduct.images as { url: string; publicId: string; isMain: boolean; order: number }[]) 
-        : (typedProduct?.imageUrl ? [{ url: typedProduct.imageUrl!, publicId: '', isMain: true, order: 0 }] : []);
+    const images = (product?.images && Array.isArray(product.images) && product.images.length > 0)
+        ? product.images 
+        : (product?.imageUrl ? [{ _id: 'main', url: product.imageUrl, publicId: product.imagePublicId || '', isMain: true, order: 0 }] : []);
 
     const hasMultipleImages = images.length > 1;
 
@@ -103,6 +110,23 @@ export function ProductDetail() {
         setBackText('Volver al inicio');
     }, [location.state, product]);
 
+    const handleEdit = () => {
+        navigate(`/admin/products/edit/${id}`);
+    };
+
+    const handleDelete = async () => {
+        try {
+            await axios.delete(`${API_URL}/products/${id}`, {
+                withCredentials: true
+            });
+            alert('✅ Producto eliminado exitosamente');
+            navigate('/');
+        } catch (error) {
+            console.error('Error al eliminar:', error);
+            alert('❌ Error al eliminar el producto');
+        }
+    };
+
     const handleZoom = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (!isZoomModalOpen) return;
         const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
@@ -150,30 +174,42 @@ export function ProductDetail() {
     };
 
     const nextImage = () => {
-        if (Array.isArray(images) && images.length > 0) {
-            setSelectedImageIndex((prev) => (prev + 1) % images.length);
-        }
+        setSelectedImageIndex((prev) => (prev + 1) % images.length);
     };
 
     const prevImage = () => {
-        if (Array.isArray(images) && images.length > 0) {
-            setSelectedImageIndex((prev) => (prev - 1 + images.length) % images.length);
-        }
+        setSelectedImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
     return (
         <div className="product-detail-container">
-            <Link to={backPath} className="back-link">
-                <ArrowLeft size={20} strokeWidth={2} />
-                {backText}
-            </Link>
+            <div className="detail-header">
+                <Link to={backPath} className="back-link">
+                    <ArrowLeft size={20} strokeWidth={2} />
+                    {backText}
+                </Link>
+                
+                {/* Botones de admin (solo visibles para admin) */}
+                {isAdmin && (
+                    <div className="admin-detail-actions">
+                        <button className="admin-detail-btn edit" onClick={handleEdit}>
+                            <Edit size={18} />
+                            Editar producto
+                        </button>
+                        <button className="admin-detail-btn delete" onClick={() => setShowDeleteModal(true)}>
+                            <Trash2 size={18} />
+                            Eliminar producto
+                        </button>
+                    </div>
+                )}
+            </div>
 
             <div className="product-detail-wrapper">
                 <div className="product-image-section">
                     <div className="main-image-wrapper">
                         <img 
-                            src={images[selectedImageIndex]?.url || (product as Product).imageUrl || 'https://via.placeholder.com/500x500?text=Sin+Imagen'} 
-                            alt={(product as Product).name} 
+                            src={images[selectedImageIndex]?.url || product.imageUrl || 'https://via.placeholder.com/500x500?text=Sin+Imagen'} 
+                            alt={product.name} 
                             className="main-image"
                             loading="lazy"
                         />
@@ -201,7 +237,7 @@ export function ProductDetail() {
                                 >
                                     <img 
                                         src={img.url} 
-                                        alt={`${(product as Product).name} - ${idx + 1}`}
+                                        alt={`${product.name} - ${idx + 1}`}
                                     />
                                 </div>
                             ))}
@@ -210,46 +246,46 @@ export function ProductDetail() {
                 </div>
 
                 <div className="product-info-section">
-                    <h1 className="product-title">{ (product as Product) .name}</h1>
+                    <h1 className="product-title">{product.name}</h1>
 
                     <div className="price-section">
-                        <span className="current-price">${formatPrice((product as Product).price)}</span>
+                        <span className="current-price">${formatPrice(product.price)}</span>
                     </div>
 
-                    { (product as Product).brand && (
+                    {product.brand && (
                         <div className="brand-section">
                             <span className="brand-label">Marca:</span>
-                            <span className="brand-value">{(product as Product).brand}</span>
+                            <span className="brand-value">{product.brand}</span>
                         </div>
                     )}
 
-                    { (product as Product).pet && (
+                    {product.pet && (
                         <div className="pet-section">
                             <span className="pet-label">Mascota:</span>
-                            <span className="pet-value">{(product as Product).pet}</span>
+                            <span className="pet-value">{product.pet}</span>
                         </div>
                     )}
 
-                    { (product as Product).age && (
+                    {product.age && (
                         <div className="age-section">
                             <span className="age-label">Edad recomendada:</span>
-                            <span className="age-value">{(product as Product).age}</span>
+                            <span className="age-value">{product.age}</span>
                         </div>
                     )}
 
-                    { (product as Product).description && (
+                    {product.description && (
                         <div className="description-section">
                             <h2 className="section-title">Descripción del producto</h2>
                             <div className="description-content">
-                                <p>{(product as Product).description}</p>
+                                <p>{product.description}</p>
                             </div>
                         </div>
                     )}
                     
-                    { (product as Product).category && (
+                    {product.category && (
                         <div className="category-section">
                             <span className="category-label">Categoría:</span>
-                            <span className="category-tag">{(product as Product).category}</span>
+                            <span className="category-tag">{product.category}</span>
                         </div>
                     )}
                 </div>
@@ -370,8 +406,8 @@ export function ProductDetail() {
                             onMouseMove={handleZoom}
                         >
                             <img 
-                                src={images[selectedImageIndex]?.url || (product as Product).imageUrl}
-                                alt={(product as Product).name}
+                                src={images[selectedImageIndex]?.url || product.imageUrl}
+                                alt={product.name}
                                 className="zoom-image"
                                 style={{
                                     transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
@@ -402,6 +438,31 @@ export function ProductDetail() {
                                 ))}
                             </div>
                         )}
+                    </div>
+                </div>
+            )}
+
+            {/* Modal de confirmación para eliminar */}
+            {showDeleteModal && (
+                <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
+                    <div className="modal-content-delete" onClick={(e) => e.stopPropagation()}>
+                        <button className="modal-close" onClick={() => setShowDeleteModal(false)}>
+                            ✕
+                        </button>
+                        <div className="modal-header">
+                            <Trash2 size={40} color="#dc2626" />
+                            <h2>Confirmar eliminación</h2>
+                            <p>¿Estás seguro de eliminar el producto <strong>"{product.name}"</strong>?</p>
+                            <p className="warning-text">Esta acción no se puede deshacer y eliminará todas las imágenes asociadas.</p>
+                        </div>
+                        <div className="modal-actions">
+                            <button className="btn-cancel" onClick={() => setShowDeleteModal(false)}>
+                                Cancelar
+                            </button>
+                            <button className="btn-confirm-delete" onClick={handleDelete}>
+                                Eliminar permanentemente
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

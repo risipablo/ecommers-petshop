@@ -601,3 +601,97 @@
         display: none;
     }
 }
+
+/* Agregar a productList.css */
+.admin-actions-overlay {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+.admin-action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-action-btn.edit {
+    color: #f59e0b;
+}
+
+.admin-action-btn.edit:hover {
+    background: #fef3c7;
+    transform: scale(1.05);
+}
+
+.admin-action-btn.delete {
+    color: #ef4444;
+}
+
+.admin-action-btn.delete:hover:not(:disabled) {
+    background: #fee2e2;
+    transform: scale(1.05);
+}
+
+.admin-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Agregar a producDetail.css */
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.admin-detail-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.admin-detail-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.admin-detail-btn.edit {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.admin-detail-btn.edit:hover {
+    background: #fde68a;
+    transform: scale(0.98);
+}
+
+.admin-detail-btn.delete {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.admin-detail-btn.delete:hover {
+    background: #fecaca;
+    transform: scale(0.98);
+}

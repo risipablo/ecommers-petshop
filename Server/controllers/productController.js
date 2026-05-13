@@ -1,7 +1,8 @@
-// Server/controllers/productController.js
+// Server/controllers/productController.js (actualizado con todas las funciones)
 const ProductModel = require('../models/Product');
 const { uploadToSupabase, deleteFromSupabase } = require('../middleware/supabaseUpload');
 
+// Obtener todos los productos
 exports.getProducts = async (req, res) => {
   try {
     const products = await ProductModel.find().sort({ createdAt: -1 });
@@ -11,6 +12,7 @@ exports.getProducts = async (req, res) => {
   }
 };
 
+// Obtener producto por ID
 exports.getProductById = async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
@@ -23,6 +25,7 @@ exports.getProductById = async (req, res) => {
   }
 };
 
+// Crear producto (solo admin)
 exports.createProduct = async (req, res) => {
   try {
     const { 
@@ -73,7 +76,7 @@ exports.createProduct = async (req, res) => {
       imagePublicId: images[0]?.publicId || null
     };
 
-    if (special && special.trim() !== '') {
+    if (special && special.trim() !== '' && special !== 'otro') {
       productData.special = special;
     }
 
@@ -90,7 +93,6 @@ exports.createProduct = async (req, res) => {
     console.error('Error al crear producto:', err);
     
     if (err.name === 'ValidationError') {
-      const errors = Object.values(err.errors).map(e => e.message);
       return res.status(400).json({ success: false, error: errors.join(', ') });
     }
     
@@ -98,6 +100,7 @@ exports.createProduct = async (req, res) => {
   }
 };
 
+// Actualizar producto completo (solo admin)
 exports.updateProduct = async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
@@ -105,6 +108,22 @@ exports.updateProduct = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Producto no encontrado' });
     }
     
+    // Actualizar campos básicos
+    const { name, brand, pet, category, age, price, description, condition, kg, special } = req.body;
+    
+    if (name) product.name = name;
+    if (brand) product.brand = brand;
+    if (pet) product.pet = pet;
+    if (category) product.category = category;
+    if (age) product.age = String(age).toLowerCase();
+    if (price) product.price = Number(price);
+    if (description) product.description = description;
+    if (condition) product.condition = condition;
+    if (kg !== undefined) product.kg = kg || null;
+    if (special && special !== 'otro') product.special = special;
+    else if (special === 'otro') product.special = null;
+    
+    // Agregar nuevas imágenes
     if (req.files && req.files.length > 0) {
       const newImages = [];
       const currentImageCount = product.images.length;
@@ -129,10 +148,6 @@ exports.updateProduct = async (req, res) => {
       }
     }
     
-    if (req.body.price) req.body.price = Number(req.body.price);
-    if (req.body.age) req.body.age = req.body.age.toLowerCase();
-    
-    Object.assign(product, req.body);
     await product.save();
     
     res.json({ success: true, data: product, message: 'Producto actualizado exitosamente' });
@@ -142,6 +157,7 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
+// Eliminar producto completo (solo admin)
 exports.deleteProduct = async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
@@ -149,6 +165,7 @@ exports.deleteProduct = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Producto no encontrado' });
     }
     
+    // Eliminar todas las imágenes de Supabase
     for (const image of product.images) {
       if (image.publicId) {
         await deleteFromSupabase(image.publicId);
@@ -168,6 +185,7 @@ exports.deleteProduct = async (req, res) => {
   }
 };
 
+// Eliminar una imagen específica (solo admin)
 exports.deleteProductImage = async (req, res) => {
   try {
     const { productId, imageId } = req.params;
@@ -182,27 +200,37 @@ exports.deleteProductImage = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Imagen no encontrada' });
     }
     
+    // Eliminar de Supabase
     await deleteFromSupabase(imageToDelete.publicId);
+    
+    // Eliminar del array
     imageToDelete.deleteOne();
     
+    // Reordenar imágenes restantes
     product.images.forEach((img, idx) => {
       img.order = idx;
     });
     
+    // Actualizar imagen principal si es necesario
     if (imageToDelete.isMain && product.images.length > 0) {
       product.images[0].isMain = true;
       product.imageUrl = product.images[0].url;
       product.imagePublicId = product.images[0].publicId;
+    } else if (product.images.length === 0) {
+      product.imageUrl = null;
+      product.imagePublicId = null;
     }
     
     await product.save();
     
     res.json({ success: true, message: 'Imagen eliminada', data: product });
   } catch (error) {
+    console.error('Error al eliminar imagen:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
+// Establecer imagen principal (solo admin)
 exports.setMainImage = async (req, res) => {
   try {
     const { productId, imageId } = req.params;
@@ -212,6 +240,7 @@ exports.setMainImage = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Producto no encontrado' });
     }
     
+    // Resetear todas las imágenes a isMain false
     product.images.forEach(img => {
       img.isMain = img._id.toString() === imageId;
     });
@@ -226,6 +255,7 @@ exports.setMainImage = async (req, res) => {
     
     res.json({ success: true, data: product, message: 'Imagen principal actualizada' });
   } catch (error) {
+    console.error('Error al establecer imagen principal:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };

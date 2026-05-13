@@ -9,159 +9,144 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 
 // Generar token JWT
 const generateToken = (user) => {
-  return jwt.sign(
-    { 
-      id: user._id, 
-      email: user.email, 
-      name: user.name, 
-      role: user.role 
-    },
-    JWT_SECRET,
-    { expiresIn: JWT_EXPIRES_IN }
-  );
+    return jwt.sign(
+        { 
+            id: user._id, 
+            email: user.email, 
+            name: user.name, 
+            role: user.role 
+        },
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRES_IN }
+    );
 };
 
 // Registro de usuario
 exports.register = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    
-    // Validar campos
-    if (!name || !email || !password) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Todos los campos son obligatorios' 
-      });
+    try {
+        const { name, email, password } = req.body;
+        
+        if (!name || !email || !password) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Todos los campos son obligatorios' 
+            });
+        }
+        
+        const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Email inválido' 
+            });
+        }
+        
+        if (password.length < 6) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'La contraseña debe tener al menos 6 caracteres' 
+            });
+        }
+        
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'El email ya está registrado' 
+            });
+        }
+        
+        const role = email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? 'admin' : 'user';
+        const user = new User({ name, email, password, role });
+        await user.save();
+        
+        const token = generateToken(user);
+        
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'none',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            path: '/'
+        });
+        
+        const userResponse = user.toObject();
+        delete userResponse.password;
+        
+        res.status(201).json({ 
+            success: true, 
+            data: userResponse,
+            token,
+            message: `Registro exitoso. Rol: ${role}`
+        });
+        
+    } catch (error) {
+        console.error('Error en registro:', error);
+        res.status(500).json({ success: false, error: 'Error en el servidor' });
     }
-    
-    // Validar email
-    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Email inválido' 
-      });
-    }
-    
-    // Validar password (mínimo 6 caracteres)
-    if (password.length < 6) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'La contraseña debe tener al menos 6 caracteres' 
-      });
-    }
-    
-    // Verificar si el usuario ya existe
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'El email ya está registrado' 
-      });
-    }
-    
-    // Determinar rol basado en el email (si coincide con ADMIN_EMAIL, es admin)
-    const role = email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? 'admin' : 'user';
-    
-    // Crear usuario
-    const user = new User({ name, email, password, role });
-    await user.save();
-    
-    // Generar token
-    const token = generateToken(user);
-    
-    // Configurar cookie
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
-    
-    // No enviar el password
-    const userResponse = user.toObject();
-    delete userResponse.password;
-    
-    res.status(201).json({ 
-      success: true, 
-      data: userResponse,
-      token,
-      message: `Registro exitoso. Rol: ${role}`
-    });
-    
-  } catch (error) {
-    console.error('Error en registro:', error);
-    res.status(500).json({ success: false, error: 'Error en el servidor' });
-  }
 };
 
 // Login de usuario
 exports.login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    
-    if (!email || !password) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Email y contraseña son obligatorios' 
-      });
+    try {
+        const { email, password } = req.body;
+        
+        if (!email || !password) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Email y contraseña son obligatorios' 
+            });
+        }
+        
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ 
+                success: false, 
+                error: 'Credenciales inválidas' 
+            });
+        }
+        
+        const isPasswordValid = await user.comparePassword(password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ 
+                success: false, 
+                error: 'Credenciales inválidas' 
+            });
+        }
+        
+        if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && user.role !== 'admin') {
+            user.role = 'admin';
+            await user.save();
+        }
+        
+        user.lastLogin = new Date();
+        await user.save();
+        
+        const token = generateToken(user);
+        
+        // Configurar cookie segura
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'none',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            path: '/'
+        });
+        
+        const userResponse = user.toObject();
+        delete userResponse.password;
+        
+        res.json({ 
+            success: true, 
+            data: userResponse,
+            token,
+            message: `Login exitoso. Rol: ${user.role}`
+        });
+        
+    } catch (error) {
+        console.error('Error en login:', error);
+        res.status(500).json({ success: false, error: 'Error en el servidor' });
     }
-    
-    // Buscar usuario
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ 
-        success: false, 
-        error: 'Credenciales inválidas' 
-      });
-    }
-    
-    // Verificar contraseña
-    const isPasswordValid = await user.comparePassword(password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ 
-        success: false, 
-        error: 'Credenciales inválidas' 
-      });
-    }
-    
-    // Verificar si debe ser admin (por si el email es el de admin pero el rol no está actualizado)
-    if (email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && user.role !== 'admin') {
-      user.role = 'admin';
-      await user.save();
-      console.log(`✅ Usuario ${email} actualizado a administrador`);
-    }
-    
-    // Actualizar último login
-    user.lastLogin = new Date();
-    await user.save();
-    
-    // Generar token
-    const token = generateToken(user);
-    
-    // Configurar cookie
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000
-    });
-    
-    // No enviar el password
-    const userResponse = user.toObject();
-    delete userResponse.password;
-    
-    res.json({ 
-      success: true, 
-      data: userResponse,
-      token,
-      message: `Login exitoso. Rol: ${user.role}`
-    });
-    
-  } catch (error) {
-    console.error('Error en login:', error);
-    res.status(500).json({ success: false, error: 'Error en el servidor' });
-  }
 };
 
 // Logout
@@ -176,22 +161,31 @@ exports.logout = async (req, res) => {
 
 // Obtener perfil del usuario actual
 exports.getMe = async (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({ success: false, error: 'No autenticado' });
+    try {
+        // Obtener token de cookies o headers
+        const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
+        
+        if (!token) {
+            return res.status(401).json({ success: false, error: 'No autenticado' });
+        }
+        
+        try {
+            const decoded = jwt.verify(token, JWT_SECRET);
+            const user = await User.findById(decoded.id).select('-password');
+            
+            if (!user) {
+                return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
+            }
+            
+            res.json({ success: true, data: user });
+        } catch (jwtError) {
+            return res.status(401).json({ success: false, error: 'Token inválido o expirado' });
+        }
+    } catch (error) {
+        console.error('Error en getMe:', error);
+        res.status(500).json({ success: false, error: 'Error en el servidor' });
     }
-    
-    const user = await User.findById(req.user.id).select('-password');
-    if (!user) {
-      return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
-    }
-    
-    res.json({ success: true, data: user });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Error en el servidor' });
-  }
 };
-
 // Verificar si el usuario es admin
 exports.checkAdmin = async (req, res) => {
   try {

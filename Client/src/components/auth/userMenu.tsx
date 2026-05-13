@@ -1,9 +1,9 @@
-// components/auth/UserMenu.tsx
+// components/auth/UserMenu.tsx (actualizar)
 import { useState } from 'react';
-import { User, LogOut, Package, Settings } from 'lucide-react';
-import "../../assets/styles/auth.css"
-import { useNavigate } from 'react-router-dom';
+import { User, LogOut, Package, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../context/authProvider';
+import { useNavigate } from 'react-router-dom';
+import '../../assets/styles/auth.css'
 
 export const UserMenu = () => {
     const { user, isAuthenticated, isAdmin, logout } = useAuth();
@@ -37,12 +37,13 @@ export const UserMenu = () => {
                     
                     <div className="user-menu-divider"></div>
                     
+                    {/* 🔒 Opciones solo para admin */}
                     {isAdmin && (
                         <>
                             <button 
                                 className="user-menu-item"
                                 onClick={() => {
-                                    navigate('/admin/products');
+                                    navigate('/crud');
                                     setIsOpen(false);
                                 }}
                             >
@@ -52,11 +53,11 @@ export const UserMenu = () => {
                             <button 
                                 className="user-menu-item"
                                 onClick={() => {
-                                    navigate('/admin/users');
+                                    navigate('/admin/products');
                                     setIsOpen(false);
                                 }}
                             >
-                                <Settings size={18} />
+                                <LayoutDashboard size={18} />
                                 Panel Admin
                             </button>
                             <div className="user-menu-divider"></div>

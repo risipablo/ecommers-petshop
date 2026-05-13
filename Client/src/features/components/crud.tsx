@@ -8,7 +8,7 @@ export const Crud = () => {
 
     const [formData, setFormData] = useState({
         name: "", brand: "", pet: "", category: "", description: "",
-        age: "", price: "", kg: "", special: ""
+        age: "", price: "", kg: "", condition: ""
     })
     
     const [imageFiles, setImageFiles] = useState<File[]>([])
@@ -74,10 +74,8 @@ export const Crud = () => {
         formDataToSend.append('age', formData.age)
         formDataToSend.append('price', formData.price)
         if (formData.kg) formDataToSend.append('kg', formData.kg)
-        if (formData.special && formData.special.trim() !== '' && formData.special !== 'otro') {
-            formDataToSend.append('special', formData.special)
-        }
-        
+        if (formData.condition) formDataToSend.append('condition', formData.condition)
+
         imageFiles.forEach(file => {
             formDataToSend.append('images', file)
         })
@@ -87,7 +85,7 @@ export const Crud = () => {
             
             setFormData({
                 name: "", brand: "", pet: "", category: "", description: "",
-                age: "", price: "", kg: "", special: ""
+                age: "", price: "", kg: "", condition: ""
             })
             imagePreviews.forEach(preview => URL.revokeObjectURL(preview))
             setImageFiles([])
@@ -186,8 +184,8 @@ export const Crud = () => {
             />
 
             <select 
-                value={formData.special} 
-                onChange={(e) => handleInputChange('special', e.target.value)}
+                value={formData.condition} 
+                onChange={(e) => handleInputChange('condition', e.target.value)}
                 disabled={isLoading}
             >
                 <option value="">Especial (opcional)</option>

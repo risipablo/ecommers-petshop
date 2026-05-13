@@ -9,7 +9,9 @@ import Footer from "../components/layout/footer";
 import { Contacto } from "../components/layout/contacto";
 import { SearchResultsPage } from "./searchResultsPage";
 import { AdminGuard } from "../components/admin/adminGuard";
-// import { EditProduct } from '../features/components/editProduct';
+import { ProfilePage } from "./profilePage";
+import { EditProduct } from "../features/components/editProduct";
+import { ManageProductImages } from "../features/components/manageProductImage";
 
 
 export function Home() {
@@ -23,28 +25,36 @@ export function Home() {
                 <Route path="/:category" element={<ProductList />} />
                 <Route path="/item/:id" element={<ProductDetail />} />
                 <Route path="/contacto" element={<Contacto />} />
+                <Route path="/profile" element={<ProfilePage />} />
                 
-                {/* Rutas de administración (protegidas) */}
+                {/* Rutas protegidas - solo admin */}
+                <Route path="/crud" element={
+                    <AdminGuard>
+                        <Crud />
+                    </AdminGuard>
+                } />
+                
                 <Route path="/admin/products" element={
                     <AdminGuard>
                         <ProductList />
                     </AdminGuard>
                 } />
+                
                 <Route path="/admin/products/new" element={
                     <AdminGuard>
                         <Crud />
                     </AdminGuard>
                 } />
-                {/* <Route path="/admin/products/edit/:id" element={
+                
+                <Route path="/admin/products/edit/:id" element={
                     <AdminGuard>
                         <EditProduct />
                     </AdminGuard>
-                } /> */}
-
-                {/* Ruta antigua de crud (redirige o protege) */}
-                <Route path="/crud" element={
+                } />
+                
+                <Route path="/admin/products/images/:id" element={
                     <AdminGuard>
-                        <Crud />
+                        <ManageProductImages />
                     </AdminGuard>
                 } />
             </Routes>
