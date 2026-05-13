@@ -113,6 +113,7 @@
     position: relative;
     animation: cardFadeIn 0.6s ease-out forwards;
     opacity: 0;
+    margin: 8rem auto;
 }
 
 @keyframes cardFadeIn {

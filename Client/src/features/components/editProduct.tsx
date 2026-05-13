@@ -4,45 +4,22 @@ import { useProducts } from "../hooks/useProducts";
 import { useNavigate, useParams } from "react-router-dom";
 import { useProduct } from "../hooks/useProducts";
 import { ArrowLeft, Save, X } from "lucide-react";
+import type { Product, ProductFormData } from "../types/product.type";
 
-interface ProductFormState {
-    name: string;
-    brand: string;
-    pet: string;
-    category: string;
-    description: string;
-    age: string;
-    condition: string;
-    price: string;
-    kg: string;
-    special: string;
-}
 
-interface ProductData {
-    name?: string;
-    brand?: string;
-    pet?: string;
-    category?: string;
-    description?: string;
-    age?: string;
-    condition?: string;
-    price?: number | string;
-    kg?: string;
-    special?: string;
-}
 
 export const EditProduct = () => {
     const { id } = useParams<{ id: string }>();
     const { updateProduct, isLoading, error } = useProducts();
     const { product, loading } = useProduct(id || "") as {
-        product: ProductData | null;
+        product: Product | null;
         loading: boolean;
     };
     const navigate = useNavigate();
 
-    const [formData, setFormData] = useState<ProductFormState>({
+    const [formData, setFormData] = useState<ProductFormData>({
         name: "", brand: "", pet: "", category: "", description: "",
-        age: "", condition: "", price: "", kg: "", special: ""
+        age: "", condition: "", price: "", kg: ""
     });
     const [imageFiles, setImageFiles] = useState<File[]>([]);
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -59,8 +36,7 @@ export const EditProduct = () => {
                 age: product.age || "",
                 condition: product.condition || "",
                 price: String(product.price) || "",
-                kg: product.kg || "",
-                special: product.special || ""
+                kg: product.kg || ""
             });
         }
     }, [product]);
@@ -225,16 +201,20 @@ export const EditProduct = () => {
 
                     <div className="form-group">
                         <label>Condición *</label>
-                        <select 
-                            value={formData.condition} 
-                            onChange={(e) => handleInputChange('condition', e.target.value)}
-                            required
-                        >
-                            <option value="">Seleccionar</option>
-                            <option value="nuevo">Nuevo</option>
-                            <option value="usado">Usado</option>
-                            <option value="reacondicionado">Reacondicionado</option>
-                        </select>
+                                <select 
+                                    value={formData.condition} 
+                                    onChange={(e) => handleInputChange('condition', e.target.value)}
+                                    disabled={isLoading}
+                                >
+                                    <option value="">Especial (opcional)</option>
+                                    <option value="otro">-</option>
+                                    <option value="derma adulto">Derma Adulto</option>
+                                    <option value="derma mini adulto">Derma Mini Adulto</option>
+                                    <option value="urinary">Urinary</option>
+                                    <option value="castrado">Castrado</option>
+                                    <option value="light">Light</option>
+                                </select>
+
                     </div>
 
                     <div className="form-group">
@@ -256,20 +236,6 @@ export const EditProduct = () => {
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label>Especial (opcional)</label>
-                        <select 
-                            value={formData.special} 
-                            onChange={(e) => handleInputChange('special', e.target.value)}
-                        >
-                            <option value="">Ninguno</option>
-                            <option value="derma adulto">Derma Adulto</option>
-                            <option value="derma mini adulto">Derma Mini Adulto</option>
-                            <option value="urinary">Urinary</option>
-                            <option value="castrado">Castrado</option>
-                            <option value="light">Light</option>
-                        </select>
-                    </div>
 
                     <div className="form-group full-width">
                         <label>Agregar nuevas imágenes (opcional)</label>

@@ -160,10 +160,12 @@ exports.logout = async (req, res) => {
 };
 
 // Obtener perfil del usuario actual
+
 exports.getMe = async (req, res) => {
     try {
-        // Obtener token de cookies o headers
         const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
+        
+        console.log('📡 getMe - Token recibido:', !!token);
         
         if (!token) {
             return res.status(401).json({ success: false, error: 'No autenticado' });
@@ -171,14 +173,18 @@ exports.getMe = async (req, res) => {
         
         try {
             const decoded = jwt.verify(token, JWT_SECRET);
+            console.log('📡 Token decodificado:', { email: decoded.email, role: decoded.role });
+            
             const user = await User.findById(decoded.id).select('-password');
             
             if (!user) {
                 return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
             }
             
+            console.log('✅ Usuario encontrado:', { email: user.email, role: user.role });
             res.json({ success: true, data: user });
         } catch (jwtError) {
+            console.error('❌ Error verificando JWT:', jwtError);
             return res.status(401).json({ success: false, error: 'Token inválido o expirado' });
         }
     } catch (error) {
@@ -186,6 +192,7 @@ exports.getMe = async (req, res) => {
         res.status(500).json({ success: false, error: 'Error en el servidor' });
     }
 };
+
 // Verificar si el usuario es admin
 exports.checkAdmin = async (req, res) => {
   try {

@@ -1,5 +1,6 @@
 /* assets/styles/filters.css */
 .filters-panel {
+    margin: 8rem auto;
     background: white;
     border-radius: 1rem;
     padding: 1.5rem;

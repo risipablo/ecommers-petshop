@@ -1,5 +1,5 @@
-// components/admin/AdminGuard.tsx (versión simplificada)
-import { type ReactNode } from 'react';
+// components/admin/adminGuard.tsx
+import { useEffect, useState, type ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/authProvider';
 
@@ -9,23 +9,31 @@ interface AdminGuardProps {
 }
 
 export const AdminGuard = ({ children, redirectTo = '/' }: AdminGuardProps) => {
-    const { isAuthenticated, isAdmin, isLoading } = useAuth();
+    const { isAuthenticated, isAdmin, isLoading, checkAuth, user } = useAuth();
+    const [isVerifying, setIsVerifying] = useState(true);
 
-    // Mostrar loading mientras verifica
-    if (isLoading) {
+    useEffect(() => {
+        const verify = async () => {
+            await checkAuth();
+            setIsVerifying(false);
+        };
+        verify();
+    }, []);
+
+    if (isLoading || isVerifying) {
         return (
             <div className="loading-container">
                 <div className="loading-spinner"></div>
-                <p>Verificando acceso...</p>
+                <p>Verificando permisos...</p>
             </div>
         );
     }
 
-    // Si no está autenticado o no es admin, redirigir
+    console.log('🔒 AdminGuard - Estado:', { isAuthenticated, isAdmin, userEmail: user?.email, userRole: user?.role });
+
     if (!isAuthenticated || !isAdmin) {
         return <Navigate to={redirectTo} replace />;
     }
 
-    // Si es admin, mostrar el contenido
     return <>{children}</>;
 };

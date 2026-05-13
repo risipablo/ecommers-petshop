@@ -142,57 +142,70 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const updateProduct = async (id: string, formData: FormData): Promise<void> => {
-        setIsLoading(true);
-        setError(null);
+// context/productsProvider.tsx (parte actualizada - updateProduct y deleteProduct)
+const updateProduct = async (id: string, formData: FormData): Promise<void> => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+        const token = localStorage.getItem('token');
         
-        try {
-            const response = await axios.put(`${API_URL}/products/${id}`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-            
-            if (response.data.success) {
-                setInitialLoad(true);
-                await fetchProducts();
-                if (searchQuery) {
-                    applySearchFilter(searchQuery);
-                }
-            } else {
-                throw new Error(response.data.error || 'Error al actualizar producto');
+        const response = await axios.put(`${API_URL}/products/${id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`
+            },
+            withCredentials: true
+        });
+        
+        if (response.data.success) {
+            setInitialLoad(true);
+            await fetchProducts();
+            if (searchQuery) {
+                applySearchFilter(searchQuery);
             }
-        } catch (err) {
+        } else {
+            throw new Error(response.data.error || 'Error al actualizar producto');
+        }
+    } catch (err) {
             const error = err instanceof Error ? err : new Error('Error desconocido');
             const errorMessage = axios.isAxiosError(err) ? err.response?.data?.error || error.message : error.message;
             setError(errorMessage || 'Error desconocido');
             throw new Error(errorMessage || 'Error desconocido');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    } finally {
+        setIsLoading(false);
+    }
+};
 
-    const deleteProduct = async (id: string): Promise<void> => {
-        setIsLoading(true);
-        setError(null);
+const deleteProduct = async (id: string): Promise<void> => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+        const token = localStorage.getItem('token');
         
-        try {
-            const response = await axios.delete(`${API_URL}/products/${id}`);
-            
-            if (response.data.success) {
-                setProducts(prev => prev.filter(p => p._id !== id));
-                setFilteredProducts(prev => prev.filter(p => p._id !== id));
-            } else {
-                throw new Error(response.data.error || 'Error al eliminar producto');
-            }
-        } catch (err) {
+        const response = await axios.delete(`${API_URL}/products/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            withCredentials: true
+        });
+        
+        if (response.data.success) {
+            setProducts(prev => prev.filter(p => p._id !== id));
+            setFilteredProducts(prev => prev.filter(p => p._id !== id));
+        } else {
+            throw new Error(response.data.error || 'Error al eliminar producto');
+        }
+    } catch (err) {
             const error = err instanceof Error ? err : new Error('Error desconocido');
             const errorMessage = axios.isAxiosError(err) ? err.response?.data?.error || error.message : error.message;
             setError(errorMessage || 'Error desconocido');
             throw new Error(errorMessage || 'Error desconocido');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
+    } finally {
+        setIsLoading(false);
+    }
+};
     const contextValue: ProductsContextType = {
         products,
         filteredProducts,

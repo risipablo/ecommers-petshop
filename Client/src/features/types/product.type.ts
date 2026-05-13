@@ -4,6 +4,14 @@ export interface SearchProps {
     filterData: (searchTerms: string[]) => void;
 }
 
+export interface ProductImage {
+    _id: string;
+    url: string;
+    publicId: string;
+    isMain: boolean;
+    order: number;
+}
+
 export interface ProductsContextType {
     products: Product[];
     filteredProducts: Product[];
@@ -21,17 +29,7 @@ export interface ProductsContextType {
     fetchProducts: () => Promise<void>;
 }
 
-export interface ProductImage {
-    _id: string;
-    url: string;
-    publicId: string;
-    isMain: boolean;
-    order: number;
-}
-
 export interface Product {
-    images: unknown;
-    condition: string;
     _id: string;
     name: string;
     brand: string;
@@ -39,14 +37,32 @@ export interface Product {
     category: string;
     description: string;
     age: string;
+    condition: string;
     price: number;
     kg?: string;
     imageUrl?: string;
     imagePublicId?: string;
+    images?: ProductImage[];
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface IDestacados {
     id: number;
     name: string;
     image: string;
+}
+
+// Formulario para editar/crear
+export interface ProductFormData {
+    name: string;
+    brand: string;
+    pet: string;
+    category: string;
+    description: string;
+    age: string;
+    condition: string;
+    price: string;
+    kg: string;
+
 }

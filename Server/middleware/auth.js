@@ -31,13 +31,28 @@ const requireAuth = (req, res, next) => {
 };
 
 // Middleware para requerir rol de admin
-const requireAdmin = (req, res, next) => {
-  if (!req.user || req.user.role !== 'admin') {
-    return res.status(403).json({ success: false, error: 'Acceso denegado. Se requieren permisos de administrador.' });
-  }
-  next();
+const requireAdmin = async (req, res, next) => {
+    try {
+        const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
+        
+        if (!token) {
+            return res.status(401).json({ success: false, error: 'No autorizado. Token no proporcionado.' });
+        }
+        
+        const decoded = jwt.verify(token, JWT_SECRET);
+        
+        if (decoded.role !== 'admin') {
+            console.log(`🔒 Acceso denegado: ${decoded.email} intentó acceder a ruta admin`);
+            return res.status(403).json({ success: false, error: 'Acceso denegado. Se requieren permisos de administrador.' });
+        }
+        
+        req.user = decoded;
+        next();
+    } catch (error) {
+        console.error('Error en requireAdmin:', error);
+        return res.status(401).json({ success: false, error: 'Token inválido o expirado' });
+    }
 };
-
 // Middleware opcional para obtener usuario si existe
 const optionalAuth = (req, res, next) => {
   const token = req.cookies?.token;

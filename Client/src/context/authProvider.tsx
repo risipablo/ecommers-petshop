@@ -7,6 +7,8 @@ import type { AuthContextType, LoginCredentials, RegisterCredentials, User } fro
 const API_URL = "https://ecommers-petshop.onrender.com/api"
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+axios.defaults.withCredentials = true;
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -121,6 +123,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const isAdmin = user?.role === 'admin';
 
+       console.log('📊 Estado actual:', { isAuthenticated, isAdmin, userRole: user?.role });
+
+       
     return (
         <AuthContext.Provider value={{
             user,

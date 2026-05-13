@@ -1,6 +1,6 @@
 // features/hooks/useProducts.ts
-import { useProductContext } from "../../context/productsProvider";
 import { useEffect, useState } from "react";
+import { useProductContext } from "../../context/productsProvider";
 
 export const useProducts = () => {
     const context = useProductContext();
