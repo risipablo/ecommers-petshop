@@ -1,25 +1,30 @@
 // features/components/ProductList.tsx
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import '../../assets/styles/productList.css';
-import { Eye, Heart, Edit, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import '../../assets/styles/filters.css';
+import { Eye, Edit, Trash2 } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import { ProductSkeletonGrid } from '../../components/common/productSkeleton';
 import { useAuth } from '../../context/authProvider';
+
 import axios from 'axios';
+import { Filters } from './filters';
+import type { Product } from '../types/product.type';
 
 const API_URL = "https://ecommers-petshop.onrender.com/api"
 
 export const ProductList = () => {
-    const { filteredProducts, searchTerms, searchQuery, isLoading, fetchProducts } = useProducts();
+    const { filteredProducts: contextFilteredProducts, searchTerms, searchQuery, isLoading, fetchProducts } = useProducts();
     const { isAdmin } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
     const currentPath = location.pathname;
     const categoryPath = currentPath.substring(1);
-    const [localProducts, setLocalProducts] = useState(filteredProducts);
-    const [wishlist, setWishlist] = useState<Set<string>>(new Set());
+    
+    const [localProducts, setLocalProducts] = useState<Product[]>([]);
+    const [filteredProductsState, setFilteredProductsState] = useState<Product[]>([]);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null);
@@ -30,16 +35,32 @@ export const ProductList = () => {
 
     useEffect(() => {
         if (!isLoading) {
-            setLocalProducts(filteredProducts);
+            let products = [...contextFilteredProducts];
+            
+            // Si estamos en una categoría específica, filtrar por ella
+            if (categoryPath && categoryPath !== 'todos' && categoryPath !== 'search' && 
+                !categoryPath.includes('edit-product') && !categoryPath.includes('admin')) {
+                products = products.filter(p => 
+                    p.category?.toLowerCase() === categoryPath.toLowerCase()
+                );
+            }
+            
+            setLocalProducts(products);
+            setFilteredProductsState(products);
         }
-    }, [filteredProducts, isLoading]);
+    }, [contextFilteredProducts, isLoading, categoryPath]);
+
+    const handleFilterChange = useCallback((filtered: Product[]) => {
+        setFilteredProductsState(filtered);
+    }, []);
 
     const getTitle = () => {
         if (searchTerms && searchQuery.trim() !== '' && currentPath === '/search') {
             return `Resultados para: "${searchQuery}"`;
         }
         
-        if (categoryPath && categoryPath !== 'todos' && categoryPath !== 'search' && !categoryPath.includes('edit-product') && !categoryPath.includes('admin')) {
+        if (categoryPath && categoryPath !== 'todos' && categoryPath !== 'search' && 
+            !categoryPath.includes('edit-product') && !categoryPath.includes('admin')) {
             const categoryName = categoryPath.charAt(0).toUpperCase() + categoryPath.slice(1);
             return `Productos de ${categoryName}`;
         }
@@ -87,29 +108,23 @@ export const ProductList = () => {
         }
     };
 
-    const toggleWishlist = (e: React.MouseEvent, productId: string) => {
-        e.stopPropagation();
-        setWishlist(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(productId)) {
-                newSet.delete(productId);
-            } else {
-                newSet.add(productId);
-            }
-            return newSet;
-        });
+    const formatPrice = (price: number | string) => {
+        const numPrice = typeof price === 'number' ? price : parseFloat(price);
+        return numPrice.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     };
 
     if (isLoading && localProducts.length === 0) {
         return (
-            <div className="product-list-container">
-                <h1 className="product-list-title">{getTitle()}</h1>
+            <div className="products-layout">
+                <div className="products-header">
+                    <h1 className="product-list-title">{getTitle()}</h1>
+                </div>
                 <ProductSkeletonGrid count={8} />
             </div>
         );
     }
 
-    if (searchTerms && localProducts.length === 0 && currentPath === '/search') {
+    if (searchTerms && filteredProductsState.length === 0 && currentPath === '/search') {
         return (
             <div className="no-results">
                 <SearchOffIcon sx={{ fontSize: 80, color: '#d4a574' }} />
@@ -118,107 +133,109 @@ export const ProductList = () => {
                 {searchQuery && (
                     <p className="search-query">Buscaste: "{searchQuery}"</p>
                 )}
-                <Link to="/" className="back-to-home">
+                <button onClick={() => navigate('/')} className="back-to-home">
                     Volver al inicio
-                </Link>
+                </button>
             </div>
         );
     }
 
-    if (localProducts.length === 0 && !isLoading) {
+    if (filteredProductsState.length === 0 && !isLoading) {
         return (
-            <div className="no-results">
-                <h2>No hay productos disponibles en esta categoría</h2>
-                <Link to="/" className="back-to-home">
-                    Volver al inicio
-                </Link>
+            <div className="products-layout">
+                <div className="products-header">
+                    <h1 className="product-list-title">{getTitle()}</h1>
+                </div>
+                <div className="no-results-filter">
+                    <h3>No hay productos disponibles</h3>
+                    <p>Pronto agregaremos más productos a esta categoría</p>
+                    <button onClick={() => navigate('/')} className="back-to-home">
+                        Volver al inicio
+                    </button>
+                </div>
             </div>
         );
     }
-
-    const formatPrice = (price: number | string) => {
-        const numPrice = typeof price === 'number' ? price : parseFloat(price);
-        return numPrice.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-    };
 
     return (
-        <div className="product-list-container">
-            <div className="page-header">
+        <div className="products-layout">
+            <div className="products-header">
                 <h1 className="product-list-title">{getTitle()}</h1>
+                <p className="products-count">{filteredProductsState.length} productos encontrados</p>
             </div>
-            
-            <div className="product-grid">
-                {localProducts.map((product, index) => (
-                    <div 
-                        key={product._id} 
-                        className="product-card"
-                        style={{ animationDelay: `${index * 0.08}s` }}
-                    >
-                        {/* Wishlist Button */}
-                        <button
-                            className={`wishlist-btn ${wishlist.has(product._id) ? 'active' : ''}`}
-                            onClick={(e) => toggleWishlist(e, product._id)}
-                            aria-label="Agregar a favoritos"
-                        >
-                            <Heart size={20} />
-                        </button>
 
-                        {/* Admin Actions (solo visible para admin) */}
-                        {isAdmin && (
-                            <div className="admin-actions-overlay">
-                                <button
-                                    className="admin-action-btn edit"
-                                    onClick={(e) => handleEdit(e, product._id)}
-                                    title="Editar producto"
-                                >
-                                    <Edit size={16} />
-                                </button>
-                                <button
-                                    className="admin-action-btn delete"
-                                    onClick={(e) => handleDeleteClick(e, product._id, product.name)}
-                                    disabled={isDeleting === product._id}
-                                    title="Eliminar producto"
-                                >
-                                    {isDeleting === product._id ? '...' : <Trash2 size={16} />}
-                                </button>
-                            </div>
-                        )}
+            <div className="products-grid-filters">
+                <aside className="filters-sidebar">
+                    <Filters 
+                        products={localProducts}
+                        onFilterChange={handleFilterChange}
+                    />
+                </aside>
 
-                        {/* Image Section */}
-                        <div className="product-image-container" onClick={() => handleProductClick(product._id)}>
-                            <img 
-                                src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'} 
-                                alt={product.name} 
-                                className="product-image"
-                                loading="lazy"
-                            />
-                            <div className="image-overlay"></div>
-                        </div>
-
-                        {/* Content Section */}
-                        <div className="product-content">
-                            <h3 className="product-name" title={product.name}>{product.name}</h3>
-                            
-                            <div className="price-section">
-                                <span className="currency">$</span>
-                                <span className="price-amount">{formatPrice(product.price)}</span>
-                            </div>
-
-                            <Link 
-                                className="view-btn" 
-                                to={`/item/${product._id}`}
-                                state={{ from: location.pathname }}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleProductClick(product._id);
-                                }}
+                <main className="products-main-content">
+                    <div className="product-grid">
+                        {filteredProductsState.map((product, index) => (
+                            <div 
+                                key={product._id} 
+                                className="product-card"
+                                style={{ animationDelay: `${index * 0.05}s` }}
+                                onClick={() => handleProductClick(product._id)}
                             >
-                                <Eye size={16} />
-                                <span>Ver detalles</span>
-                            </Link>
-                        </div>
+                                {/* Admin Actions */}
+                                {isAdmin && (
+                                    <div className="admin-actions-overlay">
+                                        <button
+                                            className="admin-action-btn edit"
+                                            onClick={(e) => handleEdit(e, product._id)}
+                                            title="Editar producto"
+                                        >
+                                            <Edit size={16} />
+                                        </button>
+                                        <button
+                                            className="admin-action-btn delete"
+                                            onClick={(e) => handleDeleteClick(e, product._id, product.name)}
+                                            disabled={isDeleting === product._id}
+                                            title="Eliminar producto"
+                                        >
+                                            {isDeleting === product._id ? '...' : <Trash2 size={16} />}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* Image Section */}
+                                <div className="product-image-container">
+                                    <img 
+                                        src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'} 
+                                        alt={product.name} 
+                                        className="product-image"
+                                        loading="lazy"
+                                    />
+                                </div>
+
+                                {/* Content Section */}
+                                <div className="product-content">
+                                    <h3 className="product-name" title={product.name}>{product.name}</h3>
+                                    
+                                    <div className="price-section">
+                                        <span className="currency">$</span>
+                                        <span className="price-amount">{formatPrice(product.price)}</span>
+                                    </div>
+
+                                    <button 
+                                        className="view-btn"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleProductClick(product._id);
+                                        }}
+                                    >
+                                        <Eye size={16} />
+                                        <span>Ver detalles</span>
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                ))}
+                </main>
             </div>
 
             {/* Modal de confirmación para eliminar */}
