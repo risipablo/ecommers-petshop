@@ -3,11 +3,9 @@ import { useState, useEffect } from "react";
 import { useProducts } from "../hooks/useProducts";
 import { useNavigate, useParams } from "react-router-dom";
 import { useProduct } from "../hooks/useProducts";
-import { ArrowLeft, Save, X } from "lucide-react";
+import { ArrowLeft, Save, Upload, X } from "lucide-react";
 import type { Product, ProductFormData } from "../types/product.type";
-
-
-
+ 
 export const EditProduct = () => {
     const { id } = useParams<{ id: string }>();
     const { updateProduct, isLoading, error } = useProducts();
@@ -16,7 +14,7 @@ export const EditProduct = () => {
         loading: boolean;
     };
     const navigate = useNavigate();
-
+ 
     const [formData, setFormData] = useState<ProductFormData>({
         name: "", brand: "", pet: "", category: "", description: "",
         age: "", condition: "", price: "", kg: ""
@@ -24,7 +22,7 @@ export const EditProduct = () => {
     const [imageFiles, setImageFiles] = useState<File[]>([]);
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);
     const [isSaving, setIsSaving] = useState(false);
-
+ 
     useEffect(() => {
         if (product) {
             setFormData({
@@ -40,11 +38,11 @@ export const EditProduct = () => {
             });
         }
     }, [product]);
-
+ 
     const handleInputChange = (field: string, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
-
+ 
     const handleImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
         
@@ -60,18 +58,18 @@ export const EditProduct = () => {
             }
             return true;
         });
-
+ 
         const newPreviews = validFiles.map(file => URL.createObjectURL(file));
         setImageFiles([...imageFiles, ...validFiles]);
         setImagePreviews([...imagePreviews, ...newPreviews]);
     };
-
+ 
     const removeNewImage = (index: number) => {
         URL.revokeObjectURL(imagePreviews[index]);
         setImageFiles(imageFiles.filter((_, i) => i !== index));
         setImagePreviews(imagePreviews.filter((_, i) => i !== index));
     };
-
+ 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
@@ -82,7 +80,7 @@ export const EditProduct = () => {
             alert(`Faltan campos: ${missingFields.join(', ')}`);
             return;
         }
-
+ 
         setIsSaving(true);
         const formDataToSend = new FormData();
         
@@ -93,7 +91,7 @@ export const EditProduct = () => {
         imageFiles.forEach(file => {
             formDataToSend.append('images', file);
         });
-
+ 
         try {
             await updateProduct(id!, formDataToSend);
             alert('✅ Producto actualizado exitosamente');
@@ -105,12 +103,13 @@ export const EditProduct = () => {
             setIsSaving(false);
         }
     };
-
+ 
     if (loading) return <div className="loading-container">Cargando producto...</div>;
     if (!product) return <div className="not-found-container">Producto no encontrado</div>;
-
+ 
     return (
         <div className="edit-product-container">
+            {/* HEADER CON BOTÓN VOLVER */}
             <div className="edit-header">
                 <button className="back-btn" onClick={() => navigate('/admin/products')}>
                     <ArrowLeft size={20} />
@@ -118,13 +117,15 @@ export const EditProduct = () => {
                 </button>
                 <h1>Editar Producto: {product.name}</h1>
             </div>
-
+ 
+            {/* MENSAJE DE ERROR */}
             {error && <div className="error-message">❌ {error}</div>}
-
+ 
             <form onSubmit={handleSubmit} className="edit-form">
                 <div className="form-grid">
+                    {/* INFORMACIÓN BÁSICA */}
                     <div className="form-group">
-                        <label>Nombre *</label>
+                        <label data-required="*">Nombre</label>
                         <input 
                             type="text" 
                             value={formData.name} 
@@ -132,9 +133,9 @@ export const EditProduct = () => {
                             required
                         />
                     </div>
-
+ 
                     <div className="form-group">
-                        <label>Marca *</label>
+                        <label data-required="*">Marca</label>
                         <input 
                             type="text" 
                             value={formData.brand} 
@@ -142,39 +143,41 @@ export const EditProduct = () => {
                             required
                         />
                     </div>
-
+ 
+                    {/* CATEGORIZACIÓN */}
                     <div className="form-group">
-                        <label>Mascota *</label>
+                        <label data-required="*">Mascota</label>
                         <select 
                             value={formData.pet} 
                             onChange={(e) => handleInputChange('pet', e.target.value)}
                             required
                         >
                             <option value="">Seleccionar</option>
-                            <option value="gato">Gato</option>
-                            <option value="perro">Perro</option>
-                            <option value="ambos">Ambos</option>
+                            <option value="gato">🐱 Gato</option>
+                            <option value="perro">🐕 Perro</option>
+                            <option value="ambos">🐱 🐕 Ambos</option>
                         </select>
                     </div>
-
+ 
                     <div className="form-group">
-                        <label>Categoría *</label>
+                        <label data-required="*">Categoría</label>
                         <select 
                             value={formData.category} 
                             onChange={(e) => handleInputChange('category', e.target.value)}
                             required
                         >
                             <option value="">Seleccionar</option>
-                            <option value="alimentos">Alimentos</option>
-                            <option value="accesorios">Accesorios</option>
-                            <option value="higiene">Higiene</option>
-                            <option value="indumentaria">Indumentaria</option>
-                            <option value="colchonetas">Colchonetas</option>
+                            <option value="alimentos">🍖 Alimentos</option>
+                            <option value="accesorios">🎀 Accesorios</option>
+                            <option value="higiene">🧼 Higiene</option>
+                            <option value="indumentaria">👕 Indumentaria</option>
+                            <option value="colchonetas">🛏️ Colchonetas</option>
                         </select>
                     </div>
-
+ 
+                    {/* DESCRIPCIÓN */}
                     <div className="form-group full-width">
-                        <label>Descripción *</label>
+                        <label data-required="*">Descripción</label>
                         <textarea 
                             value={formData.description} 
                             onChange={(e) => handleInputChange('description', e.target.value)}
@@ -182,43 +185,42 @@ export const EditProduct = () => {
                             required
                         />
                     </div>
-
+ 
+                    {/* ESPECIFICACIONES */}
                     <div className="form-group">
-                        <label>Edad *</label>
+                        <label data-required="*">Edad</label>
                         <select 
                             value={formData.age} 
                             onChange={(e) => handleInputChange('age', e.target.value)}
                             required
                         >
                             <option value="">Seleccionar</option>
-                            <option value="cachorro">Cachorro</option>
-                            <option value="mini adulto">Mini Adulto</option>
-                            <option value="adulto">Adulto</option>
-                            <option value="senior">Senior</option>
+                            <option value="cachorro">👶 Cachorro</option>
+                            <option value="mini adulto">🐾 Mini Adulto</option>
+                            <option value="adulto">🐕 Adulto</option>
+                            <option value="senior">👴 Senior</option>
                             <option value="otro">Otro</option>
                         </select>
                     </div>
-
+ 
                     <div className="form-group">
-                        <label>Condición *</label>
-                                <select 
-                                    value={formData.condition} 
-                                    onChange={(e) => handleInputChange('condition', e.target.value)}
-                                    disabled={isLoading}
-                                >
-                                    <option value="">Especial (opcional)</option>
-                                    <option value="otro">-</option>
-                                    <option value="derma adulto">Derma Adulto</option>
-                                    <option value="derma mini adulto">Derma Mini Adulto</option>
-                                    <option value="urinary">Urinary</option>
-                                    <option value="castrado">Castrado</option>
-                                    <option value="light">Light</option>
-                                </select>
-
+                        <label data-required="*">Condición Especial</label>
+                        <select 
+                            value={formData.condition} 
+                            onChange={(e) => handleInputChange('condition', e.target.value)}
+                            required
+                        >
+                            <option value="">Seleccionar</option>
+                            <option value="derma adulto">Derma Adulto</option>
+                            <option value="derma mini adulto">Derma Mini Adulto</option>
+                            <option value="urinary">Urinary</option>
+                            <option value="castrado">Castrado</option>
+                            <option value="light">Light</option>
+                        </select>
                     </div>
-
+ 
                     <div className="form-group">
-                        <label>Precio *</label>
+                        <label data-required="*">Precio</label>
                         <input 
                             type="number" 
                             value={formData.price} 
@@ -226,7 +228,7 @@ export const EditProduct = () => {
                             required
                         />
                     </div>
-
+ 
                     <div className="form-group">
                         <label>Kg (opcional)</label>
                         <input 
@@ -235,18 +237,26 @@ export const EditProduct = () => {
                             onChange={(e) => handleInputChange('kg', e.target.value)}
                         />
                     </div>
-
-
-                    <div className="form-group full-width">
+ 
+                    {/* AGREGAR NUEVAS IMÁGENES */}
+                    <div className="form-group full-width multi-image-section">
                         <label>Agregar nuevas imágenes (opcional)</label>
-                        <input 
-                            type="file" 
-                            accept="image/jpeg,image/jpg,image/png,image/webp"
-                            onChange={handleImagesChange}
-                            multiple
-                        />
-                        <small>Puedes agregar más imágenes al producto</small>
+                        <div className="image-upload-area">
+                            <input 
+                                id="new-images"
+                                type="file" 
+                                accept="image/jpeg,image/jpg,image/png,image/webp"
+                                onChange={handleImagesChange}
+                                multiple
+                            />
+                            <label htmlFor="new-images" className="upload-label">
+                                <Upload size={28} />
+                                <span>Seleccionar imágenes</span>
+                                <small>Puedes agregar más imágenes al producto</small>
+                            </label>
+                        </div>
                         
+                        {/* PREVIEWS DE NUEVAS IMÁGENES */}
                         {imagePreviews.length > 0 && (
                             <div className="new-images-preview">
                                 <h4>Nuevas imágenes a subir:</h4>
@@ -256,10 +266,11 @@ export const EditProduct = () => {
                                             <img src={preview} alt={`Nueva ${index + 1}`} />
                                             <button 
                                                 type="button"
-                                                className="remove-new-image"
+                                                className="remove-image"
                                                 onClick={() => removeNewImage(index)}
+                                                aria-label="Eliminar imagen"
                                             >
-                                                <X size={14} />
+                                                <X size={18} />
                                             </button>
                                         </div>
                                     ))}
@@ -268,14 +279,15 @@ export const EditProduct = () => {
                         )}
                     </div>
                 </div>
-
+ 
+                {/* BOTONES DE ACCIÓN */}
                 <div className="form-actions">
-                    <button type="submit" className="btn-save" disabled={isSaving || isLoading}>
-                        <Save size={18} />
-                        {isSaving ? 'Guardando...' : 'Guardar Cambios'}
-                    </button>
                     <button type="button" className="btn-cancel" onClick={() => navigate('/admin/products')}>
                         Cancelar
+                    </button>
+                    <button type="submit" className="btn-save" disabled={isSaving || isLoading}>
+                        <Save size={18} />
+                        {isSaving ? '💾 Guardando...' : '✅ Guardar Cambios'}
                     </button>
                 </div>
             </form>

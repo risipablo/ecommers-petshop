@@ -1,11 +1,12 @@
 import { useState } from "react"
 import { useProducts } from "../hooks/useProducts"
-import { X, Upload } from "lucide-react"
+import { X, Upload, CheckCircle } from "lucide-react"
 import "../../assets/styles/crud.css"
-
+ 
 export const Crud = () => {
     const { addProduct, isLoading, error } = useProducts()
-
+    const [successMessage, setSuccessMessage] = useState("")
+ 
     const [formData, setFormData] = useState({
         name: "", brand: "", pet: "", category: "", description: "",
         age: "", price: "", kg: "", condition: ""
@@ -13,58 +14,60 @@ export const Crud = () => {
     
     const [imageFiles, setImageFiles] = useState<File[]>([])
     const [imagePreviews, setImagePreviews] = useState<string[]>([])
-
+ 
     const handleInputChange = (field: string, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }))
     }
-
+ 
     const handleImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || [])
         
         const validFiles = files.filter(file => {
             const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
             if (!validTypes.includes(file.type)) {
-                alert(`Formato no válido: ${file.name}`)
+                alert(`Formato no válido: ${file.name}. Usa JPEG, PNG o WebP`)
                 return false
             }
             if (file.size > 5 * 1024 * 1024) {
-                alert(`Imagen muy grande (máx 5MB): ${file.name}`)
+                alert(`Imagen muy grande: ${file.name} (máx 5MB)`)
                 return false
             }
             return true
         })
-
+ 
         if (validFiles.length + imageFiles.length > 10) {
             alert('Máximo 10 imágenes por producto')
             return
         }
-
+ 
         const newPreviews = validFiles.map(file => URL.createObjectURL(file))
         
         setImageFiles([...imageFiles, ...validFiles])
         setImagePreviews([...imagePreviews, ...newPreviews])
     }
-
+ 
     const removeImage = (index: number) => {
         URL.revokeObjectURL(imagePreviews[index])
         setImageFiles(imageFiles.filter((_, i) => i !== index))
         setImagePreviews(imagePreviews.filter((_, i) => i !== index))
     }
-
+ 
     const handleAddProduct = async () => {
+        setSuccessMessage("")
+        
         const requiredFields = ['name', 'brand', 'pet', 'category', 'description', 'age', 'price']
         const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData])
         
         if (missingFields.length > 0) {
-            alert(`Faltan campos: ${missingFields.join(', ')}`)
+            alert(`Faltan campos obligatorios: ${missingFields.join(', ')}`)
             return
         }
-
+ 
         if (imageFiles.length === 0) {
             alert('Debes seleccionar al menos una imagen para el producto')
             return
         }
-
+ 
         const formDataToSend = new FormData()
         formDataToSend.append('name', formData.name)
         formDataToSend.append('brand', formData.brand)
@@ -75,14 +78,15 @@ export const Crud = () => {
         formDataToSend.append('price', formData.price)
         if (formData.kg) formDataToSend.append('kg', formData.kg)
         if (formData.condition) formDataToSend.append('condition', formData.condition)
-
+ 
         imageFiles.forEach(file => {
             formDataToSend.append('images', file)
         })
-
+ 
         try {
             await addProduct(formDataToSend)
             
+            // LIMPIAR FORMULARIO
             setFormData({
                 name: "", brand: "", pet: "", category: "", description: "",
                 age: "", price: "", kg: "", condition: ""
@@ -94,155 +98,209 @@ export const Crud = () => {
             const fileInput = document.getElementById('image-input') as HTMLInputElement
             if (fileInput) fileInput.value = ''
             
-            alert('✅ Producto agregado exitosamente')
+            // MOSTRAR MENSAJE DE ÉXITO
+            setSuccessMessage("✅ Producto agregado exitosamente")
+            setTimeout(() => setSuccessMessage(""), 4000)
         } catch (err) {
             console.error('Error:', err)
         }
     }
-
+ 
     return(
         <div className="product-list-container">
-            <h2>Agregar Nuevo Producto</h2>
+            <h2>➕ Agregar Nuevo Producto</h2>
             
+            {/* MENSAJES DE ERROR Y ÉXITO */}
             {error && <div className="error-message">❌ {error}</div>}
-            
-            <input 
-                type="text" 
-                placeholder="Nombre *" 
-                value={formData.name} 
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                disabled={isLoading}
-            />
-            
-            <input 
-                type="text" 
-                placeholder="Marca *" 
-                value={formData.brand} 
-                onChange={(e) => handleInputChange('brand', e.target.value)}
-                disabled={isLoading}
-            />
-            
-            <select 
-                value={formData.pet} 
-                onChange={(e) => handleInputChange('pet', e.target.value)}
-                disabled={isLoading}
-            >
-                <option value="">Seleccionar mascota *</option>
-                <option value="gato">Gato</option>
-                <option value="perro">Perro</option>
-                <option value="ambos">Ambos</option>
-            </select>
-
-            <select 
-                value={formData.category} 
-                onChange={(e) => handleInputChange('category', e.target.value)}
-                disabled={isLoading}
-            >
-                <option value="">Seleccionar categoría *</option>
-                <option value="alimentos">Alimentos</option>
-                <option value="accesorios">Accesorios</option>
-                <option value="higiene">Higiene</option>
-                <option value="indumentaria">Indumentaria</option>
-                <option value="colchonetas">Colchonetas</option>
-            </select>
-
-            <textarea 
-                placeholder="Descripción *" 
-                value={formData.description} 
-                onChange={(e) => handleInputChange('description', e.target.value)}
-                disabled={isLoading}
-                rows={3}
-            />
-            
-            <select 
-                value={formData.age} 
-                onChange={(e) => handleInputChange('age', e.target.value)}
-                disabled={isLoading}
-            >
-                <option value="">Seleccionar edad *</option>
-                <option value="cachorro">Cachorro</option>
-                <option value="mini adulto">Mini Adulto</option>
-                <option value="adulto">Adulto</option>
-                <option value="senior">Senior</option>
-                <option value="otro">Otro</option>
-            </select>
-            
-            <input 
-                type="number" 
-                placeholder="Precio *" 
-                value={formData.price} 
-                onChange={(e) => handleInputChange('price', e.target.value)}
-                disabled={isLoading}
-            />
-            
-            <input 
-                type="text" 
-                placeholder="Kg (opcional)" 
-                value={formData.kg} 
-                onChange={(e) => handleInputChange('kg', e.target.value)}
-                disabled={isLoading}
-            />
-
-            <select 
-                value={formData.condition} 
-                onChange={(e) => handleInputChange('condition', e.target.value)}
-                disabled={isLoading}
-            >
-                <option value="">Especial (opcional)</option>
-                <option value="otro">-</option>
-                <option value="derma adulto">Derma Adulto</option>
-                <option value="derma mini adulto">Derma Mini Adulto</option>
-                <option value="urinary">Urinary</option>
-                <option value="castrado">Castrado</option>
-                <option value="light">Light</option>
-            </select>
-
-            {/* Sección de múltiples imágenes */}
-            <div className="multi-image-section">
-                <label>Imágenes del producto *</label>
-                <div className="image-upload-area">
-                    <input
-                        id="image-input"
-                        type="file"
-                        accept="image/jpeg,image/jpg,image/png,image/webp"
-                        onChange={handleImagesChange}
-                        multiple
-                        disabled={isLoading || imageFiles.length >= 10}
-                        style={{ display: 'none' }}
-                    />
-                    <label htmlFor="image-input" className="upload-label">
-                        <Upload size={24} />
-                        <span>Seleccionar imágenes</span>
-                        <small>Máx 10 imágenes, 5MB cada una (Primera imagen será la principal)</small>
-                    </label>
+            {successMessage && (
+                <div className="success-message">
+                    <CheckCircle size={20} />
+                    {successMessage}
                 </div>
-
-                {/* Grid de previews */}
-                {imagePreviews.length > 0 && (
-                    <div className="images-grid">
-                        {imagePreviews.map((preview, index) => (
-                            <div key={index} className="image-preview-item">
-                                <img src={preview} alt={`Preview ${index + 1}`} />
-                                {index === 0 && <span className="main-badge">Principal</span>}
-                                <button 
-                                    type="button"
-                                    className="remove-image"
-                                    onClick={() => removeImage(index)}
-                                >
-                                    <X size={16} />
-                                </button>
-                            </div>
-                        ))}
+            )}
+            
+            <form className="edit-form">
+                <div className="form-grid">
+                    {/* FILA 1: Nombre y Marca */}
+                    <div className="form-group">
+                        <label data-required="*">Nombre</label>
+                        <input 
+                            type="text" 
+                            placeholder="Ej: Collar Premium" 
+                            value={formData.name} 
+                            onChange={(e) => handleInputChange('name', e.target.value)}
+                            disabled={isLoading}
+                        />
                     </div>
-                )}
-            </div>
-
-            <button 
-                onClick={handleAddProduct} 
-                disabled={isLoading || imageFiles.length === 0}
-            >
-                {isLoading ? '🔄 Agregando...' : '➕ Agregar Producto'}
-            </button>
+                    
+                    <div className="form-group">
+                        <label data-required="*">Marca</label>
+                        <input 
+                            type="text" 
+                            placeholder="Ej: Purina" 
+                            value={formData.brand} 
+                            onChange={(e) => handleInputChange('brand', e.target.value)}
+                            disabled={isLoading}
+                        />
+                    </div>
+                    
+                    {/* FILA 2: Mascota y Categoría */}
+                    <div className="form-group">
+                        <label data-required="*">Mascota</label>
+                        <select 
+                            value={formData.pet} 
+                            onChange={(e) => handleInputChange('pet', e.target.value)}
+                            disabled={isLoading}
+                        >
+                            <option value="">Seleccionar mascota</option>
+                            <option value="gato">🐱 Gato</option>
+                            <option value="perro">🐕 Perro</option>
+                            <option value="ambos">🐱 🐕 Ambos</option>
+                        </select>
+                    </div>
+ 
+                    <div className="form-group">
+                        <label data-required="*">Categoría</label>
+                        <select 
+                            value={formData.category} 
+                            onChange={(e) => handleInputChange('category', e.target.value)}
+                            disabled={isLoading}
+                        >
+                            <option value="">Seleccionar categoría</option>
+                            <option value="alimentos">🍖 Alimentos</option>
+                            <option value="accesorios">🎀 Accesorios</option>
+                            <option value="higiene">🧼 Higiene</option>
+                            <option value="indumentaria">👕 Indumentaria</option>
+                            <option value="colchonetas">🛏️ Colchonetas</option>
+                        </select>
+                    </div>
+ 
+                    {/* DESCRIPCIÓN - ANCHO COMPLETO */}
+                    <div className="form-group full-width">
+                        <label data-required="*">Descripción</label>
+                        <textarea 
+                            placeholder="Describe los detalles y características del producto..." 
+                            value={formData.description} 
+                            onChange={(e) => handleInputChange('description', e.target.value)}
+                            disabled={isLoading}
+                            rows={4}
+                        />
+                    </div>
+                    
+                    {/* FILA 3: Edad y Precio */}
+                    <div className="form-group">
+                        <label data-required="*">Edad</label>
+                        <select 
+                            value={formData.age} 
+                            onChange={(e) => handleInputChange('age', e.target.value)}
+                            disabled={isLoading}
+                        >
+                            <option value="">Seleccionar edad</option>
+                            <option value="cachorro">👶 Cachorro</option>
+                            <option value="mini adulto">🐾 Mini Adulto</option>
+                            <option value="adulto">🐕 Adulto</option>
+                            <option value="senior">👴 Senior</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div className="form-group">
+                        <label data-required="*">Precio</label>
+                        <input 
+                            type="number" 
+                            placeholder="0.00" 
+                            value={formData.price} 
+                            onChange={(e) => handleInputChange('price', e.target.value)}
+                            disabled={isLoading}
+                            min="0"
+                            step="0.01"
+                        />
+                    </div>
+                    
+                    {/* FILA 4: Kg y Condición */}
+                    <div className="form-group">
+                        <label>Kg (opcional)</label>
+                        <input 
+                            type="text" 
+                            placeholder="Ej: 1kg, 500g" 
+                            value={formData.kg} 
+                            onChange={(e) => handleInputChange('kg', e.target.value)}
+                            disabled={isLoading}
+                        />
+                    </div>
+ 
+                    <div className="form-group">
+                        <label>Especial (opcional)</label>
+                        <select 
+                            value={formData.condition} 
+                            onChange={(e) => handleInputChange('condition', e.target.value)}
+                            disabled={isLoading}
+                        >
+                            <option value="">Sin especial</option>
+                            <option value="derma adulto">Derma Adulto</option>
+                            <option value="derma mini adulto">Derma Mini Adulto</option>
+                            <option value="urinary">Urinary</option>
+                            <option value="castrado">Castrado</option>
+                            <option value="light">Light</option>
+                        </select>
+                    </div>
+ 
+                    {/* SECCIÓN DE IMÁGENES - ANCHO COMPLETO */}
+                    <div className="form-group full-width multi-image-section">
+                        <label data-required="*">Imágenes del producto</label>
+                        <div className="image-upload-area">
+                            <input
+                                id="image-input"
+                                type="file"
+                                accept="image/jpeg,image/jpg,image/png,image/webp"
+                                onChange={handleImagesChange}
+                                multiple
+                                disabled={isLoading || imageFiles.length >= 10}
+                            />
+                            <label htmlFor="image-input" className="upload-label">
+                                <Upload size={28} />
+                                <span>Seleccionar imágenes</span>
+                                <small>Máx 10 imágenes, 5MB cada una • La primera será la principal</small>
+                            </label>
+                        </div>
+ 
+                        {/* GRID DE PREVIEWS */}
+                        {imagePreviews.length > 0 && (
+                            <div className="new-images-preview">
+                                <h4>📸 {imagePreviews.length} imagen{imagePreviews.length !== 1 ? 's' : ''} cargada{imagePreviews.length !== 1 ? 's' : ''}</h4>
+                                <div className="images-grid">
+                                    {imagePreviews.map((preview, index) => (
+                                        <div key={index} className="image-preview-item">
+                                            <img src={preview} alt={`Preview ${index + 1}`} />
+                                            {index === 0 && <span className="main-badge">📍 Principal</span>}
+                                            <button 
+                                                type="button"
+                                                className="remove-image"
+                                                onClick={() => removeImage(index)}
+                                                aria-label="Eliminar imagen"
+                                            >
+                                                <X size={18} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+ 
+                {/* BOTONES DE ACCIÓN */}
+                <div className="form-actions">
+                    <button 
+                        type="button"
+                        onClick={handleAddProduct} 
+                        disabled={isLoading || imageFiles.length === 0}
+                        className="btn-save"
+                    >
+                        {isLoading ? '⏳ Agregando...' : '✅ Agregar Producto'}
+                    </button>
+                </div>
+            </form>
         </div>
     )
 }

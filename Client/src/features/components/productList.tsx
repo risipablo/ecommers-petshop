@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import '../../assets/styles/productList.css';
-import '../../assets/styles/filters.css';
 import { Eye, Edit, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { ProductSkeletonGrid } from '../../components/common/productSkeleton';

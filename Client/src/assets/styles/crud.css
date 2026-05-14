@@ -1,52 +1,297 @@
-/* Agregá esto a tu CSS */
-.image-upload-container {
-    margin: 10px 0;
+/* --- Contenedores Principales --- */
+.product-list-container,
+.edit-product-container {
+  max-width: 900px;
+  margin: 15rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.image-preview {
-    margin-top: 10px;
-    position: relative;
-    display: inline-block;
+.product-list-container h1, h2 {
+  color: #2d3436;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.image-preview img {
-    max-width: 200px;
-    max-height: 200px;
-    border-radius: 8px;
-    border: 2px solid #ddd;
+/* --- Header y Botón Volver --- */
+.edit-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #f1f2f6;
+  padding-bottom: 1rem;
 }
 
-.image-preview button {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: red;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    cursor: pointer;
-    font-size: 12px;
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #f1f2f6;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  color: #636e72;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+.back-btn:hover {
+  background: #dfe6e9;
+  color: #2d3436;
 }
 
+/* --- Formulario y Grid --- */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+  gap: 1.5rem;
+}
+
+.full-width {
+  grid-column: span 2; /* Ocupa las dos columnas */
+}
+
+/* --- Grupos de Input --- */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #4b4b4b;
+  font-size: 0.9rem;
+}
+
+.form-group label[data-required]::after {
+  content: " *";
+  color: #e74c3c;
+}
+
+.form-group input,
+.form-group select {
+  padding: 12px;
+  
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-group textarea{
+    width: 100%;          
+  box-sizing: border-box; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  display: block;         
+  margin-top: 10px;
+  resize: vertical;  
+  min-height: 100px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #74b9ff;
+  box-shadow: 0 0 0 3px rgba(116, 185, 255, 0.2);
+}
+
+/* --- Sección de Imágenes --- */
+.multi-image-section {
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px dashed #ccc;
+}
+
+.image-upload-area {
+  position: relative;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.image-upload-area input[type="file"] {
+  display: none;
+}
+
+.upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: white;
+  border: 2px dashed #b2bec3;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.upload-label:hover {
+  border-color: #0984e3;
+  background: #f0f7ff;
+}
+
+.upload-label span {
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.upload-label small {
+  color: #636e72;
+  margin-top: 5px;
+}
+
+/* Grid de Previsualización */
+.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+  margin-top: 1rem;
+}
+
+.image-preview-item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #eee;
+}
+
+.image-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(231, 76, 60, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.main-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 184, 148, 0.9);
+  color: white;
+  font-size: 0.7rem;
+  text-align: center;
+  padding: 3px 0;
+}
+
+/* --- Botones de Acción --- */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #f1f2f6;
+}
+
+.btn-save, .btn-cancel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.btn-save {
+  background-color: #00b894;
+  color: white;
+  border: none;
+}
+
+.btn-save:hover {
+  background-color: #00a887;
+  transform: translateY(-2px);
+}
+
+.btn-cancel {
+  background-color: white;
+  color: #636e72;
+  border: 1px solid #dcdde1;
+}
+
+.btn-cancel:hover {
+  background-color: #f1f2f6;
+}
+
+.btn-save:disabled {
+  background-color: #b2bec3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* --- Mensajes --- */
 .error-message {
-    color: red;
-    background: #ffeeee;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
+  background-color: #fff5f5;
+  color: #c0392b;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 5px solid #e74c3c;
+  margin-bottom: 1rem;
 }
 
-textarea {
+.success-message {
+  background-color: #f0fff4;
+  color: #27ae60;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 5px solid #2ecc71;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .full-width {
+    grid-column: span 1;
+  }
+  .form-actions {
+    flex-direction: column;
+  }
+  .btn-save, .btn-cancel {
     width: 100%;
-    padding: 8px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    justify-content: center;
+  }
 }

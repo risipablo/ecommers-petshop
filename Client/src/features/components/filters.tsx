@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/static-components */
 // features/components/filters.tsx
-import { useState, useEffect,  } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ChevronDown, ChevronUp, Filter, X, SlidersHorizontal } from 'lucide-react';
 import type { Product } from '../types/product.type';
 import '../../assets/styles/filters.css';
+
 
 interface FiltersProps {
     products: Product[];
@@ -17,8 +18,8 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
     const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const [selectedAges, setSelectedAges] = useState<string[]>([]);
     const [selectedWeights, setSelectedWeights] = useState<string[]>([]);
-    const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({ min: 0, max: 100000 });
-    const [tempPriceRange, setTempPriceRange] = useState<{ min: number; max: number }>({ min: 0, max: 100000 });
+    const [priceRange, setPriceRange] = useState({ min: 0, max: 100000 });
+    const [tempPriceRange, setTempPriceRange] = useState({ min: 0, max: 100000 });
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [openSections, setOpenSections] = useState({
         pet: true,
@@ -28,13 +29,15 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
         price: true
     });
 
-    // Obtener opciones únicas de los productos
-    const petOptions = Array.from(new Set(products.map(p => p.pet).filter((pet): pet is string => Boolean(pet))));
-    const brandOptions = Array.from(new Set(products.map(p => p.brand).filter((brand): brand is string => Boolean(brand))));
-    const ageOptions = Array.from(new Set(products.map(p => p.age).filter((age): age is string => Boolean(age))));
-    const weightOptions = Array.from(new Set(products.map(p => p.kg).filter((kg): kg is string => Boolean(kg))));
+    // Memoizar opciones únicas
+    const options = useMemo(() => ({
+        pet: Array.from(new Set(products.map(p => p.pet).filter(Boolean))),
+        brand: Array.from(new Set(products.map(p => p.brand).filter(Boolean))),
+        age: Array.from(new Set(products.map(p => p.age).filter(Boolean))),
+        weight: Array.from(new Set(products.map(p => p.kg).filter(Boolean)))
+    }), [products]);
 
-    // Calcular precio mínimo y máximo
+    // Calcular rango de precios
     useEffect(() => {
         if (products.length > 0) {
             const prices = products.map(p => typeof p.price === 'number' ? p.price : parseFloat(String(p.price)));
@@ -50,22 +53,11 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
     useEffect(() => {
         let filtered = [...products];
 
-        if (selectedPets.length > 0) {
-            filtered = filtered.filter(p => selectedPets.includes(p.pet));
-        }
-
-        if (selectedBrands.length > 0) {
-            filtered = filtered.filter(p => selectedBrands.includes(p.brand));
-        }
-
-        if (selectedAges.length > 0) {
-            filtered = filtered.filter(p => selectedAges.includes(p.age));
-        }
-
-        if (selectedWeights.length > 0) {
-            filtered = filtered.filter(p => selectedWeights.includes(p.kg || ''));
-        }
-
+        if (selectedPets.length) filtered = filtered.filter(p => selectedPets.includes(p.pet));
+        if (selectedBrands.length) filtered = filtered.filter(p => selectedBrands.includes(p.brand));
+        if (selectedAges.length) filtered = filtered.filter(p => selectedAges.includes(p.age));
+        if (selectedWeights.length) filtered = filtered.filter(p => selectedWeights.includes(p.kg || ''));
+        
         filtered = filtered.filter(p => {
             const price = typeof p.price === 'number' ? p.price : parseFloat(String(p.price));
             return price >= tempPriceRange.min && price <= tempPriceRange.max;
@@ -78,28 +70,8 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
         setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
     };
 
-    const handlePetChange = (pet: string) => {
-        setSelectedPets(prev =>
-            prev.includes(pet) ? prev.filter(p => p !== pet) : [...prev, pet]
-        );
-    };
-
-    const handleBrandChange = (brand: string) => {
-        setSelectedBrands(prev =>
-            prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]
-        );
-    };
-
-    const handleAgeChange = (age: string) => {
-        setSelectedAges(prev =>
-            prev.includes(age) ? prev.filter(a => a !== age) : [...prev, age]
-        );
-    };
-
-    const handleWeightChange = (weight: string) => {
-        setSelectedWeights(prev =>
-            prev.includes(weight) ? prev.filter(w => w !== weight) : [...prev, weight]
-        );
+    const handleCheckboxChange = (setter: React.Dispatch<React.SetStateAction<string[]>>, value: string) => {
+        setter(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);
     };
 
     const clearAllFilters = () => {
@@ -115,35 +87,21 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
                             tempPriceRange.min !== priceRange.min || tempPriceRange.max !== priceRange.max;
 
     const FilterSection = ({ 
-        title, 
-        section, 
-        options, 
-        selectedValues, 
-        onChange 
+        title, section, options, selectedValues, onChange 
     }: { 
-        title: string; 
-        section: SectionKey; 
-        options: string[]; 
-        selectedValues: string[]; 
-        onChange: (value: string) => void;
+        title: string; section: SectionKey; options: string[]; 
+        selectedValues: string[]; onChange: (value: string) => void;
     }) => (
         <div className="filter-section">
-            <button 
-                className="filter-section-header"
-                onClick={() => toggleSection(section)}
-            >
+            <button className="filter-section-header" onClick={() => toggleSection(section)}>
                 <span>{title}</span>
                 {openSections[section] ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </button>
             {openSections[section] && options.length > 0 && (
                 <div className="filter-section-content">
-                    {options.map((option) => (
+                    {options.map(option => (
                         <label key={option} className="filter-checkbox">
-                            <input
-                                type="checkbox"
-                                checked={selectedValues.includes(option)}
-                                onChange={() => onChange(option)}
-                            />
+                            <input type="checkbox" checked={selectedValues.includes(option)} onChange={() => onChange(option)} />
                             <span>{option}</span>
                         </label>
                     ))}
@@ -154,68 +112,29 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
 
     return (
         <>
-            {/* Botón móvil */}
-            <button 
-                className="mobile-filter-btn"
-                onClick={() => setIsMobileMenuOpen(true)}
-            >
+            <button className="mobile-filter-btn" onClick={() => setIsMobileMenuOpen(true)}>
                 <SlidersHorizontal size={18} />
                 Filtrar productos
                 {hasActiveFilters && <span className="filter-badge">•</span>}
             </button>
 
-            {/* Panel de filtros desktop */}
             <div className="filters-panel">
                 <div className="filters-header">
-                    <h3>
-                        <Filter size={18} />
-                        Filtros
-                    </h3>
+                    <h3><Filter size={18} />Filtros</h3>
                     {hasActiveFilters && (
                         <button className="clear-filters" onClick={clearAllFilters}>
-                            <X size={14} />
-                            Limpiar todo
+                            <X size={14} />Limpiar todo
                         </button>
                     )}
                 </div>
 
-                <FilterSection
-                    title="Mascota"
-                    section="pet"
-                    options={petOptions}
-                    selectedValues={selectedPets}
-                    onChange={handlePetChange}
-                />
-
-                <FilterSection
-                    title="Marcas"
-                    section="brand"
-                    options={brandOptions}
-                    selectedValues={selectedBrands}
-                    onChange={handleBrandChange}
-                />
-
-                <FilterSection
-                    title="Edad"
-                    section="age"
-                    options={ageOptions}
-                    selectedValues={selectedAges}
-                    onChange={handleAgeChange}
-                />
-
-                <FilterSection
-                    title="Peso (kg)"
-                    section="weight"
-                    options={weightOptions}
-                    selectedValues={selectedWeights}
-                    onChange={handleWeightChange}
-                />
+                <FilterSection title="Mascota" section="pet" options={options.pet} selectedValues={selectedPets} onChange={(v) => handleCheckboxChange(setSelectedPets, v)} />
+                <FilterSection title="Marcas" section="brand" options={options.brand} selectedValues={selectedBrands} onChange={(v) => handleCheckboxChange(setSelectedBrands, v)} />
+                <FilterSection title="Edad" section="age" options={options.age} selectedValues={selectedAges} onChange={(v) => handleCheckboxChange(setSelectedAges, v)} />
+                <FilterSection title="Peso (kg)" section="weight" options={[]} selectedValues={selectedWeights} onChange={(v) => handleCheckboxChange(setSelectedWeights, v)} />
 
                 <div className="filter-section">
-                    <button 
-                        className="filter-section-header"
-                        onClick={() => toggleSection('price')}
-                    >
+                    <button className="filter-section-header" onClick={() => toggleSection('price')}>
                         <span>Rango de precio</span>
                         {openSections.price ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                     </button>
@@ -224,43 +143,17 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
                             <div className="price-inputs">
                                 <div className="price-input">
                                     <label>Min</label>
-                                    <input
-                                        type="number"
-                                        value={tempPriceRange.min}
-                                        onChange={(e) => setTempPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))}
-                                        min={priceRange.min}
-                                        max={tempPriceRange.max}
-                                    />
+                                    <input type="number" value={tempPriceRange.min} onChange={(e) => setTempPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))} min={priceRange.min} max={tempPriceRange.max} />
                                 </div>
                                 <span>-</span>
                                 <div className="price-input">
                                     <label>Max</label>
-                                    <input
-                                        type="number"
-                                        value={tempPriceRange.max}
-                                        onChange={(e) => setTempPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))}
-                                        min={tempPriceRange.min}
-                                        max={priceRange.max}
-                                    />
+                                    <input type="number" value={tempPriceRange.max} onChange={(e) => setTempPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))} min={tempPriceRange.min} max={priceRange.max} />
                                 </div>
                             </div>
                             <div className="price-slider">
-                                <input
-                                    type="range"
-                                    min={priceRange.min}
-                                    max={priceRange.max}
-                                    value={tempPriceRange.min}
-                                    onChange={(e) => setTempPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))}
-                                    className="slider-min"
-                                />
-                                <input
-                                    type="range"
-                                    min={priceRange.min}
-                                    max={priceRange.max}
-                                    value={tempPriceRange.max}
-                                    onChange={(e) => setTempPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))}
-                                    className="slider-max"
-                                />
+                                <input type="range" min={priceRange.min} max={priceRange.max} value={tempPriceRange.min} onChange={(e) => setTempPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))} />
+                                <input type="range" min={priceRange.min} max={priceRange.max} value={tempPriceRange.max} onChange={(e) => setTempPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))} />
                             </div>
                             <div className="price-values">
                                 <span>${tempPriceRange.min.toLocaleString()}</span>
@@ -271,79 +164,38 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
                 </div>
             </div>
 
-            {/* Panel de filtros móvil */}
             {isMobileMenuOpen && (
                 <div className="filters-modal-overlay" onClick={() => setIsMobileMenuOpen(false)}>
                     <div className="filters-modal" onClick={(e) => e.stopPropagation()}>
                         <div className="filters-modal-header">
                             <h3>Filtrar productos</h3>
-                            <button onClick={() => setIsMobileMenuOpen(false)}>
-                                <X size={20} />
-                            </button>
+                            <button onClick={() => setIsMobileMenuOpen(false)}><X size={20} /></button>
                         </div>
                         <div className="filters-modal-content">
-                            <FilterSection
-                                title="Mascota"
-                                section="pet"
-                                options={petOptions}
-                                selectedValues={selectedPets}
-                                onChange={handlePetChange}
-                            />
-                            <FilterSection
-                                title="Marcas"
-                                section="brand"
-                                options={brandOptions}
-                                selectedValues={selectedBrands}
-                                onChange={handleBrandChange}
-                            />
-                            <FilterSection
-                                title="Edad"
-                                section="age"
-                                options={ageOptions}
-                                selectedValues={selectedAges}
-                                onChange={handleAgeChange}
-                            />
-                            <FilterSection
-                                title="Peso (kg)"
-                                section="weight"
-                                options={weightOptions}
-                                selectedValues={selectedWeights}
-                                onChange={handleWeightChange}
-                            />
+                            <FilterSection title="Mascota" section="pet" options={options.pet} selectedValues={selectedPets} onChange={(v) => handleCheckboxChange(setSelectedPets, v)} />
+                            <FilterSection title="Marcas" section="brand" options={options.brand} selectedValues={selectedBrands} onChange={(v) => handleCheckboxChange(setSelectedBrands, v)} />
+                            <FilterSection title="Edad" section="age" options={options.age} selectedValues={selectedAges} onChange={(v) => handleCheckboxChange(setSelectedAges, v)} />
+                            <FilterSection title="Peso (kg)" section="weight" selectedValues={selectedWeights} onChange={(v) => handleCheckboxChange(setSelectedWeights, v)} options={[]} />
                             <div className="filter-section">
-                                <div className="filter-section-header">
-                                    <span>Rango de precio</span>
-                                </div>
+                                <div className="filter-section-header"><span>Rango de precio</span></div>
                                 <div className="filter-section-content price-range">
                                     <div className="price-inputs">
                                         <div className="price-input">
                                             <label>Min</label>
-                                            <input
-                                                type="number"
-                                                value={tempPriceRange.min}
-                                                onChange={(e) => setTempPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))}
-                                            />
+                                            <input type="number" value={tempPriceRange.min} onChange={(e) => setTempPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))} />
                                         </div>
                                         <span>-</span>
                                         <div className="price-input">
                                             <label>Max</label>
-                                            <input
-                                                type="number"
-                                                value={tempPriceRange.max}
-                                                onChange={(e) => setTempPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))}
-                                            />
+                                            <input type="number" value={tempPriceRange.max} onChange={(e) => setTempPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))} />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="filters-modal-footer">
-                            <button className="clear-filters-btn" onClick={clearAllFilters}>
-                                Limpiar todo
-                            </button>
-                            <button className="apply-filters-btn" onClick={() => setIsMobileMenuOpen(false)}>
-                                Aplicar filtros
-                            </button>
+                            <button className="clear-filters-btn" onClick={clearAllFilters}>Limpiar todo</button>
+                            <button className="apply-filters-btn" onClick={() => setIsMobileMenuOpen(false)}>Aplicar filtros</button>
                         </div>
                     </div>
                 </div>
