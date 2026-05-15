@@ -1,8 +1,11 @@
 // Server/controllers/authController.js
-const User = require('../models/User');
+const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { sendEmail } = require('../config/email')
+
+
+
 
 
 const JWT_SECRET = process.env.JWT_SECRET
