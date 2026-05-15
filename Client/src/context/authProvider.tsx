@@ -1,10 +1,21 @@
 // context/authProvider.tsx
-import{ createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, type ReactNode, } from 'react';
 import axios from 'axios';
-import type { AuthContextType, LoginCredentials, RegisterCredentials, User } from '../features/types/auth.types';
+import type {
+    User,
+    AuthContextType,
+    LoginCredentials,
+    RegisterCredentials,
+    ChangeNameCredentials,
+    ChangePasswordCredentials,
+    ForgotPasswordCredentials,
+    ResetPasswordCredentials
+} from '../features/types/auth.types';
 
+import  {config} from "../config/index"
 
-const API_URL = "https://ecommers-petshop.onrender.com/api"
+const API_URL = config.Api;
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 axios.defaults.withCredentials = true;
@@ -14,9 +25,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
-    // Configurar axios para enviar cookies
-    axios.defaults.withCredentials = true;
 
     const checkAuth = async () => {
         const token = localStorage.getItem('token');
@@ -30,51 +38,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         try {
             const response = await axios.get(`${API_URL}/auth/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                headers: { Authorization: `Bearer ${token}` }
             });
             
             if (response.data.success && response.data.data) {
                 setUser(response.data.data);
                 setIsAuthenticated(true);
-                // Actualizar token si es necesario
-                if (response.data.token) {
-                    localStorage.setItem('token', response.data.token);
-                }
             } else {
                 setUser(null);
                 setIsAuthenticated(false);
                 localStorage.removeItem('token');
             }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (err) {
-            console.error('Error verificando auth:', err);
             setUser(null);
             setIsAuthenticated(false);
             localStorage.removeItem('token');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const login = async (credentials: LoginCredentials) => {
-        setIsLoading(true);
-        setError(null);
-        try {
-            const response = await axios.post(`${API_URL}/auth/login`, credentials);
-            if (response.data.success) {
-                setUser(response.data.data);
-                setIsAuthenticated(true);
-                // Guardar token en localStorage
-                if (response.data.token) {
-                    localStorage.setItem('token', response.data.token);
-                }
-                return response.data;
-            }
-        } catch (err: unknown) {
-            const errorMsg = (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Error al iniciar sesión';
-            setError(errorMsg);
-            throw new Error(errorMsg);
         } finally {
             setIsLoading(false);
         }
@@ -88,14 +67,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             if (response.data.success) {
                 setUser(response.data.data);
                 setIsAuthenticated(true);
-                // Guardar token en localStorage
                 if (response.data.token) {
                     localStorage.setItem('token', response.data.token);
                 }
                 return response.data;
             }
         } catch (err: unknown) {
-            const errorMsg = (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Error al registrarse';
+            const errorMsg = (err as { response?: { data?: { error: string } } }).response?.data?.error || 'Error al registrarse';
+            setError(errorMsg);
+            throw new Error(errorMsg);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const login = async (credentials: LoginCredentials) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await axios.post(`${API_URL}/auth/login`, credentials);
+            if (response.data.success) {
+                setUser(response.data.data);
+                setIsAuthenticated(true);
+                if (response.data.token) {
+                    localStorage.setItem('token', response.data.token);
+                }
+                return response.data;
+            }
+        } catch (err: unknown) {
+            const errorMsg = (err as { response?: { data?: { error: string } } }).response?.data?.error || 'Error al iniciar sesión';
             setError(errorMsg);
             throw new Error(errorMsg);
         } finally {
@@ -117,15 +117,85 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const changeName = async (credentials: ChangeNameCredentials) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.put(`${API_URL}/auth/change-name`, credentials, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            
+            if (response.data.success) {
+                setUser(response.data.data);
+                return response.data;
+            }
+        } catch (err: unknown) {
+            const errorMsg = (err as { response?: { data?: { error: string } } }).response?.data?.error || 'Error al cambiar nombre';
+            setError(errorMsg);
+            throw new Error(errorMsg);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const changePassword = async (credentials: ChangePasswordCredentials) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.put(`${API_URL}/auth/change-password`, credentials, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            
+            if (response.data.success) {
+                return response.data;
+            }
+        } catch (err: unknown) {
+            const errorMsg = (err as { response?: { data?: { error: string } } }).response?.data?.error || 'Error al cambiar contraseña';
+            setError(errorMsg);
+            throw new Error(errorMsg);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const forgotPassword = async (credentials: ForgotPasswordCredentials) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await axios.post(`${API_URL}/auth/forgot-password`, credentials);
+            return response.data;
+        } catch (err: unknown) {
+            const errorMsg = (err as { response?: { data?: { error: string } } }).response?.data?.error || 'Error al enviar email de recuperación';
+            setError(errorMsg);
+            throw new Error(errorMsg);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const resetPassword = async (credentials: ResetPasswordCredentials) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await axios.post(`${API_URL}/auth/reset-password`, credentials);
+            return response.data;
+        } catch (err: unknown) {
+            const errorMsg = (err as { response?: { data?: { error: string } } }).response?.data?.error || 'Error al restablecer contraseña';
+            setError(errorMsg);
+            throw new Error(errorMsg);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         checkAuth();
     }, []);
 
     const isAdmin = user?.role === 'admin';
 
-       console.log('📊 Estado actual:', { isAuthenticated, isAdmin, userRole: user?.role });
-
-       
     return (
         <AuthContext.Provider value={{
             user,
@@ -136,6 +206,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             register,
             logout,
             checkAuth,
+            changeName,
+            changePassword,
+            forgotPassword,
+            resetPassword,
             isAdmin
         }}>
             {children}

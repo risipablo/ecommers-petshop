@@ -29,8 +29,10 @@ exports.getProductById = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const { 
-      name, brand, pet, category, age, price, description, condition, kg, special 
+      name, brand, pet, category, age, price, description, condition, kg 
     } = req.body;
+
+    console.log('📦 Datos recibidos:', { name, brand, pet, category, age, price, condition });
 
     const requiredFields = ['name', 'brand', 'pet', 'category', 'age', 'price', 'description', 'condition'];
     const missingFields = requiredFields.filter(field => !req.body[field]);
@@ -76,12 +78,10 @@ exports.createProduct = async (req, res) => {
       imagePublicId: images[0]?.publicId || null
     };
 
-    if (special && special.trim() !== '' && special !== 'otro') {
-      productData.special = special;
-    }
-
     const newProduct = new ProductModel(productData);
     const result = await newProduct.save();
+    
+    console.log('✅ Producto creado:', result._id);
     
     res.status(201).json({ 
       success: true, 
@@ -90,13 +90,21 @@ exports.createProduct = async (req, res) => {
     });
     
   } catch (err) {
-    console.error('Error al crear producto:', err);
+    console.error('❌ Error al crear producto:', err);
     
     if (err.name === 'ValidationError') {
-      return res.status(400).json({ success: false, error: errors.join(', ') });
+      
+      const validationErrors = Object.values(err.errors).map((e) => e.message);
+      return res.status(400).json({ 
+        success: false, 
+        error: validationErrors.join(', ') 
+      });
     }
     
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ 
+      success: false, 
+      error: err.message || 'Error interno del servidor'
+    });
   }
 };
 
@@ -109,7 +117,7 @@ exports.updateProduct = async (req, res) => {
     }
     
     // Actualizar campos básicos
-    const { name, brand, pet, category, age, price, description, condition, kg, special } = req.body;
+    const { name, brand, pet, category, age, price, description, condition, kg } = req.body;
     
     if (name) product.name = name;
     if (brand) product.brand = brand;
@@ -120,8 +128,7 @@ exports.updateProduct = async (req, res) => {
     if (description) product.description = description;
     if (condition) product.condition = condition;
     if (kg !== undefined) product.kg = kg || null;
-    if (special && special !== 'otro') product.special = special;
-    else if (special === 'otro') product.special = null;
+
     
     // Agregar nuevas imágenes
     if (req.files && req.files.length > 0) {

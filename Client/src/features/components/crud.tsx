@@ -53,35 +53,35 @@ export const Crud = () => {
     }
  
     const handleAddProduct = async () => {
-        setSuccessMessage("")
-        
-        const requiredFields = ['name', 'brand', 'pet', 'category', 'description', 'age', 'price']
-        const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData])
-        
-        if (missingFields.length > 0) {
-            alert(`Faltan campos obligatorios: ${missingFields.join(', ')}`)
-            return
-        }
- 
-        if (imageFiles.length === 0) {
-            alert('Debes seleccionar al menos una imagen para el producto')
-            return
-        }
- 
-        const formDataToSend = new FormData()
-        formDataToSend.append('name', formData.name)
-        formDataToSend.append('brand', formData.brand)
-        formDataToSend.append('pet', formData.pet)
-        formDataToSend.append('category', formData.category)
-        formDataToSend.append('description', formData.description)
-        formDataToSend.append('age', formData.age)
-        formDataToSend.append('price', formData.price)
-        if (formData.kg) formDataToSend.append('kg', formData.kg)
-        if (formData.condition) formDataToSend.append('condition', formData.condition)
- 
-        imageFiles.forEach(file => {
-            formDataToSend.append('images', file)
-        })
+       setSuccessMessage("")
+    
+    const requiredFields = ['name', 'brand', 'pet', 'category', 'description', 'age', 'price', 'condition']
+    const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData])
+    
+    if (missingFields.length > 0) {
+        alert(`Faltan campos obligatorios: ${missingFields.join(', ')}`)
+        return
+    }
+
+    if (imageFiles.length === 0) {
+        alert('Debes seleccionar al menos una imagen para el producto')
+        return
+    }
+
+    const formDataToSend = new FormData()
+    formDataToSend.append('name', formData.name)
+    formDataToSend.append('brand', formData.brand)
+    formDataToSend.append('pet', formData.pet)
+    formDataToSend.append('category', formData.category)
+    formDataToSend.append('description', formData.description)
+    formDataToSend.append('age', formData.age)
+    formDataToSend.append('price', formData.price)
+    formDataToSend.append('condition', formData.condition)
+    if (formData.kg) formDataToSend.append('kg', formData.kg)
+
+    imageFiles.forEach(file => {
+        formDataToSend.append('images', file)
+    })
  
         try {
             await addProduct(formDataToSend)
@@ -153,9 +153,9 @@ export const Crud = () => {
                             disabled={isLoading}
                         >
                             <option value="">Seleccionar mascota</option>
-                            <option value="gato">🐱 Gato</option>
-                            <option value="perro">🐕 Perro</option>
-                            <option value="ambos">🐱 🐕 Ambos</option>
+                            <option value="Gato">🐱 Gato</option>
+                            <option value="Perro">🐕 Perro</option>
+                            <option value="Ambos">🐱 🐕 Ambos</option>
                         </select>
                     </div>
  
@@ -167,11 +167,11 @@ export const Crud = () => {
                             disabled={isLoading}
                         >
                             <option value="">Seleccionar categoría</option>
-                            <option value="alimentos">🍖 Alimentos</option>
-                            <option value="accesorios">🎀 Accesorios</option>
-                            <option value="higiene">🧼 Higiene</option>
-                            <option value="indumentaria">👕 Indumentaria</option>
-                            <option value="colchonetas">🛏️ Colchonetas</option>
+                            <option value="Alimentos">🍖 Alimentos</option>
+                            <option value="Accesorios">🎀 Accesorios</option>
+                            <option value="Higiene">🧼 Higiene</option>
+                            <option value="Indumentaria">👕 Indumentaria</option>
+                            <option value="Colchonetas">🛏️ Colchonetas</option>
                         </select>
                     </div>
  
@@ -196,11 +196,11 @@ export const Crud = () => {
                             disabled={isLoading}
                         >
                             <option value="">Seleccionar edad</option>
-                            <option value="cachorro">👶 Cachorro</option>
-                            <option value="mini adulto">🐾 Mini Adulto</option>
-                            <option value="adulto">🐕 Adulto</option>
-                            <option value="senior">👴 Senior</option>
-                            <option value="otro">Otro</option>
+                            <option value="Cachorro">👶 Cachorro</option>
+                            <option value="Mini adulto">🐾 Mini Adulto</option>
+                            <option value="Adulto">🐕 Adulto</option>
+                            <option value="Senior">👴 Senior</option>
+                            <option value="Otro">Otro</option>
                         </select>
                     </div>
                     
@@ -236,12 +236,13 @@ export const Crud = () => {
                             onChange={(e) => handleInputChange('condition', e.target.value)}
                             disabled={isLoading}
                         >
-                            <option value="">Sin especial</option>
-                            <option value="derma adulto">Derma Adulto</option>
-                            <option value="derma mini adulto">Derma Mini Adulto</option>
-                            <option value="urinary">Urinary</option>
-                            <option value="castrado">Castrado</option>
-                            <option value="light">Light</option>
+                            
+                            <option value="Derma adulto">Derma Adulto</option>
+                            <option value="Derma mini adulto">Derma Mini Adulto</option>
+                            <option value="Urinary">Urinary</option>
+                            <option value="Castrado">Castrado</option>
+                            <option value="Light">Light</option>
+                            <option value=" ">Ninguno</option>
                         </select>
                     </div>
  

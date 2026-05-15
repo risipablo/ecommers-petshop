@@ -3,9 +3,12 @@ import { createContext, useContext, useEffect, useState, useCallback, type React
 import type { Product, ProductsContextType } from "../features/types/product.type";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import { config } from '../config/index';
+
+const API_URL = config.Api;
 
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
-const API_URL = "https://ecommers-petshop.onrender.com/api"
+
 
 export const ProductsProvider = ({ children }: { children: ReactNode }) => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -177,6 +180,8 @@ const updateProduct = async (id: string, formData: FormData): Promise<void> => {
     }
 };
 
+
+
 const deleteProduct = async (id: string): Promise<void> => {
     setIsLoading(true);
     setError(null);
@@ -192,20 +197,27 @@ const deleteProduct = async (id: string): Promise<void> => {
         });
         
         if (response.data.success) {
-            setProducts(prev => prev.filter(p => p._id !== id));
-            setFilteredProducts(prev => prev.filter(p => p._id !== id));
+            
+            setProducts(prevProducts => prevProducts.filter(product => product._id !== id));
+            setFilteredProducts(prevFiltered => prevFiltered.filter(product => product._id !== id));
+            
+            
+            console.log(' Producto eliminado exitosamente');
         } else {
             throw new Error(response.data.error || 'Error al eliminar producto');
         }
     } catch (err) {
-            const error = err instanceof Error ? err : new Error('Error desconocido');
-            const errorMessage = axios.isAxiosError(err) ? err.response?.data?.error || error.message : error.message;
-            setError(errorMessage || 'Error desconocido');
-            throw new Error(errorMessage || 'Error desconocido');
+        console.error('Error en deleteProduct:', err);
+        const error = err instanceof Error ? err : new Error('Error desconocido');
+        const errorMessage = axios.isAxiosError(err) ? err.response?.data?.error || error.message : error.message;
+        setError(errorMessage || 'Error desconocido');
+        throw new Error(errorMessage || 'Error desconocido');
     } finally {
         setIsLoading(false);
     }
 };
+
+
     const contextValue: ProductsContextType = {
         products,
         filteredProducts,

@@ -19,11 +19,11 @@ export const AdminProductCard = ({ product }: AdminProductCardProps) => {
     const navigate = useNavigate();
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const handleDelete = async () => {
-        if (confirm(`¿Estás seguro de eliminar "${product.name}"?`)) {
+    const handleDelete = async (id: string, name: string) => {
+        if (confirm(`¿Estás seguro de eliminar "${name}"?`)) {
             setIsDeleting(true);
             try {
-                await deleteProduct(product._id);
+                await deleteProduct(id);
                 alert('Producto eliminado exitosamente');
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (error) {
@@ -76,7 +76,7 @@ export const AdminProductCard = ({ product }: AdminProductCardProps) => {
                         </button>
                         <button 
                             className="delete-btn"
-                            onClick={handleDelete}
+                            onClick={() => handleDelete(product._id, product.name)}
                             disabled={isDeleting || isLoading}
                             title="Eliminar producto"
                         >

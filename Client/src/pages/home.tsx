@@ -12,6 +12,7 @@ import { AdminGuard } from "../components/admin/adminGuard";
 import { ProfilePage } from "./profilePage";
 import { EditProduct } from "../features/components/editProduct";
 import { ManageProductImages } from "../features/components/manageProductImage";
+import { ResetPasswordPage } from "./resetPasswordPage";
 
 
 export function Home() {
@@ -25,7 +26,8 @@ export function Home() {
                 <Route path="/:category" element={<ProductList />} />
                 <Route path="/item/:id" element={<ProductDetail />} />
                 <Route path="/contacto" element={<Contacto />} />
-                <Route path="/profile" element={<ProfilePage />} />
+                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
                 
                 {/* Rutas protegidas - solo admin */}
                 <Route path="/crud" element={

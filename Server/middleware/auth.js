@@ -24,12 +24,30 @@ const verifyToken = (req, res, next) => {
 
 // Middleware para requerir autenticación
 const requireAuth = (req, res, next) => {
-  if (!req.user) {
-    return res.status(401).json({ success: false, error: 'No autorizado. Inicia sesión primero.' });
+  const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
+  
+  console.log('requireAuth - Token recibido:', !!token);
+  
+  if (!token) {
+    return res.status(401).json({ 
+      success: false, 
+      error: 'No autorizado. Inicia sesión primero.' 
+    });
   }
-  next();
+  
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    console.log('Usuario autenticado:', req.user.email);
+    next();
+  } catch (error) {
+    console.error(' Token inválido:', error.message);
+    return res.status(401).json({ 
+      success: false, 
+      error: 'Token inválido o expirado' 
+    });
+  }
 };
-
 // Middleware para requerir rol de admin
 const requireAdmin = async (req, res, next) => {
     try {

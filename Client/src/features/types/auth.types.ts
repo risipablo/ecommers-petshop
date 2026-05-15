@@ -25,6 +25,28 @@ export interface RegisterCredentials {
     name: string;
     email: string;
     password: string;
+    confirmPassword: string;
+}
+
+export interface ChangeNameCredentials {
+    name: string;
+}
+
+export interface ChangePasswordCredentials {
+    email: string;
+    currentPassword: string;
+    newPassword: string;
+    confirmNewPassword: string;
+}
+
+export interface ForgotPasswordCredentials {
+    email: string;
+}
+
+export interface ResetPasswordCredentials {
+    token: string;
+    newPassword: string;
+    confirmNewPassword: string;
 }
 
 export interface AuthContextType extends AuthState {
@@ -32,5 +54,9 @@ export interface AuthContextType extends AuthState {
     register: (credentials: RegisterCredentials) => Promise<void>;
     logout: () => Promise<void>;
     checkAuth: () => Promise<void>;
+    changeName: (credentials: ChangeNameCredentials) => Promise<void>;
+    changePassword: (credentials: ChangePasswordCredentials) => Promise<void>;
+    forgotPassword: (credentials: ForgotPasswordCredentials) => Promise<void>;
+    resetPassword: (credentials: ResetPasswordCredentials) => Promise<void>;
     isAdmin: boolean;
 }

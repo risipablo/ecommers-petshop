@@ -21,6 +21,7 @@ export const UserMenu = () => {
     return (
         <div className="user-menu-container">
             <button className="user-menu-btn" onClick={() => setIsOpen(!isOpen)}>
+
                 <User size={20} />
                 <span>{user?.name?.split(' ')[0] || 'Usuario'}</span>
             </button>
@@ -37,7 +38,7 @@ export const UserMenu = () => {
                     
                     <div className="user-menu-divider"></div>
                     
-                    {/* 🔒 Opciones solo para admin */}
+                    
                     {isAdmin && (
                         <>
                             <button 

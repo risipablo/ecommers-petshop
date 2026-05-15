@@ -1,21 +1,23 @@
-import { useState } from "react"
-
-import { destacado } from "../../components/data/destacados"
-import type { IDestacados } from "../types/product.type"
+// features/hooks/useDestacados.ts
+import { useState } from 'react';
+import { useProducts } from './useProducts';
 
 export const UseDestacados = () => {
-    const [products, setProducts] = useState<IDestacados[]>([])
+    const { products, isLoading, fetchProducts } = useProducts();
+    const [loading, setLoading] = useState(true);
 
-    const fetch = ():Promise<IDestacados[]> => {
-        
-        return new Promise<IDestacados[]>((resolve) => {
-            const prods = (destacado as IDestacados[])
+    const fetch = async () => {
+        setLoading(true);
+        await fetchProducts();
+        setLoading(false);
+    };
 
-            setProducts(prods)
-            resolve(prods)
-        })
-    }
+    // Mostrar los primeros 8 productos (los más recientes)
+    const destacados = products.slice(0, 8);
 
-    return{products, fetch}
-
-}
+    return {
+        products: destacados,
+        loading: loading || isLoading,
+        fetch
+    };
+};

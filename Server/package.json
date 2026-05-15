@@ -22,12 +22,15 @@
     "mongodb": "^7.0.0",
     "mongoose": "^8.19.4",
     "multer": "^2.1.1",
-    "nodemon": "^3.1.11"
+    "nodemailer": "^8.0.7",
+    "nodemon": "^3.1.11",
+    "resend": "^6.12.3"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.1.0",
+    "@types/nodemailer": "^8.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

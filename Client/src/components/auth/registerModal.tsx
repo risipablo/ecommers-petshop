@@ -1,9 +1,8 @@
 // components/auth/RegisterModal.tsx
 import { useState } from 'react';
-import { X, Mail, Lock, User, UserPlus } from 'lucide-react';
-import "../../assets/styles/auth.css"
+import { X, Mail, Lock, User, UserPlus, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/authProvider';
-
+import '../../assets/styles/auth.css';
 
 interface RegisterModalProps {
     isOpen: boolean;
@@ -16,11 +15,27 @@ export const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }: RegisterModa
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
     const { register } = useAuth();
 
     if (!isOpen) return null;
+
+    const validatePassword = (pass: string) => {
+        const errors = [];
+        if (pass.length < 7) errors.push('• Mínimo 7 caracteres');
+        if (!/[A-Z]/.test(pass)) errors.push('• Al menos una mayúscula');
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(pass)) errors.push('• Al menos un carácter especial');
+        return errors;
+    };
+
+    const handlePasswordChange = (pass: string) => {
+        setPassword(pass);
+        setPasswordErrors(validatePassword(pass));
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,8 +45,8 @@ export const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }: RegisterModa
             return;
         }
         
-        if (password.length < 6) {
-            setError('La contraseña debe tener al menos 6 caracteres');
+        if (passwordErrors.length > 0) {
+            setError('Por favor, cumple con todos los requisitos de contraseña');
             return;
         }
         
@@ -39,7 +54,7 @@ export const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }: RegisterModa
         setError('');
         
         try {
-            await register({ name, email, password });
+            await register({ name, email, password, confirmPassword });
             onClose();
             setName('');
             setEmail('');
@@ -93,23 +108,46 @@ export const RegisterModal = ({ isOpen, onClose, onSwitchToLogin }: RegisterModa
                     <div className="form-group">
                         <Lock size={18} />
                         <input
-                            type="password"
-                            placeholder="Contraseña (mínimo 6 caracteres)"
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Contraseña"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => handlePasswordChange(e.target.value)}
                             required
                         />
+                        <button 
+                            type="button"
+                            className="password-toggle"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
                     </div>
+                    
+                    {passwordErrors.length > 0 && (
+                        <div className="password-requirements">
+                            <p className="requirements-title">La contraseña debe tener:</p>
+                            {passwordErrors.map((err, i) => (
+                                <span key={i} className="requirement">{err}</span>
+                            ))}
+                        </div>
+                    )}
                     
                     <div className="form-group">
                         <Lock size={18} />
                         <input
-                            type="password"
+                            type={showConfirmPassword ? "text" : "password"}
                             placeholder="Confirmar contraseña"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
                         />
+                        <button 
+                            type="button"
+                            className="password-toggle"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        >
+                            {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
                     </div>
                     
                     <button type="submit" className="auth-btn" disabled={loading}>

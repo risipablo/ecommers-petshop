@@ -1,7 +1,16 @@
 import { useState, useEffect, type SetStateAction } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '../../assets/styles/slider.css';
-import image1 from "../../assets/images/foto2.jpg"
+
+// Imports para Desktop (versiones grandes)
+import desk1 from "../../assets/images/pic1d.png";
+import desk2 from "../../assets/images/pic1.png";
+import desk3 from "../../assets/images/picd3.png";
+
+// Imports para Mobile (versiones pequeñas)
+import mobile1 from "../../assets/images/pic2.png";
+import mobile2 from "../../assets/images/pic1.png";
+import mobile3 from "../../assets/images/pic3.png";
 
 export default function Carousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -10,22 +19,24 @@ export default function Carousel() {
   const slides = [
     {
       id: 1,
-      image: image1,
-      
+      images: {
+        mobile: mobile1,
+        desktop: desk1
+      }
     },
     {
       id: 2,
-      image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=1920&h=700&fit=crop',
-      title: '¡Nuevos Productos de Invierno!',
-      subtitle: 'Mantén a tu mascota abrigada y feliz',
-      cta: 'Ver Productos'
+      images: {
+        mobile: mobile2,
+        desktop: desk2
+      }
     },
     {
       id: 3,
-      image: 'https://images.unsplash.com/photo-1615751072497-5f5169febe17?w=1920&h=700&fit=crop',
-      title: 'Alimento Premium',
-      subtitle: 'Nutrición de calidad para tu mejor amigo',
-      cta: 'Descubrir Más'
+      images: {
+        mobile: mobile3,
+        desktop: desk3
+      }
     }
   ];
 
@@ -60,28 +71,28 @@ export default function Carousel() {
       >
         {slides.map((slide) => (
           <div key={slide.id} className="carousel-slide">
-            {/* Imagen */}
-            <img 
-              src={slide.image} 
-              alt={slide.title}
-              className="carousel-image"
-            />
+            <picture>
+              <source 
+                media="(max-width: 767px)" 
+                srcSet={slide.images.mobile}
+              />
+              <source 
+                media="(min-width: 768px)" 
+                srcSet={slide.images.desktop}
+              />
+              <img 
+                src={slide.images.desktop} 
+                alt={`Slide ${slide.id}`}
+                className="carousel-image"
+                loading="lazy"
+              />
+            </picture>
             
-            {/* Overlay oscuro */}
             <div className="carousel-overlay" />
             
-            {/* Contenido */}
             <div className="carousel-content">
               <div className="carousel-text">
-                <h2 className="carousel-title">
-                  {slide.title}
-                </h2>
-                <p className="carousel-subtitle">
-                  {slide.subtitle}
-                </p>
-                {/* <button className="carousel-button">
-                  {slide.cta}
-                </button> */}
+                {/* Contenido si lo necesitas */}
               </div>
             </div>
           </div>
@@ -109,7 +120,6 @@ export default function Carousel() {
         <ChevronRight className="carousel-nav-icon" />
       </button>
 
-      {/* Indicadores (dots) */}
       <div className="carousel-indicators">
         {slides.map((_, index) => (
           <button
@@ -122,11 +132,6 @@ export default function Carousel() {
           />
         ))}
       </div>
-
-
-      {/* <div className="carousel-counter">
-        {currentSlide + 1} / {slides.length}
-      </div> */}
     </div>
   );
 }

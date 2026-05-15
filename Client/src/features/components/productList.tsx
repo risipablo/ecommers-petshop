@@ -7,15 +7,11 @@ import { Eye, Edit, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { ProductSkeletonGrid } from '../../components/common/productSkeleton';
 import { useAuth } from '../../context/authProvider';
-
-import axios from 'axios';
 import { Filters } from './filters';
 import type { Product } from '../types/product.type';
 
-const API_URL = "https://ecommers-petshop.onrender.com/api"
-
 export const ProductList = () => {
-    const { filteredProducts: contextFilteredProducts, searchTerms, searchQuery, isLoading, fetchProducts } = useProducts();
+    const { filteredProducts: contextFilteredProducts, searchTerms, searchQuery, isLoading, deleteProduct } = useProducts();
     const { isAdmin } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
@@ -36,7 +32,6 @@ export const ProductList = () => {
         if (!isLoading) {
             let products = [...contextFilteredProducts];
             
-            // Si estamos en una categoría específica, filtrar por ella
             if (categoryPath && categoryPath !== 'todos' && categoryPath !== 'search' && 
                 !categoryPath.includes('edit-product') && !categoryPath.includes('admin')) {
                 products = products.filter(p => 
@@ -92,10 +87,12 @@ export const ProductList = () => {
         
         setIsDeleting(productToDelete.id);
         try {
-            await axios.delete(`${API_URL}/products/${productToDelete.id}`, {
-                withCredentials: true
-            });
-            await fetchProducts();
+            await deleteProduct(productToDelete.id);
+            
+            // ✅ Actualizar estados locales inmediatamente
+            setLocalProducts(prev => prev.filter(p => p._id !== productToDelete.id));
+            setFilteredProductsState(prev => prev.filter(p => p._id !== productToDelete.id));
+            
             alert('✅ Producto eliminado exitosamente');
             setShowDeleteModal(false);
             setProductToDelete(null);
@@ -180,7 +177,6 @@ export const ProductList = () => {
                                 style={{ animationDelay: `${index * 0.05}s` }}
                                 onClick={() => handleProductClick(product._id)}
                             >
-                                {/* Admin Actions */}
                                 {isAdmin && (
                                     <div className="admin-actions-overlay">
                                         <button
@@ -201,7 +197,6 @@ export const ProductList = () => {
                                     </div>
                                 )}
 
-                                {/* Image Section */}
                                 <div className="product-image-container">
                                     <img 
                                         src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'} 
@@ -211,7 +206,6 @@ export const ProductList = () => {
                                     />
                                 </div>
 
-                                {/* Content Section */}
                                 <div className="product-content">
                                     <h3 className="product-name" title={product.name}>{product.name}</h3>
                                     
@@ -237,7 +231,6 @@ export const ProductList = () => {
                 </main>
             </div>
 
-            {/* Modal de confirmación para eliminar */}
             {showDeleteModal && productToDelete && (
                 <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
                     <div className="modal-content-delete" onClick={(e) => e.stopPropagation()}>

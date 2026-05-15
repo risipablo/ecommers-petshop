@@ -8,8 +8,9 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/authProvider';
 import axios from 'axios';
 import type { Product } from '../types/product.type';
+import { config } from '../../config/index';
 
-const API_URL = "https://ecommers-petshop.onrender.com/api"
+const API_URL = config.Api;
 
 export function ProductDetail() {
     const { id } = useParams<{ id: string }>();

@@ -4,14 +4,20 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const { optionalAuth, requireAuth } = require('../middleware/auth');
 
+// Verificar que todas las funciones existen
+console.log('Controladores cargados:', Object.keys(authController));
+
 // Rutas públicas
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/reset-password', authController.resetPassword);
 
-// Rutas protegidas (requieren autenticación)
+// Rutas protegidas
 router.get('/me', optionalAuth, authController.getMe);
 router.get('/check-admin', optionalAuth, authController.checkAdmin);
-router.put('/profile', requireAuth, authController.updateProfile);
+router.put('/change-name', requireAuth, authController.changeName);
+router.put('/change-password', requireAuth, authController.changePassword);
 
 module.exports = router;
