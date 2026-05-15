@@ -1,5 +1,5 @@
 // context/authProvider.tsx
-import React, { createContext, useContext, useState, useEffect, type ReactNode, } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode, } from 'react';
 import axios from 'axios';
 import type {
     User,
