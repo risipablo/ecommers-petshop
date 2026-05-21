@@ -2,20 +2,22 @@ import { Link, useLocation } from 'react-router-dom';
 import '../../assets/styles/navbar.css';
 import { useState, useEffect } from 'react';
 import { useProducts } from '../../features/hooks/useProducts';
-import { Shield, Package, Plus, Images, LayoutDashboard } from 'lucide-react';
+import { useAuth } from '../../context/authProvider'; // Importamos el auth hook
+import { Shield, Package, Plus, Images, LayoutDashboard, User, LogIn, UserPlus, LogOut, User as UserIconLucide } from 'lucide-react';
 
 const Navbar = () => {
     const location = useLocation();
     const { clearSearch } = useProducts();
+    const { isAuthenticated, user, isAdmin: authIsAdmin, logout } = useAuth(); // Extraemos estado de auth
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
-        const adminStatus = localStorage.getItem('isAdmin') === 'true';
+        const adminStatus = localStorage.getItem('isAdmin') === 'true' || authIsAdmin;
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsAdmin(adminStatus);
-    }, []);
+    }, [authIsAdmin]);
 
     // Cerrar menú al cambiar ruta
     useEffect(() => {
@@ -107,14 +109,43 @@ const Navbar = () => {
                     </div>
                 )}
 
-                {/* Link Home */}
-                <Link 
-                    to="/"
-                    onClick={handleNavClick}
-                    className={`nav-link home-link ${location.pathname === '/' ? 'active' : ''}`}
-                >
-                    Inicio
-                </Link>
+
+               
+                <div className="mobile-user-section">
+                    {!isAuthenticated ? (
+                        <>
+                            <div className="mobile-user-avatar">
+                                <User size={22} />
+                            </div>
+                            <Link to="/login" className="mobile-user-btn login-btn">
+                                <LogIn size={16} />
+                                <span>Iniciar Sesión</span>
+                            </Link>
+                            <Link to="/register" className="mobile-user-btn register-btn">
+                                <UserPlus size={16} />
+                                <span>Registrarse</span>
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <div className="mobile-user-avatar authenticated">
+                                <User size={22} />
+                                <span className="mobile-status-dot"></span>
+                            </div>
+                            <div className="mobile-user-info">
+                                <span className="mobile-user-name">¡Hola, {user?.name?.split(' ')[0]}!</span>
+                            </div>
+                            <div className="mobile-user-actions-row">
+                                <Link to="/profile" className="mobile-user-btn profile-btn">
+                                    <UserIconLucide size={16} />
+                                </Link>
+                                <button onClick={logout} className="mobile-user-btn logout-btn" aria-label="Cerrar sesión">
+                                    <LogOut size={16} />
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
 
             {/* Botón FAB Admin (solo en móvil) */}

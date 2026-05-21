@@ -11,6 +11,7 @@
     --text-secondary: #6c6480;
     --border-color: #e7def7;
     --shadow-sm: 0 2px 8px rgba(109, 75, 163, 0.06);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -223,7 +224,11 @@
     margin-top: 0.5rem;
 }
 
-/* Mobile Filter Button */
+/* ==========================================
+   MOBILE DRAWER - LATERAL DERECHA
+   ========================================== */
+
+/* Botón móvil - IMPORTANTE: debe estar visible en móvil */
 .mobile-filter-btn {
     display: none;
     align-items: center;
@@ -231,52 +236,41 @@
     gap: 0.5rem;
     width: 100%;
     padding: 0.875rem 1rem;
-    background: linear-gradient(135deg, var(--roman-purple) 0%, var(--roman-purple-dark) 100%);
-    border: none;
+    background: white;
+    border: 1px solid var(--border-color);
     border-radius: 0.75rem;
     cursor: pointer;
     font-size: 0.9375rem;
     font-weight: 600;
     margin-bottom: 1.25rem;
     position: relative;
-    color: white;
+    color: var(--roman-purple);
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(109, 75, 163, 0.2);
+    box-shadow: var(--shadow-sm);
 }
 
 .mobile-filter-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(109, 75, 163, 0.3);
+    border-color: var(--roman-purple);
+    background: var(--roman-purple-bg);
 }
 
-.filter-badge {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    background: #f97316;
+/* Contador de filtros activos */
+.filter-count {
+    background: var(--roman-purple);
     color: white;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: bold;
-    width: 20px;
+    min-width: 20px;
     height: 20px;
-    border-radius: 50%;
-    display: flex;
+    border-radius: 10px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    animation: pulse 1.5s infinite;
+    padding: 0 6px;
 }
 
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-}
-
-/* Modal Móvil */
-.filters-modal-overlay {
+/* Overlay del drawer */
+.filters-drawer-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -284,151 +278,174 @@
     bottom: 0;
     background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
-    display: flex;
-    align-items: flex-end;
+    animation: fadeIn 0.3s ease;
 }
 
-.filters-modal {
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Drawer lateral desde derecha */
+.filters-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 85%;
+    max-width: 360px;
     background: white;
-    border-radius: 1rem 1rem 0 0;
-    width: 100%;
-    max-height: 85vh;
+    z-index: 1001;
     display: flex;
     flex-direction: column;
-    animation: slideUp 0.3s ease;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+    animation: slideInRight 0.3s ease;
 }
 
-@keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
 }
 
-.filters-modal-header {
+/* Header del Drawer */
+.filters-drawer-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1.25rem;
+    padding: 1.25rem 1.25rem 1rem;
     border-bottom: 1px solid var(--border-color);
+    background: white;
+    border-radius: 0;
 }
 
-.filters-modal-header h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
+.filters-drawer-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
     color: var(--roman-purple);
+    margin: 0;
 }
 
-.filters-modal-header button {
-    background: none;
+.filters-drawer-close {
+    background: var(--roman-purple-bg);
     border: none;
     cursor: pointer;
     padding: 0.5rem;
-    border-radius: 0.5rem;
-    transition: all 0.2s;
-}
-
-.filters-modal-header button:hover {
-    background: var(--roman-purple-bg);
-}
-
-.filters-modal-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1rem 1.25rem;
-}
-
-/* Scrollbar para modal móvil */
-.filters-modal-content::-webkit-scrollbar {
-    width: 6px;
-}
-
-.filters-modal-content::-webkit-scrollbar-track {
-    background: var(--border-color);
-    border-radius: 3px;
-}
-
-.filters-modal-content::-webkit-scrollbar-thumb {
-    background: var(--roman-purple-light);
-    border-radius: 3px;
-}
-
-/* Estilos dentro del modal móvil */
-.filters-modal-content .filter-section {
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.filters-modal-content .filter-section-header {
+    border-radius: 0.75rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    padding: 0.875rem 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-    color: var(--text-primary);
-    font-size: 0.9375rem;
-}
-
-.filters-modal-content .filter-section-header:hover {
+    justify-content: center;
+    transition: all 0.2s;
     color: var(--roman-purple);
 }
 
-.filters-modal-content .filter-checkbox {
+.filters-drawer-close:hover {
+    background: var(--roman-purple);
+    color: white;
+}
+
+/* Filtros activos row */
+.active-filters-row {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.75rem;
-    cursor: pointer;
-    font-size: 0.9375rem;
-    color: var(--text-secondary);
-    padding: 0.5rem 0;
+    padding: 0.75rem 1.25rem;
+    background: var(--roman-purple-bg);
+    border-bottom: 1px solid var(--border-color);
 }
 
-.filters-modal-content .filter-checkbox input {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: var(--roman-purple);
-}
-
-.filters-modal-content .price-inputs {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin: 1rem 0;
-}
-
-.filters-modal-content .price-input {
-    flex: 1;
-}
-
-.filters-modal-content .price-input label {
-    display: block;
+.active-filters-label {
     font-size: 0.75rem;
     color: var(--text-secondary);
-    margin-bottom: 0.25rem;
 }
 
-.filters-modal-content .price-input input {
-    width: 100%;
-    padding: 0.625rem;
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
+.clear-all-filters {
+    background: none;
+    border: none;
+    color: var(--roman-purple);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+}
+
+.clear-all-filters:hover {
+    background: rgba(109, 75, 163, 0.15);
+}
+
+/* Contenido del Drawer - Scroll */
+.filters-drawer-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem 1.25rem;
+}
+
+/* Scrollbar para drawer */
+.filters-drawer-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.filters-drawer-content::-webkit-scrollbar-track {
+    background: var(--border-color);
+    border-radius: 2px;
+}
+
+.filters-drawer-content::-webkit-scrollbar-thumb {
+    background: var(--roman-purple-light);
+    border-radius: 2px;
+}
+
+/* Estilos dentro del drawer */
+.filters-drawer-content .filter-section {
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.filters-drawer-content .filter-section-header {
+    padding: 1rem 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+.filters-drawer-content .filter-checkbox {
+    padding: 0.5rem 0;
     font-size: 0.9375rem;
 }
 
-.filters-modal-footer {
+.filters-drawer-content .filter-checkbox input {
+    width: 18px;
+    height: 18px;
+}
+
+.filters-drawer-content .price-inputs {
+    gap: 0.75rem;
+    margin: 0.75rem 0 1rem;
+}
+
+.filters-drawer-content .price-input input {
+    padding: 0.625rem;
+    font-size: 0.9375rem;
+}
+
+/* Footer del Drawer */
+.filters-drawer-footer {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
     padding: 1rem 1.25rem;
     border-top: 1px solid var(--border-color);
     background: white;
-    border-radius: 0 0 1rem 1rem;
 }
 
-.clear-filters-btn,
-.apply-filters-btn {
+.drawer-clear-btn,
+.drawer-apply-btn {
     flex: 1;
     padding: 0.875rem;
     border-radius: 0.75rem;
@@ -436,26 +453,27 @@
     cursor: pointer;
     transition: all 0.2s;
     font-size: 0.9375rem;
+    text-align: center;
+    border: none;
 }
 
-.clear-filters-btn {
+.drawer-clear-btn {
     background: #f3f4f6;
-    border: none;
     color: #6b7280;
 }
 
-.clear-filters-btn:hover {
+.drawer-clear-btn:hover {
     background: #e5e7eb;
 }
 
-.apply-filters-btn {
+.drawer-apply-btn {
     background: var(--roman-purple);
-    border: none;
     color: white;
 }
 
-.apply-filters-btn:hover {
+.drawer-apply-btn:hover {
     background: var(--roman-purple-dark);
+    transform: translateY(-1px);
 }
 
 /* ==========================================
@@ -470,26 +488,45 @@
     }
 }
 
-/* Tablet Portrait y Móviles */
+
 @media (max-width: 768px) {
+    .filters-sidebar {
+        display: block !important;
+        width: 100% !important;
+    }
+    
     .filters-panel {
-        display: none;
+        display: none !important;
     }
     
     .mobile-filter-btn {
-        display: flex;
+        display: flex !important;
+        width: 100% !important;
+        margin-bottom: 1rem !important;
     }
 }
 
-/* Ajustes para móviles pequeños */
+
 @media (max-width: 480px) {
-    .filters-modal-content .filter-checkbox {
-        font-size: 0.875rem;
-        padding: 0.375rem 0;
+    .filters-drawer {
+        width: 100%;
+        max-width: 320px;
     }
     
-    .clear-filters-btn,
-    .apply-filters-btn {
+    .filters-drawer-header {
+        padding: 1rem 1rem 0.875rem;
+    }
+    
+    .filters-drawer-content {
+        padding: 0 1rem;
+    }
+    
+    .filters-drawer-footer {
+        padding: 0.875rem 1rem;
+    }
+    
+    .drawer-clear-btn,
+    .drawer-apply-btn {
         padding: 0.75rem;
         font-size: 0.875rem;
     }

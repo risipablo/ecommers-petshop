@@ -120,21 +120,21 @@ export const ProductList = () => {
         );
     }
 
-    if (searchTerms && filteredProductsState.length === 0 && currentPath === '/search') {
-        return (
-            <div className="no-results">
-                <SearchOffIcon sx={{ fontSize: 80, color: '#d4a574' }} />
-                <h2>No se encontró ningún producto</h2>
-                <p>Intenta con otros términos de búsqueda</p>
-                {searchQuery && (
-                    <p className="search-query">Buscaste: "{searchQuery}"</p>
-                )}
-                <button onClick={() => navigate('/')} className="back-to-home">
-                    Volver al inicio
-                </button>
-            </div>
-        );
-    }
+if (searchTerms && filteredProductsState.length === 0 && currentPath === '/search') {
+    return (
+        <div className="no-results">
+            <SearchOffIcon sx={{ fontSize: 80, color: '#d4a574' }} />
+            <h2> No hubo resultados para tu búsqueda</h2>
+            <p>Intenta con otros términos o revisa la ortografía</p>
+            {searchQuery && (
+                <p className="search-query">Buscaste: <strong>"{searchQuery}"</strong></p>
+            )}
+            <button onClick={() => navigate('/')} className="back-to-home">
+                Volver al inicio
+            </button>
+        </div>
+    );
+}
 
     if (filteredProductsState.length === 0 && !isLoading) {
         return (

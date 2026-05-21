@@ -86,6 +86,7 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
                             selectedAges.length > 0 || selectedWeights.length > 0 ||
                             tempPriceRange.min !== priceRange.min || tempPriceRange.max !== priceRange.max;
 
+    // Componente FilterSection interno
     const FilterSection = ({ 
         title, section, options, selectedValues, onChange 
     }: { 
@@ -110,14 +111,19 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
         </div>
     );
 
+    // Contar filtros activos
+    const activeFiltersCount = selectedPets.length + selectedBrands.length + selectedAges.length + selectedWeights.length;
+
     return (
         <>
+            {/* Botón móvil */}
             <button className="mobile-filter-btn" onClick={() => setIsMobileMenuOpen(true)}>
                 <SlidersHorizontal size={18} />
-                Filtrar productos
-                {hasActiveFilters && <span className="filter-badge">•</span>}
+                Filtrar
+                {activeFiltersCount > 0 && <span className="filter-count">{activeFiltersCount}</span>}
             </button>
 
+            {/* Panel Desktop */}
             <div className="filters-panel">
                 <div className="filters-header">
                     <h3><Filter size={18} />Filtros</h3>
@@ -131,8 +137,8 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
                 <FilterSection title="Mascota" section="pet" options={options.pet} selectedValues={selectedPets} onChange={(v) => handleCheckboxChange(setSelectedPets, v)} />
                 <FilterSection title="Marcas" section="brand" options={options.brand} selectedValues={selectedBrands} onChange={(v) => handleCheckboxChange(setSelectedBrands, v)} />
                 <FilterSection title="Edad" section="age" options={options.age} selectedValues={selectedAges} onChange={(v) => handleCheckboxChange(setSelectedAges, v)} />
-                <FilterSection title="Peso (kg)" section="weight" options={[]} selectedValues={selectedWeights} onChange={(v) => handleCheckboxChange(setSelectedWeights, v)} />
 
+                {/* Sección Precio */}
                 <div className="filter-section">
                     <button className="filter-section-header" onClick={() => toggleSection('price')}>
                         <span>Rango de precio</span>
@@ -164,41 +170,99 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
                 </div>
             </div>
 
+            {/* Drawer lateral móvil - DESDE LA DERECHA */}
             {isMobileMenuOpen && (
-                <div className="filters-modal-overlay" onClick={() => setIsMobileMenuOpen(false)}>
-                    <div className="filters-modal" onClick={(e) => e.stopPropagation()}>
-                        <div className="filters-modal-header">
-                            <h3>Filtrar productos</h3>
-                            <button onClick={() => setIsMobileMenuOpen(false)}><X size={20} /></button>
+                <>
+                    <div className="filters-drawer-overlay" onClick={() => setIsMobileMenuOpen(false)} />
+                    <div className="filters-drawer">
+                        {/* Header del Drawer */}
+                        <div className="filters-drawer-header">
+                            <h3>
+                                <Filter size={20} />
+                                Filtrar
+                            </h3>
+                            <button className="filters-drawer-close" onClick={() => setIsMobileMenuOpen(false)}>
+                                <X size={24} />
+                            </button>
                         </div>
-                        <div className="filters-modal-content">
-                            <FilterSection title="Mascota" section="pet" options={options.pet} selectedValues={selectedPets} onChange={(v) => handleCheckboxChange(setSelectedPets, v)} />
-                            <FilterSection title="Marcas" section="brand" options={options.brand} selectedValues={selectedBrands} onChange={(v) => handleCheckboxChange(setSelectedBrands, v)} />
-                            <FilterSection title="Edad" section="age" options={options.age} selectedValues={selectedAges} onChange={(v) => handleCheckboxChange(setSelectedAges, v)} />
-                            <FilterSection title="Peso (kg)" section="weight" selectedValues={selectedWeights} onChange={(v) => handleCheckboxChange(setSelectedWeights, v)} options={[]} />
+
+                        {/* Filtros activos - badges */}
+                        {hasActiveFilters && (
+                            <div className="active-filters-row">
+                                <span className="active-filters-label">Filtros activos:</span>
+                                <button className="clear-all-filters" onClick={clearAllFilters}>
+                                    Limpiar todo
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Contenido del Drawer */}
+                        <div className="filters-drawer-content">
+                            <FilterSection 
+                                title="Mascota" 
+                                section="pet" 
+                                options={options.pet} 
+                                selectedValues={selectedPets} 
+                                onChange={(v) => handleCheckboxChange(setSelectedPets, v)} 
+                            />
+                            <FilterSection 
+                                title="Marcas" 
+                                section="brand" 
+                                options={options.brand} 
+                                selectedValues={selectedBrands} 
+                                onChange={(v) => handleCheckboxChange(setSelectedBrands, v)} 
+                            />
+                            <FilterSection 
+                                title="Edad" 
+                                section="age" 
+                                options={options.age} 
+                                selectedValues={selectedAges} 
+                                onChange={(v) => handleCheckboxChange(setSelectedAges, v)} 
+                            />
+
+                            {/* Sección Precio en móvil */}
                             <div className="filter-section">
-                                <div className="filter-section-header"><span>Rango de precio</span></div>
-                                <div className="filter-section-content price-range">
-                                    <div className="price-inputs">
-                                        <div className="price-input">
-                                            <label>Min</label>
-                                            <input type="number" value={tempPriceRange.min} onChange={(e) => setTempPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))} />
+                                <button className="filter-section-header" onClick={() => toggleSection('price')}>
+                                    <span>Rango de precio</span>
+                                    {openSections.price ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                </button>
+                                {openSections.price && (
+                                    <div className="filter-section-content price-range">
+                                        <div className="price-inputs">
+                                            <div className="price-input">
+                                                <label>Min</label>
+                                                <input type="number" value={tempPriceRange.min} onChange={(e) => setTempPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))} min={priceRange.min} max={tempPriceRange.max} />
+                                            </div>
+                                            <span>-</span>
+                                            <div className="price-input">
+                                                <label>Max</label>
+                                                <input type="number" value={tempPriceRange.max} onChange={(e) => setTempPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))} min={tempPriceRange.min} max={priceRange.max} />
+                                            </div>
                                         </div>
-                                        <span>-</span>
-                                        <div className="price-input">
-                                            <label>Max</label>
-                                            <input type="number" value={tempPriceRange.max} onChange={(e) => setTempPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))} />
+                                        <div className="price-slider">
+                                            <input type="range" min={priceRange.min} max={priceRange.max} value={tempPriceRange.min} onChange={(e) => setTempPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))} />
+                                            <input type="range" min={priceRange.min} max={priceRange.max} value={tempPriceRange.max} onChange={(e) => setTempPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))} />
+                                        </div>
+                                        <div className="price-values">
+                                            <span>${tempPriceRange.min.toLocaleString()}</span>
+                                            <span>${tempPriceRange.max.toLocaleString()}</span>
                                         </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         </div>
-                        <div className="filters-modal-footer">
-                            <button className="clear-filters-btn" onClick={clearAllFilters}>Limpiar todo</button>
-                            <button className="apply-filters-btn" onClick={() => setIsMobileMenuOpen(false)}>Aplicar filtros</button>
+
+                        {/* Footer del Drawer */}
+                        <div className="filters-drawer-footer">
+                            <button className="drawer-clear-btn" onClick={clearAllFilters}>
+                                Limpiar todo
+                            </button>
+                            <button className="drawer-apply-btn" onClick={() => setIsMobileMenuOpen(false)}>
+                                Ver productos
+                            </button>
                         </div>
                     </div>
-                </div>
+                </>
             )}
         </>
     );

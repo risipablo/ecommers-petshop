@@ -9,11 +9,12 @@ import type { SearchProps } from '../types/product.type';
 
 export const Search = ({ placeholder, filterData }: SearchProps) => {
     const [inputValue, setInputValue] = useState('');
-    const { searchQuery, clearSearch,  } = useProducts();
+    const { searchQuery, clearSearch } = useProducts();
     const navigate = useNavigate();
     const location = useLocation();
     const inputRef = useRef<HTMLInputElement>(null);
 
+    // Sincronizar con searchQuery del contexto
     useEffect(() => {
         if (searchQuery) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -23,6 +24,7 @@ export const Search = ({ placeholder, filterData }: SearchProps) => {
         }
     }, [searchQuery]);
 
+    // Ejecutar búsqueda solo cuando se presiona Enter o el botón
     const performSearch = () => {
         const value = inputValue.trim();
         if (value) {
@@ -31,24 +33,31 @@ export const Search = ({ placeholder, filterData }: SearchProps) => {
             if (location.pathname !== '/search') {
                 navigate('/search');
             }
-        }
-    };
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setInputValue(value);
-        
-        if (value.trim() === '') {
-            clearSearch();
+            // ✅ Limpiar el input después de la búsqueda
+            setInputValue('');
         } else {
-            const terms = value.trim().split(/\s+/);
-            filterData(terms);
-            if (location.pathname !== '/search') {
-                navigate('/search');
+            clearSearch();
+            if (location.pathname === '/search') {
+                navigate('/');
             }
         }
     };
 
+    // Solo actualizar el estado local, NO ejecutar búsqueda
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setInputValue(value);
+        
+        // Si el input se vacía, limpiar búsqueda inmediatamente
+        if (value.trim() === '') {
+            clearSearch();
+            if (location.pathname === '/search') {
+                navigate('/');
+            }
+        }
+    };
+
+    // Ejecutar búsqueda al presionar Enter
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -56,13 +65,18 @@ export const Search = ({ placeholder, filterData }: SearchProps) => {
         }
     };
 
+    // Ejecutar búsqueda al hacer clic en la lupa
     const handleSearchClick = () => {
         performSearch();
     };
 
+    // Limpiar búsqueda
     const handleClear = () => {
         setInputValue('');
         clearSearch();
+        if (location.pathname === '/search') {
+            navigate('/');
+        }
         inputRef.current?.focus();
     };
 

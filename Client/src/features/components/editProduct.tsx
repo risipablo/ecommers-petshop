@@ -211,6 +211,7 @@ export const EditProduct = () => {
                             required
                         >
                             <option value="">Seleccionar</option>
+                            <option value=" ">Ninguno</option>
                             <option value="derma adulto">Derma Adulto</option>
                             <option value="derma mini adulto">Derma Mini Adulto</option>
                             <option value="urinary">Urinary</option>

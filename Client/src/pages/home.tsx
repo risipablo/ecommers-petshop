@@ -26,7 +26,7 @@ export function Home() {
                 <Route path="/:category" element={<ProductList />} />
                 <Route path="/item/:id" element={<ProductDetail />} />
                 <Route path="/contacto" element={<Contacto />} />
-                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
                 
                 {/* Rutas protegidas - solo admin */}
