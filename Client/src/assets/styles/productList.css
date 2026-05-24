@@ -15,7 +15,10 @@
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Layout Principal */
+/* ==========================================
+   LAYOUT PRINCIPAL
+   ========================================== */
+
 .products-layout {
     max-width: 1400px;
     margin: 15rem auto;
@@ -40,7 +43,7 @@
     font-size: 0.875rem;
 }
 
-/* Grid de Filtros + Productos - Desktop (filtros a la izquierda) */
+/* Grid de Filtros + Productos */
 .products-grid-filters {
     display: flex;
     gap: 2rem;
@@ -55,14 +58,20 @@
     flex: 1;
 }
 
-/* Product Grid */
+/* ==========================================
+   PRODUCT GRID
+   ========================================== */
+
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1.5rem;
 }
 
-/* Product Card */
+/* ==========================================
+   PRODUCT CARD
+   ========================================== */
+
 .product-card {
     background: white;
     border-radius: 1.2rem;
@@ -93,7 +102,10 @@
     }
 }
 
-/* Image Container */
+/* ==========================================
+   IMAGE CONTAINER
+   ========================================== */
+
 .product-image-container {
     position: relative;
     width: 100%;
@@ -116,39 +128,61 @@
     transform: scale(1.05);
 }
 
-/* Product Content */
+/* ==========================================
+   PRODUCT CONTENT
+   ========================================== */
+
 .product-content {
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 
 .product-name {
-    font-size: 1rem;
+    font-size: 1.08rem;
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1.4;
-    min-height: 2.8rem;
+    min-height: 1.2rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    margin: 0;
 }
 
 .product-card:hover .product-name {
     color: var(--roman-purple);
 }
 
-/* Price Section */
+.product-kg {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* ==========================================
+
+   ========================================== */
+
+.price-action-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
 .price-section {
     display: flex;
     align-items: baseline;
-    gap: 0.125rem;
+    gap: 2px;
+    flex-shrink: 0;
 }
 
 .currency {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--roman-purple);
     background: linear-gradient(135deg, var(--roman-purple) 0%, var(--roman-purple-light) 100%);
@@ -158,7 +192,7 @@
 }
 
 .price-amount {
-    font-size: 1.85rem;
+    font-size: 1.5rem;
     font-weight: 800;
     background: linear-gradient(135deg, var(--roman-purple) 0%, var(--roman-purple-light) 100%);
     -webkit-background-clip: text;
@@ -167,25 +201,29 @@
     line-height: 1;
 }
 
-/* View Button */
+/* ==========================================
+   BOTÓN VER DETALLES
+   ========================================== */
+
 .view-btn {
     background: var(--roman-purple);
+    min-width: 100px;
     color: white;
-    text-decoration: none;
-    padding: 0.75rem 1rem;
+    padding: 0.6rem 1rem;
     border-radius: 0.75rem;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     transition: all var(--transition);
     border: none;
     cursor: pointer;
-    margin-top: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .view-btn:hover {
@@ -197,7 +235,10 @@
     transform: translateY(0);
 }
 
-/* Admin Actions */
+/* ==========================================
+   ADMIN ACTIONS
+   ========================================== */
+
 .admin-actions-overlay {
     position: absolute;
     top: 0.75rem;
@@ -227,7 +268,10 @@
 .admin-action-btn.delete { color: #ef4444; }
 .admin-action-btn.delete:hover:not(:disabled) { background: #fee2e2; transform: scale(1.05); }
 
-/* No Results */
+/* ==========================================
+   NO RESULTS (filtros)
+   ========================================== */
+
 .no-results-filter {
     text-align: center;
     padding: 3rem;
@@ -241,7 +285,10 @@
     margin-bottom: 0.5rem;
 }
 
-/* Delete Modal */
+/* ==========================================
+   DELETE MODAL
+   ========================================== */
+
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -295,7 +342,8 @@
     gap: 1rem;
 }
 
-.btn-cancel, .btn-confirm-delete {
+.btn-cancel,
+.btn-confirm-delete {
     flex: 1;
     padding: 0.75rem;
     border-radius: 0.5rem;
@@ -315,23 +363,23 @@
 }
 
 /* ==========================================
-   RESPONSIVE - PRODUCT LIST
+   RESPONSIVE
    ========================================== */
 
 /* Tablet Landscape */
 @media (max-width: 1024px) {
-    .product-grid { 
-        grid-template-columns: repeat(3, 1fr); 
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
-    
-    .product-image-container { 
-        height: 220px; 
+
+    .product-image-container {
+        height: 220px;
     }
-    
-    .products-header h1 { 
-        font-size: 2.2rem; 
+
+    .products-header h1 {
+        font-size: 2.2rem;
     }
-    
+
     .filters-sidebar {
         width: 240px;
     }
@@ -339,142 +387,156 @@
 
 /* Tablet Portrait y Móviles Grandes */
 @media (max-width: 768px) {
-    .products-layout { 
-        padding: 1rem; 
+    .products-layout {
+        padding: 1rem;
     }
-    
-    /* Ocultar sidebar desktop en móvil */
-    .filters-sidebar { 
-        display: none; 
+
+    .filters-sidebar {
+        display: none;
     }
-    
-    /* Cambiar layout a vertical */
-    .products-grid-filters { 
-        flex-direction: column; 
+
+    .products-grid-filters {
+        flex-direction: column;
         gap: 1rem;
     }
-    
+
     .products-main-content {
         width: 100%;
     }
-    
-    .product-grid { 
-        grid-template-columns: repeat(2, 1fr); 
+
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
     }
-    
-    .product-image-container { 
-        height: 180px; 
+
+    .product-image-container {
+        height: 180px;
         padding: 1rem;
     }
-    
-    .product-content { 
-        padding: 0.875rem; 
+
+    .product-content {
+        padding: 0.875rem;
     }
-    
-    .product-name { 
-        font-size: 0.875rem; 
+
+    .product-name {
+        font-size: 0.875rem;
         min-height: 2.4rem;
     }
-    
-    .currency { 
-        font-size: 0.9rem; 
+
+    .product-kg {
+        font-size: 0.75rem;
     }
-    
-    .price-amount { 
-        font-size: 1.5rem; 
+
+    .currency {
+        font-size: 0.9rem;
     }
-    
-    .view-btn { 
-        padding: 0.6rem 0.75rem; 
-        font-size: 0.75rem; 
+
+    .price-amount {
+        font-size: 1.4rem;
     }
-    
-    .view-btn span { 
-        display: none; 
+
+    /* En tablet ocultar texto del botón para que quepa */
+    .view-btn span {
+        display: none;
     }
-    
-    .products-header h1 { 
-        font-size: 1.75rem; 
+
+    .view-btn {
+        padding: 0.6rem 0.7rem;
     }
-    
-    .products-count { 
-        font-size: 0.8125rem; 
+
+    .products-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .products-count {
+        font-size: 0.8125rem;
     }
 }
 
 /* Móviles Pequeños */
 @media (max-width: 480px) {
-    .products-layout { 
-        padding: 0.75rem; 
+    .products-layout {
+        padding: 0.75rem;
     }
-    
-    .product-grid { 
-        gap: 0.75rem; 
+
+    .product-grid {
+        gap: 0.75rem;
     }
-    
-    .product-image-container { 
-        height: 150px; 
+
+    .product-image-container {
+        height: 150px;
     }
-    
-    .product-content { 
-        padding: 0.75rem; 
-        gap: 0.5rem; 
+
+    .product-content {
+        padding: 0.75rem;
+        gap: 0.4rem;
     }
-    
-    .product-name { 
-        font-size: 0.8125rem; 
+
+    .product-name {
+        font-size: 0.8125rem;
         min-height: 2.2rem;
     }
-    
-    .currency { 
-        font-size: 0.8rem; 
+
+    .product-kg {
+        font-size: 0.7rem;
     }
-    
-    .price-amount { 
-        font-size: 1.3rem; 
+
+    .currency {
+        font-size: 0.8rem;
     }
-    
-    .view-btn { 
-        padding: 0.5rem 0.6rem; 
-        font-size: 0.7rem; 
+
+    .price-amount {
+        font-size: 1.2rem;
     }
-    
-    .products-header h1 { 
-        font-size: 1.5rem; 
+
+    .view-btn {
+        padding: 0.5rem 0.6rem;
+    }
+
+    .products-header h1 {
+        font-size: 1.5rem;
     }
 }
 
 /* Móviles Muy Pequeños */
 @media (max-width: 360px) {
-    .product-grid { 
-        grid-template-columns: 1fr; 
+    .product-grid {
+        grid-template-columns: 1fr;
     }
-    
-    .product-image-container { 
-        height: 200px; 
+
+    .product-image-container {
+        height: 200px;
     }
-    
-    .product-name { 
-        font-size: 0.9375rem; 
+
+    .product-name {
+        font-size: 0.9375rem;
         min-height: auto;
     }
-    
-    .currency { 
-        font-size: 0.95rem; 
+
+    .product-kg {
+        font-size: 0.8rem;
     }
-    
-    .price-amount { 
-        font-size: 1.6rem; 
+
+    .currency {
+        font-size: 0.95rem;
     }
-    
-    .view-btn span { 
-        display: inline; 
+
+    .price-amount {
+        font-size: 1.6rem;
+    }
+
+    /* En pantallas muy pequeñas con 1 columna sí entra el texto */
+    .view-btn span {
+        display: inline;
+    }
+
+    .view-btn {
+        padding: 0.6rem 1rem;
     }
 }
 
 /* ==========================================
-   NO RESULTS SEARCH - ROMAN PURPLE LUXURY
+   NO RESULTS - BÚSQUEDA
    ========================================== */
 
 .no-results {
@@ -553,87 +615,72 @@
     transform: translateY(0);
 }
 
-/* Animación para entrada */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* ==========================================
    RESPONSIVE - NO RESULTS
    ========================================== */
 
-/* Tablet */
 @media (max-width: 768px) {
     .no-results {
         padding: 3rem 1.5rem;
         margin: 12.5rem auto;
         border-radius: 1.5rem;
     }
-    
+
     .no-results h2 {
         font-size: 1.5rem;
     }
-    
+
     .no-results p {
         font-size: 0.875rem;
     }
-    
+
     .no-results svg {
         width: 60px;
         height: 60px;
     }
 }
 
-/* Móvil */
 @media (max-width: 480px) {
     .no-results {
         padding: 2rem 1rem;
         margin: 12.5rem auto;
         border-radius: 1rem;
     }
-    
+
     .no-results h2 {
         font-size: 1.25rem;
     }
-    
+
     .no-results p {
         font-size: 0.8125rem;
     }
-    
+
     .no-results .search-query {
         font-size: 0.75rem;
         padding: 0.375rem 0.75rem;
     }
-    
+
     .no-results .back-to-home {
         padding: 0.625rem 1.5rem;
         font-size: 0.8125rem;
     }
-    
+
     .no-results svg {
         width: 50px;
         height: 50px;
     }
 }
 
-/* Móvil muy pequeño */
 @media (max-width: 360px) {
     .no-results {
         margin: 12.5rem auto;
         padding: 1.5rem 0.75rem;
     }
-    
+
     .no-results h2 {
         font-size: 1.125rem;
     }
-    
+
     .no-results p {
         font-size: 0.75rem;
     }
