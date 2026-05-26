@@ -13,6 +13,8 @@ import { ProfilePage } from "./profilePage";
 import { EditProduct } from "../features/components/editProduct";
 import { ManageProductImages } from "../features/components/manageProductImage";
 import { ResetPasswordPage } from "./resetPasswordPage";
+import { Whatsapp } from "../components/layout/whatsappButton";
+import { ScrollTop } from "../components/layout/upButton";
 
 
 export function Home() {
@@ -60,6 +62,8 @@ export function Home() {
                     </AdminGuard>
                 } />
             </Routes>
+            <ScrollTop />
+            <Whatsapp/>
             <Footer />
         </>
     );

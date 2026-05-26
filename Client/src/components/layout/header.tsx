@@ -8,28 +8,19 @@ import { Facebook, Instagram, HelpCircle } from "lucide-react"
 import { useEffect, useState } from "react"
 import { UserIcon } from "../common/userIcon"
 
-
-
 export const Header = () => {
   const [scrolled, setScrolled] = useState(false)
   const [isHelpOpen, setIsHelpOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true)
-      } else {
-        setScrolled(false)
-      }
+      setScrolled(window.scrollY > 50)
     }
-
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const toggleHelp = () => {
-    setIsHelpOpen(!isHelpOpen)
-  }
+  const toggleHelp = () => setIsHelpOpen(!isHelpOpen)
 
   return (
     <Box className={`container-header ${scrolled ? 'scrolled' : ''}`}>
@@ -53,19 +44,18 @@ export const Header = () => {
         <Box className="main-bar">
           <Box className="main-bar-content">
             <Logo />
+
             <Box className="search-wrapper-main">
               <SearchWrapper />
             </Box>
-            
-            {/* Sección de Usuario + Ayuda - SOLO VISIBLE EN DESKTOP */}
-            <Box className="user-help-wrapper desktop-only">
-              <UserIcon />
-              
-              {/* Ícono de Ayuda */}
+
+            {/* User + Help — visible en desktop Y mobile */}
+            <Box className="user-help-wrapper">
+              <span className="user-icon-mobile-hide"><UserIcon /></span>
               <div className="help-icon-container" onClick={toggleHelp}>
                 <HelpCircle size={24} />
                 <span className="help-text">Ayuda</span>
-                
+
                 {isHelpOpen && (
                   <div className="help-dropdown">
                     <a href="/preguntas-frecuentes" className="help-link">
@@ -81,15 +71,13 @@ export const Header = () => {
                 )}
               </div>
             </Box>
-            
+
             <div className="navbar-wrapper-main">
               <Navbar />
             </div>
           </Box>
         </Box>
       </Box>
-
-      
     </Box>
   )
 }

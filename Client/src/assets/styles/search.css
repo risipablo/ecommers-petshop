@@ -111,6 +111,7 @@
   .search-input-wrapper {
     border-radius: 30px;
     border-width: 1.5px;
+    margin: 0 1rem;
   }
 
   .search-input {

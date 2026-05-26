@@ -3,7 +3,6 @@
 footer {
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
     color: #82119f;
     background-color: rgb(237, 240, 243);
     margin: 4.2rem 0 0 0;
@@ -141,67 +140,57 @@ footer a:hover::before {
     padding: 12px 6px;
 }
 
-/* WhatsApp */
-
-.btn-wsp {
-    position: fixed;
-    width: 45px;
-    height: 45px;
-    line-height: 50px;
-    bottom: 30px;
-    right: 30px;
-    background: linear-gradient(135deg, #25d366 0%, #20ba61 100%);
-    color: rgb(255, 255, 255);
-    border-radius: 30px;
-    text-align: center;
-    font-size: 25px;
-    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.3);
-    z-index: 80;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.btn-wsp i {
-    font-size: 1.2em;
-}
-
-.btn-wsp:hover {
-    text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateY(-6px) scale(1.1);
-    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
-}
-
-.btn-wsp svg {
-    transition: transform 0.3s ease;
-}
-
-.btn-wsp:hover svg {
-    transform: rotate(15deg) scale(1.1);
-}
 
 /* ==========================================
    RESPONSIVE - MÓVIL PEQUEÑO (360px)
    ========================================== */
 
 @media (max-width: 360px) {
-    footer a {
-        font-size: 0.65rem;
-        padding: 0px 6px;
+    /* Cada box apilado con espacio y separador */
+    .pie-pagina .grupo-1 {
+        display: flex;
+        flex-direction: column;
+        padding: 1.25rem 1rem;
+        gap: 0;
+    }
+
+    .pie-pagina .grupo-1 .box {
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba(130, 17, 159, 0.15);
+    }
+
+    .pie-pagina .grupo-1 .box:last-child {
+        border-bottom: none;
+        padding-bottom: 0.5rem;
     }
 
     .grupo-1 h3 {
         font-size: 1rem;
-        margin: 0 auto 0.875rem;
+        margin: 0 0 0.75rem 0;
+        padding: 0;
     }
 
     .grupo-1 li {
         margin-bottom: 6px;
+        padding: 0;
+    }
+
+    footer a {
+        font-size: 0.65rem;
+        padding: 0px 9px;
+    }
+
+
+
+    .red-social {
+        padding-top: 0.375rem;
+        gap: 0.75rem;
+    }
+
+    .btn-insta,
+    .btn-face {
+        width: 42px;
+        height: 42px;
     }
 
     .btn-wsp {
@@ -218,29 +207,55 @@ footer a:hover::before {
 }
 
 /* ==========================================
-   RESPONSIVE - MÓVIL (480px)
+   RESPONSIVE - MÓVIL (hasta 600px)
    ========================================== */
 
-@media (max-width: 480px) {
-    footer a {
-        font-size: 0.7rem;
-        padding: 0px 8px;
+@media (min-width: 361px) and (max-width: 600px) {
+    /* Cada box apilado con espacio y separador */
+    .pie-pagina .grupo-1 {
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem 1.25rem;
+        gap: 0;
+    }
+
+    .pie-pagina .grupo-1 .box {
+        padding: 1.125rem 0;
+        border-bottom: 1px solid rgba(130, 17, 159, 0.15);
+    }
+
+    .pie-pagina .grupo-1 .box:last-child {
+        border-bottom: none;
+        padding-bottom: 0.75rem;
     }
 
     .grupo-1 h3 {
         font-size: 1.05rem;
-        margin: 0 auto 1rem;
-        padding: 0px 6px;
+        margin: 0 0 0.875rem 0;
+        padding: 0;
     }
 
     .grupo-1 li {
         margin-bottom: 8px;
-        padding: 0px 6px;
+        padding: 0;
+    }
+
+    footer a {
+        font-size: 0.8rem;
+        padding: 0px 9px;
+    }
+
+    footer a::before {
+        left: 0;
+    }
+
+    footer a:hover::before {
+        width: 100%;
     }
 
     .red-social {
         gap: 0.875rem;
-        padding-top: 0.5rem;
+        padding-top: 0.375rem;
     }
 
     .btn-insta,
@@ -263,41 +278,7 @@ footer a:hover::before {
 }
 
 /* ==========================================
-   RESPONSIVE - TABLET PEQUEÑO (600px)
-   ========================================== */
-
-@media (max-width: 600px) {
-    footer a {
-        font-size: 0.75rem;
-    }
-
-    .grupo-1 h3 {
-        font-size: 1.1rem;
-        margin: 0 auto 1rem;
-    }
-
-    .grupo-1 li {
-        margin-bottom: 10px;
-    }
-
-    .red-social {
-        gap: 1rem;
-    }
-
-    .btn-insta,
-    .btn-face {
-        width: 46px;
-        height: 46px;
-    }
-
-    .btn-wsp {
-        width: 50px;
-        height: 50px;
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - TABLET (768px) - 3 COLUMNAS
+   RESPONSIVE - TABLET (601px - 1024px) - 3 COLUMNAS
    ========================================== */
 
 @media only screen and (min-width: 601px) and (max-width: 1024px) {
@@ -316,7 +297,7 @@ footer a:hover::before {
     .pie-pagina .grupo-1 h3 {
         font-size: 1.15rem;
         margin: 0 auto 0.75rem;
-        padding-bottom: 0.5rem;
+        padding: 0 0 0.5rem 0;
         border-bottom: 2px solid rgba(130, 17, 159, 0.2);
     }
 
@@ -360,7 +341,7 @@ footer a:hover::before {
 }
 
 /* ==========================================
-   RESPONSIVE - TABLET GRANDE (900px)
+   RESPONSIVE - TABLET GRANDE (900px - 1024px)
    ========================================== */
 
 @media (min-width: 900px) and (max-width: 1024px) {
@@ -386,7 +367,7 @@ footer a:hover::before {
 }
 
 /* ==========================================
-   RESPONSIVE - DESKTOP (1025px)
+   RESPONSIVE - DESKTOP (1025px+)
    ========================================== */
 
 @media only screen and (min-width: 1025px) {
