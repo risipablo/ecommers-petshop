@@ -1,11 +1,9 @@
-// Contacto.tsx
+// src/components/layout/contacto.tsx
 import { MapPin, Phone, Mail, Send } from 'lucide-react';
 import "../../assets/styles/contact.css";
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import {config} from "../../config/index"
-
-const serverFront = config.Api;
+import { config } from '../../config/index';
 
 interface ContactFormData {
     name: string;
@@ -52,24 +50,24 @@ export const Contacto = () => {
             return false;
         }
         if (!formData.email.trim()) {
-            alert(' Por favor, ingresa tu email');
+            alert('❌ Por favor, ingresa tu email');
             return false;
         }
-        const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+        const emailRegex = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
         if (!emailRegex.test(formData.email)) {
-            alert(' Por favor, ingresa un email válido');
+            alert('❌ Por favor, ingresa un email válido');
             return false;
         }
         if (!formData.phone.trim()) {
-            alert('Por favor, ingresa tu teléfono');
+            alert('❌ Por favor, ingresa tu teléfono');
             return false;
         }
         if (!formData.message.trim()) {
-            alert('Por favor, ingresa tu mensaje');
+            alert('❌ Por favor, ingresa tu mensaje');
             return false;
         }
         if (formData.message.trim().length < 10) {
-            alert(' El mensaje debe tener al menos 10 caracteres');
+            alert('❌ El mensaje debe tener al menos 10 caracteres');
             return false;
         }
         return true;
@@ -83,7 +81,8 @@ export const Contacto = () => {
         setIsLoading(true);
         
         try {
-            const response = await fetch(`${serverFront}/api/send-email`, {
+            // Usar la ruta /auth/send-email
+            const response = await fetch(`${config.Api}/auth/send-email`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,7 +99,7 @@ export const Contacto = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setToast({ message: ' ¡Mensaje enviado con éxito! Te responderemos a la brevedad.', type: 'success' });
+                setToast({ message: '✅ ¡Mensaje enviado con éxito! Te responderemos a la brevedad.', type: 'success' });
                 // Resetear formulario
                 setFormData({
                     name: '',
@@ -110,11 +109,11 @@ export const Contacto = () => {
                     reason: 'consulta'
                 });
             } else {
-                setToast({ message: data.error || ' Error al enviar el mensaje. Intenta nuevamente.', type: 'error' });
+                setToast({ message: data.error || '❌ Error al enviar el mensaje. Intenta nuevamente.', type: 'error' });
             }
         } catch (error) {
             console.error('Error:', error);
-            setToast({ message: 'Error de conexión. Verifica tu internet e intenta nuevamente.', type: 'error' });
+            setToast({ message: '❌ Error de conexión. Verifica tu internet e intenta nuevamente.', type: 'error' });
         } finally {
             setIsLoading(false);
         }
@@ -244,9 +243,9 @@ export const Contacto = () => {
                                 onChange={handleInputChange}
                                 disabled={isLoading}
                             >
-                                <option value="consulta"> Consulta general</option>
-                                <option value="sugerencia">Sugerencia</option>
-                                <option value="queja"> Queja / Reclamo</option>
+                                <option value="consulta">📝 Consulta general</option>
+                                <option value="sugerencia">💡 Sugerencia</option>
+                                <option value="queja">⚠️ Queja / Reclamo</option>
                             </select>
                         </div>
 
