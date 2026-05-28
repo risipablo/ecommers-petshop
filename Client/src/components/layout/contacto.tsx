@@ -3,6 +3,9 @@ import { MapPin, Phone, Mail, Send } from 'lucide-react';
 import "../../assets/styles/contact.css";
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import {config} from "../../config/index"
+
+const serverFront = config.Api;
 
 interface ContactFormData {
     name: string;
@@ -80,7 +83,7 @@ export const Contacto = () => {
         setIsLoading(true);
         
         try {
-            const response = await fetch('https://ecommers-petshop.onrender.com/api/contact', {
+            const response = await fetch(`${serverFront}/api/send-email`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
