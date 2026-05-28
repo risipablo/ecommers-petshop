@@ -20,12 +20,12 @@
 .user-greeting {
     font-size: 0.875rem;
     font-weight: 500;
-    color: #4b5563;
+     color: #ffffff;
     white-space: nowrap;
 }
 
 .user-icon-wrapper.authenticated .user-greeting {
-    color: #722b8f;
+    color: #ffffff;
 }
 
 .user-icon-container {
@@ -66,8 +66,8 @@
 
 /* Dropdown menu */
 .user-dropdown {
-    position: absolute;
-    top: 60px;
+ position: absolute;
+    top: calc(100% + 8px);  
     right: 0;
     background: white;
     border-radius: 0.75rem;

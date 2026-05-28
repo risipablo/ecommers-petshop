@@ -3,12 +3,12 @@ import '../../assets/styles/navbar.css';
 import { useState, useEffect } from 'react';
 import { useProducts } from '../../features/hooks/useProducts';
 import { useAuth } from '../../context/authProvider'; // Importamos el auth hook
-import { Shield, Package, Plus, Images, LayoutDashboard, User, LogIn, UserPlus, LogOut, User as UserIconLucide } from 'lucide-react';
+import { Shield, Package, Plus, Images, LayoutDashboard, User, LogIn, UserPlus, User as UserIconLucide } from 'lucide-react';
 
 const Navbar = () => {
     const location = useLocation();
     const { clearSearch } = useProducts();
-    const { isAuthenticated, user, isAdmin: authIsAdmin, logout } = useAuth(); // Extraemos estado de auth
+    const { isAuthenticated, user, isAdmin: authIsAdmin,  } = useAuth(); // Extraemos estado de auth
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
@@ -139,16 +139,13 @@ const Navbar = () => {
                                 <Link to="/profile" className="mobile-user-btn profile-btn">
                                     <UserIconLucide size={16} />
                                 </Link>
-                                <button onClick={logout} className="mobile-user-btn logout-btn" aria-label="Cerrar sesión">
-                                    <LogOut size={16} />
-                                </button>
                             </div>
                         </>
                     )}
                 </div>
             </div>
 
-            {/* Botón FAB Admin (solo en móvil) */}
+            
             {isAdmin && (
                 <div className="admin-fab" onClick={toggleAdminMenu} aria-label="Admin menu">
                     <Shield size={24} />

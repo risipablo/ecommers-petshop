@@ -1,677 +1,272 @@
 /* ==========================================
-   GRID CATEGORY - TOTALMENTE RESPONSIVE
+   GRID CATEGORY — MINIMAL LUXURY
    ========================================== */
 
+:root {
+    --grid-transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --grid-purple: #6d4ba3;
+    --grid-purple-dark: #563584;
+}
+
 /* ==========================================
-   CONTENEDOR PRINCIPAL
+   CONTENEDOR
    ========================================== */
 
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
-    padding: 2rem 1rem;
+    padding: 0 2rem;
     max-width: 1200px;
-    margin: 4.5rem auto;
+    margin: 7rem auto;
 }
 
 /* ==========================================
-   ITEM DEL GRID - FORMA DE CARTA
+   CARD
    ========================================== */
 
 .grid-item {
-    list-style: none;
     position: relative;
     border-radius: 1.25rem;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: auto;
+    height: 320px;
+    opacity: 0;
+    animation: gridFadeIn 0.55s ease forwards;
+    outline: none;
 }
 
-.grid-item:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+.grid-item:focus-visible {
+    box-shadow: 0 0 0 3px var(--grid-purple);
+}
+
+@keyframes gridFadeIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================
-   IMAGEN DEL GRID
+   IMAGEN
    ========================================== */
 
 .grid-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    position: absolute;
-    inset: 0;
+    display: block;
+    transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .grid-item:hover .grid-image {
-    transform: scale(1.08);
+    transform: scale(1.07);
 }
 
 /* ==========================================
-   OVERLAY CON DEGRADADO
+   OVERLAY degradado
    ========================================== */
 
-.grid-item::before {
-    content: '';
+.grid-overlay {
     position: absolute;
     inset: 0;
     background: linear-gradient(
         to top,
-        rgba(0, 0, 0, 0.7) 0%,
-        rgba(0, 0, 0, 0.3) 50%,
-        rgba(0, 0, 0, 0) 100%
+        rgba(10, 4, 20, 0.78) 0%,
+        rgba(10, 4, 20, 0.22) 55%,
+        rgba(10, 4, 20, 0) 100%
     );
-    z-index: 1;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--grid-transition);
 }
 
-.grid-item:hover::before {
-    opacity: 0.9;
+.grid-item:hover .grid-overlay {
+    background: linear-gradient(
+        to top,
+        rgba(10, 4, 20, 0.88) 0%,
+        rgba(10, 4, 20, 0.38) 60%,
+        rgba(10, 4, 20, 0.05) 100%
+    );
 }
 
 /* ==========================================
-   TÍTULO
+   CONTENIDO (título + botón)
    ========================================== */
 
-.grid-item h3 {
+.grid-content {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem 1.5rem 1.625rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    z-index: 2;
+}
+
+/* Título */
+.grid-title {
     color: #ffffff;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    z-index: 2;
     margin: 0;
-    text-align: center;
-    width: 90%;
-    letter-spacing: -0.01em;
-    line-height: 1.2;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    transition: transform var(--grid-transition);
 }
 
-/* ==========================================
-   BOTÓN
-   ========================================== */
+.grid-item:hover .grid-title {
+    transform: translateY(-3px);
+}
 
-.grid-item button {
-    position: absolute;
-    bottom: 0.875rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #f97316;
-    color: #ffffff;
+/* Botón */
+.grid-btn {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: white;
+    color: var(--grid-purple-dark);
     border: none;
-    padding: 0.5rem 1.25rem;
+    padding: 0.5rem 1.1rem;
     border-radius: 2rem;
-    font-weight: 600;
     font-size: 0.8rem;
+    font-weight: 600;
     cursor: pointer;
-    z-index: 2;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+    transition: all var(--grid-transition);
+    letter-spacing: 0.01em;
+    /* Oculto por defecto, aparece en hover */
+    opacity: 0;
+    transform: translateY(8px);
 }
 
-.grid-item button:hover {
-    background-color: #ea580c;
-    transform: translateX(-50%) scale(1.05);
-    box-shadow: 0 6px 16px rgba(249, 115, 22, 0.3);
+.grid-item:hover .grid-btn {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.grid-item button:active {
-    transform: translateX(-50%) scale(0.98);
+.grid-btn:hover {
+    background: var(--grid-purple);
+    color: white;
+}
+
+.grid-btn svg {
+    transition: transform var(--grid-transition);
+}
+
+.grid-btn:hover svg {
+    transform: translateX(3px);
 }
 
 /* ==========================================
-   RESPONSIVE - MÓVIL PEQUEÑO (360px)
+   RESPONSIVE
    ========================================== */
 
-@media (max-width: 360px) {
+/* Tablet landscape */
+@media (max-width: 1024px) {
+    .grid-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        padding: 0 1.5rem;
+    }
+
+    .grid-item { height: 280px; }
+    .grid-title { font-size: 1.375rem; }
+}
+
+/* Tablet portrait — 2 columnas */
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 0 1.25rem;
+        margin: 2rem auto;
+    }
+
+    .grid-item { height: 240px; }
+
+    .grid-title { font-size: 1.25rem; }
+
+    /* En tablet el botón siempre visible */
+    .grid-btn {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .grid-content { padding: 1.125rem 1.125rem 1.25rem; gap: 0.625rem; }
+}
+
+/* Móvil — 1 columna */
+@media (max-width: 480px) {
     .grid-container {
         grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 1.5rem 0.75rem;
-        margin: 4rem auto;
+        gap:1.5rem;
+        padding: 0 1rem;   
+        margin: 5rem auto;
     }
 
-    .grid-item {
-        height: 160px;
-    }
+    .grid-item { height: 250px; border-radius: 1rem; }
 
-    .grid-item h3 {
-        font-size: 1.125rem;
-        width: 85%;
-    }
+    .grid-title { font-size: 1.25rem; flex: 1; }
 
-    .grid-item button {
-        padding: 0.4rem 1rem;
+    .grid-btn {
+        flex-shrink: 0; 
+        opacity: 1;
+        transform: translateY(0);
         font-size: 0.75rem;
-        bottom: 0.625rem;
+        padding: 0.45rem 1rem;
+          white-space: nowrap; 
     }
+
+      .grid-content {
+        padding: 0rem 1rem 1.25rem;
+        flex-direction: row;           
+        align-items: flex-end;         
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+
 }
 
-/* ==========================================
-   RESPONSIVE - MÓVIL (480px)
-   ========================================== */
-
-@media (max-width: 480px) {
-    .grid-container {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 1.75rem 0.875rem;
-        margin: 4rem auto;
-    }
-
-    .grid-item {
-        height: 180px;
-    }
-
-    .grid-item h3 {
-        font-size: 1.25rem;
-        width: 85%;
-    }
-
-    .grid-item button {
-        padding: 0.5rem 1.25rem;
-        font-size: 0.8rem;
-        bottom: 0.75rem;
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - TABLET PEQUEÑO (600px)
-   ========================================== */
-
-@media (max-width: 600px) {
-    .grid-container {
-        grid-template-columns: 1fr;
-        gap: 1.25rem;
-        padding: 2rem 1rem;
-        margin: 4.5rem auto;
-    }
-
-    .grid-item {
-        height: 200px;
-    }
-
-    .grid-item h3 {
-        font-size: 1.375rem;
-        width: 85%;
-    }
-
-    .grid-item button {
-        padding: 0.5rem 1.5rem;
-        font-size: 0.85rem;
-        bottom: 0.875rem;
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - TABLET (768px) - 2 COLUMNAS
-   ========================================== */
-
-@media (min-width: 601px) and (max-width: 1024px) {
-    .grid-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        padding: 2.5rem 1.5rem;
-        margin: 5rem auto;
-    }
-
-    .grid-item {
-        height: 220px;
-    }
-
-    .grid-item h3 {
-        font-size: 1.5rem;
-    }
-
-    .grid-item button {
-        padding: 0.6rem 1.75rem;
-        font-size: 0.9rem;
-        bottom: 1rem;
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - TABLET GRANDE (900px)
-   ========================================== */
-
-@media (min-width: 900px) and (max-width: 1024px) {
-    .grid-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-        padding: 3rem 2rem;
-    }
-
-    .grid-item {
-        height: 240px;
-    }
-
-    .grid-item h3 {
-        font-size: 1.625rem;
-    }
-
-    .grid-item button {
-        padding: 0.625rem 2rem;
-        font-size: 0.95rem;
-        bottom: 1.125rem;
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - DESKTOP (1025px) - 3+ COLUMNAS
-   ========================================== */
-
-@media (min-width: 1025px) {
-    .grid-container {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2.5rem;
-        padding: 3.5rem 2.5rem;
-        margin: 5.5rem auto;
-    }
-
-    .grid-item {
-        height: 260px;
-    }
-
-    .grid-item h3 {
-        font-size: 1.75rem;
-        width: 90%;
-    }
-
-    .grid-item button {
-        padding: 0.7rem 2.25rem;
-        font-size: 1rem;
-        bottom: 1.25rem;
-    }
-
-    .grid-item:hover {
-        transform: translateY(-12px);
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - DESKTOP GRANDE (1440px)
-   ========================================== */
-
-@media (min-width: 1440px) {
-    .grid-container {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 3rem;
-        padding: 4rem 3rem;
-        margin: 6rem auto;
-    }
-
-    .grid-item {
-        height: 280px;
-    }
-
-    .grid-item h3 {
-        font-size: 2rem;
-    }
-
-    .grid-item button {
-        padding: 0.75rem 2.5rem;
-        font-size: 1.0625rem;
-        bottom: 1.5rem;
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - DESKTOP ULTRA (1920px+)
-   ========================================== */
-
-@media (min-width: 1920px) {
-    .grid-container {
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 3.5rem;
-        padding: 4.5rem 4rem;
-        margin: 7rem auto;
-    }
-
-    .grid-item {
-        height: 300px;
-    }
-
-    .grid-item h3 {
-        font-size: 2.25rem;
-    }
-
-    .grid-item button {
-        padding: 0.875rem 3rem;
-        font-size: 1.125rem;
-        bottom: 1.75rem;
-    }
-}
-
-/* ==========================================
-   IMPRESIÓN
-   ========================================== */
-
-@media print {
-    .grid-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        margin: 0;
-        padding: 0;
-    }
-
-    .grid-item {
-        height: 200px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    .grid-item button {
-        display: none;
-    }
-}
-
-/* ==========================================
-   ACCESIBILIDAD
-   ========================================== */
-
-@media (prefers-reduced-motion: reduce) {
-    .grid-item,
-    .grid-image,
-    .grid-item::before,
-    .grid-item button {
-        transition: none;
-    }
-}
-
-/* ==========================================
-   DARK MODE (OPCIONAL)
-   ========================================== */
-
-@media (prefers-color-scheme: dark) {
-    .grid-item::before {
-        background: linear-gradient(
-            to top,
-            rgba(0, 0, 0, 0.8) 0%,
-            rgba(0, 0, 0, 0.4) 50%,
-            rgba(0, 0, 0, 0) 100%
-        );
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - MÓVIL PEQUEÑO (360px)
-   ========================================== */
-
+/* Móvil muy pequeño */
 @media (max-width: 360px) {
-    .grid-container {
+       .grid-container {
         grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 1.5rem 0.75rem;
-        margin: 4rem auto;
-    }
-
-    .grid-item {
-        height: 220px;
-    }
-
-    .grid-item h3 {
-        font-size: 1.25rem;
-        width: 85%;
-    }
-
-    .grid-item button {
-        padding: 0.5rem 1.25rem;
-        font-size: 0.8125rem;
-        bottom: 0.75rem;
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - MÓVIL (480px)
-   ========================================== */
-
-@media (max-width: 480px) {
-    .grid-container {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 1.75rem 0.875rem;
-        margin: 4rem auto;
-    }
-
-    .grid-item {
-        height: 220px;
-    }
-
-    .grid-item h3 {
-        font-size: 1.375rem;
-        width: 85%;
-    }
-
-    .grid-item button {
-        padding: 0.625rem 1.5rem;
-        font-size: 0.875rem;
-        bottom: 1rem;
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - TABLET PEQUEÑO (600px)
-   ========================================== */
-
-@media (max-width: 600px) {
-    .grid-container {
-        grid-template-columns: 1fr;
-        gap: 1.25rem;
-        padding: 2rem 1rem;
-        margin: 4.5rem auto;
-    }
-
-    .grid-item {
-        height: 240px;
-    }
-
-    .grid-item h3 {
-        font-size: 1.5rem;
-        width: 85%;
-    }
-
-    .grid-item button {
-        padding: 0.625rem 1.75rem;
-        font-size: 0.9rem;
-        bottom: 1rem;
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - TABLET (768px) - 2 COLUMNAS
-   ========================================== */
-
-@media (min-width: 601px) and (max-width: 1024px) {
-    .grid-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        padding: 2.5rem 1.5rem;
+        gap:1.5rem;
+        padding: 0 1rem;   
         margin: 5rem auto;
     }
 
-    .grid-item {
-        height: 280px;
-    }
-
-    .grid-item h3 {
-        font-size: 1.625rem;
-    }
-
-    .grid-item button {
-        padding: 0.7rem 1.875rem;
-        font-size: 0.95rem;
-        bottom: 1.25rem;
-    }
+    .grid-item { height: 190px; border-radius: 0.875rem; }  
+    .grid-title { font-size: 1.05rem; }
+    .grid-btn { font-size: 0.68rem; padding: 0.35rem 0.75rem; }
+    .grid-content { padding: 0.875rem 0.875rem 1rem; }
 }
 
-/* ==========================================
-   RESPONSIVE - TABLET GRANDE (900px)
-   ========================================== */
-
-@media (min-width: 900px) and (max-width: 1024px) {
+/* Desktop grande */
+@media (min-width: 1280px) {
     .grid-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-        padding: 3rem 2rem;
+        gap: 1.5rem;
+        padding: 0 2.5rem;
     }
 
-    .grid-item {
-        height: 300px;
-    }
+    .grid-item { height: 360px; }
+    .grid-title { font-size: 1.75rem; }
 
-    .grid-item h3 {
-        font-size: 1.75rem;
-    }
-
-    .grid-item button {
-        padding: 0.75rem 2rem;
-        font-size: 1rem;
-        bottom: 1.5rem;
+    .grid-btn {
+        font-size: 0.875rem;
+        padding: 0.6rem 1.375rem;
     }
 }
 
-/* ==========================================
-   RESPONSIVE - DESKTOP (1025px) - 3+ COLUMNAS
-   ========================================== */
-
-@media (min-width: 1025px) {
-    .grid-container {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2.5rem;
-        padding: 3.5rem 2.5rem;
-        margin: 5.5rem auto;
-    }
-
-    .grid-item {
-        height: 320px;
-    }
-
-    .grid-item h3 {
-        font-size: 2rem;
-        width: 90%;
-    }
-
-    .grid-item button {
-        padding: 0.875rem 2.5rem;
-        font-size: 1.0625rem;
-        bottom: 1.75rem;
-    }
-
-    .grid-item:hover {
-        transform: translateY(-12px);
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - DESKTOP GRANDE (1440px)
-   ========================================== */
-
-@media (min-width: 1440px) {
-    .grid-container {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 3rem;
-        padding: 4rem 3rem;
-        margin: 6rem auto;
-    }
-
-    .grid-item {
-        height: 350px;
-    }
-
-    .grid-item h3 {
-        font-size: 2.25rem;
-    }
-
-    .grid-item button {
-        padding: 1rem 3rem;
-        font-size: 1.125rem;
-        bottom: 2rem;
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - DESKTOP ULTRA (1920px+)
-   ========================================== */
-
-@media (min-width: 1920px) {
-    .grid-container {
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 3.5rem;
-        padding: 4.5rem 4rem;
-        margin: 7rem auto;
-    }
-
-    .grid-item {
-        height: 400px;
-    }
-
-    .grid-item h3 {
-        font-size: 2.5rem;
-    }
-
-    .grid-item button {
-        padding: 1.125rem 3.5rem;
-        font-size: 1.25rem;
-        bottom: 2.25rem;
-    }
-}
-
-/* ==========================================
-   IMPRESIÓN
-   ========================================== */
-
-@media print {
-    .grid-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        margin: 0;
-        padding: 0;
-    }
-
-    .grid-item {
-        height: 250px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    .grid-item button {
-        display: none;
-    }
-}
-
-/* ==========================================
-   ACCESIBILIDAD
-   ========================================== */
-
+/* Accesibilidad */
 @media (prefers-reduced-motion: reduce) {
     .grid-item,
     .grid-image,
-    .grid-item::before,
-    .grid-item button {
+    .grid-overlay,
+    .grid-btn,
+    .grid-title {
         transition: none;
-    }
-}
-
-/* ==========================================
-   DARK MODE (OPCIONAL)
-   ========================================== */
-
-@media (prefers-color-scheme: dark) {
-    .grid-item::before {
-        background: linear-gradient(
-            to top,
-            rgba(0, 0, 0, 0.8) 0%,
-            rgba(0, 0, 0, 0.4) 50%,
-            rgba(0, 0, 0, 0) 100%
-        );
+        animation: none;
+        opacity: 1;
     }
 }

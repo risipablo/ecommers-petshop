@@ -295,3 +295,205 @@
     justify-content: center;
   }
 }
+
+/* Agregar a tu archivo CSS de edición */
+
+/* Grid de imágenes existentes */
+.existing-images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.existing-image-card {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 2px solid #e5e7eb;
+    background: white;
+}
+
+.existing-image-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.existing-image-card .image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.existing-image-card:hover .image-overlay {
+    opacity: 1;
+}
+
+.main-badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background: #10b981;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    z-index: 2;
+}
+
+.image-controls {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    z-index: 2;
+}
+
+.set-main-btn,
+.delete-image-btn {
+    background: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.set-main-btn {
+    color: #f59e0b;
+}
+
+.set-main-btn:hover {
+    background: #fef3c7;
+}
+
+.delete-image-btn {
+    color: #ef4444;
+}
+
+.delete-image-btn:hover:not(:disabled) {
+    background: #fee2e2;
+}
+
+.order-controls {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    z-index: 2;
+}
+
+.order-controls button {
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.order-controls button:hover {
+    background: #f97316;
+}
+
+/* Grid de nuevas imágenes */
+.new-images-grid {
+    margin-top: 1rem;
+}
+
+.new-images-grid h4 {
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+    color: #374151;
+}
+
+.images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
+}
+
+.new-image-card {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 2px solid #e5e7eb;
+}
+
+.new-image-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-new-image {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-new-image:hover {
+    background: #dc2626;
+}
+
+/* Upload area */
+.new-image-upload {
+    margin: 1rem 0;
+}
+
+.upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    border: 2px dashed #d1d5db;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #f9fafb;
+}
+
+.upload-label:hover {
+    border-color: #f97316;
+    background: #fff7ed;
+}
+
+.help-text {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+@media (max-width: 640px) {
+    .existing-images-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+}

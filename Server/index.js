@@ -11,6 +11,11 @@ const app = express()
 
 DB()
 
+if (!process.env.RESEND_API_KEY || !process.env.EMAIL_USER) {
+    console.error('Error: Faltan variables de entorno RESEND_API_KEY o EMAIL_USER');
+    process.exit(1);
+}
+
 const corsOption = {
     origin: ['http://localhost:5173','http://localhost:5174',"https://ecommers-petshop.vercel.app","https://ecommers-petshop.onrender.com"],
     optionsSuccessStatus: 200,
@@ -44,4 +49,5 @@ app.use((err, req, res, next) => {
 
 app.listen(3001,() => {
     console.log("Servidor corriendo en el local")
+    console.log(`Emails se enviarán a: ${process.env.EMAIL_USER}`);
 })

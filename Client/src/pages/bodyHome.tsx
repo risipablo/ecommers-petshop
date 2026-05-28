@@ -28,7 +28,6 @@ export function BodyHome(){
             <SliderMarcas/>
             <ConsultaHome/>
             
-            {/* <Newsletter/> */}
         </div>
     )
 }

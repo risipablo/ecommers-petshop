@@ -217,7 +217,7 @@ export const ProductList = () => {
                                     {product.name}
                                 </h3>
 
-                                {/* ✅ Mostrar kg SOLO en la categoría alimentos */}
+                                {/*  kg SOLO en la categoría alimentos */}
                                 {categoryPath === 'alimentos' && product.kg && (
                                     <p className="product-kg">Kilos: {product.kg} kg</p>
                                 )}

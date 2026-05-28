@@ -617,99 +617,122 @@
        NUEVA SECCIÓN DE USUARIO HORIZONTAL (MOBILE)
        ============================================ */
     
-    .mobile-user-section {
-        display: flex;
-        flex-direction: row; 
-        align-items: center;
-        justify-content: flex-start;
-        gap: 0.6rem;
-        padding: 1.25rem 1rem;
-        margin-top: auto; 
-        background: rgba(0, 0, 0, 0.15);
-        border-top: 1px solid rgba(255, 255, 255, 0.15);
-        width: 100%;
-        box-sizing: border-box;
-    }
+.mobile-user-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.875rem 0.75rem;
+    margin-top: auto;
+    background: rgba(0, 0, 0, 0.18);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    width: 100%;
+    box-sizing: border-box;
+}
 
-    .mobile-user-avatar {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 36px;
-        height: 36px;
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 50%;
-        color: white;
-        flex-shrink: 0;
-        position: relative;
-    }
+/* Avatar circular */
+.mobile-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    color: white;
+}
 
-    .mobile-user-avatar.authenticated {
-        background: rgb(242, 242, 27);
-        color: var(--primary-purple);
-    }
+.mobile-user-avatar.authenticated {
+    background: rgb(242, 242, 27);
+    color: var(--primary-purple);
+}
 
-    .mobile-status-dot {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 9px;
-        height: 9px;
-        background: #10b981;
-        border-radius: 50%;
-        border: 2px solid var(--primary-purple);
-    }
+.mobile-status-dot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    border: 2px solid var(--primary-purple);
+}
 
-    .mobile-user-info {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-    }
+/* Nombre del usuario */
+.mobile-user-name {
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
-    .mobile-user-name {
-        color: white;
-        font-size: 0.95rem;
-        font-weight: 600;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+/* Solo botón perfil (ícono) */
+.mobile-user-btn.profile-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+}
 
-    .mobile-user-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.4rem;
-        padding: 0.5rem 0.75rem;
-        border: none;
-        border-radius: 0.5rem;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-decoration: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        white-space: nowrap;
-    }
+.mobile-user-btn.profile-btn:hover {
+    background: rgba(255, 255, 255, 0.28);
+}
 
-    /* BOTONES MÓVIL ESTADO NO AUTENTICADO */
-    .mobile-user-btn.login-btn {
-        background: transparent;
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-    }
+/* Botones login/register sin cambios */
+.mobile-user-btn.login-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 2rem;              /* pill */
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: white;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.mobile-user-btn.login-btn:hover {
+    background: rgba(255, 255, 255, 0.22);
+}
 
-    .mobile-user-btn.login-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-    }
+.mobile-user-btn.register-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 2rem;              /* pill */
+    background: rgb(242, 242, 27);
+    border: none;
+    color: #000;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
 
-    .mobile-user-btn.register-btn {
-        background: rgb(242, 242, 27);
-        color: #000;
-    }
+.mobile-user-btn.register-btn:hover {
+    background: rgb(255, 255, 120);
+}
 
-    .mobile-user-btn.register-btn:hover {
-        background: rgb(255, 255, 120);
-    }
 
     /* BOTONES MÓVIL ESTADO AUTENTICADO */
     .mobile-user-actions-row {

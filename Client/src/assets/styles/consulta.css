@@ -1,133 +1,180 @@
-/* ConsultaHome.css */
+/* ==========================================
+   CONSULTA HOME — PARALLAX
+   ========================================== */
 
-.consulta-home-container {
-  padding: 3rem 1.5rem;
-  margin: 4rem auto;
-  max-width: 1200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
+.consulta-parallax {
+    position: relative;
+    height: 480px;
+    overflow: hidden;        /* recorta el bg que sobresale */
+    margin: 0;
 }
 
-.consulta-home-text {
-  text-align: center;
-  max-width: 500px;
+/* FONDO — más alto que la sección para que tenga recorrido */
+.consulta-parallax-bg {
+    position: absolute;
+    top: -80px;
+    left: 0;
+    right: 0;
+    bottom: -80px;
+    background-image: url('../images/yuna.png');
+    background-size: cover;
+    background-position: center top;
+    will-change: transform;
+    z-index: 0;
 }
 
-.consulta-home-title {
-  font-size: 1.75rem;
-  font-weight: bold;
-  color: #722b8f;;
-  margin: 0 0 1.8rem 0;
-  
-  line-height: 1.3;
+.consulta-parallax-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(10, 3, 20, 0.38) 0%,
+        rgba(45, 10, 62, 0.28) 60%,
+        rgba(10, 3, 20, 0.38) 100%
+    );
+
+    z-index: 1;
 }
 
-.consulta-home-subtitle {
-  font-size: 1.125rem;
-  color: #722b8f;
-  margin: 0 0 2rem 0;
-  line-height: 1.6;
-}
 
-.consulta-home-image {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  object-fit: contain;
-  animation: float 3s ease-in-out infinite;
-}
-
-.consulta-home-button {
-  background-color: #f97316;
-  color: white;
-  border: none;
-  padding: 1rem 3rem;
-  border-radius: 3rem;
-  font-size: 1.125rem;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
-  transition: all 0.3s ease;
-  margin-top: 1rem;
-}
-
-.consulta-home-button:hover {
-  background-color: #ea580c;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
-}
-
-.consulta-home-button:active {
-  transform: translateY(-1px);
-}
-
-/* Animación flotante para la imagen */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-}
-
-/* Desktop */
-@media (min-width: 768px) {
-  .consulta-home-container {
-    flex-direction: row;
-    justify-content: space-between;
+.consulta-parallax-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 4rem;
+    display: flex;
     align-items: center;
-    padding: 4rem 3rem;
+    justify-content: space-between;
     gap: 3rem;
-  }
-
-  .consulta-home-text {
-    text-align: left;
-    flex: 1;
-    max-width: 600px;
-  }
-
-  .consulta-home-title {
-    font-size: 1rem;
-  }
-
-  .consulta-home-subtitle {
-    font-size: 1.1rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .consulta-home-image {
-    max-width: 350px;
-    flex-shrink: 0;
-  }
-
-  .consulta-home-button {
-    margin-top: 0;
-  }
 }
 
-@media (min-width: 1024px) {
-  .consulta-home-container {
-    padding: 5rem 4rem;
-  }
 
-  .consulta-home-title {
-    font-size: 1.8rem;
-    
-  }
+.consulta-tag {
+    display: inline-block;
+    background: rgba(249, 115, 22, 0.18);
+    border: 1px solid rgba(249, 115, 22, 0.45);
+    color: #fb923c;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.875rem;
+    border-radius: 2rem;
+    margin-bottom: 1.25rem;
+}
 
-  .consulta-home-subtitle {
-    font-size: 1.1rem;
-  }
+/* TÍTULO */
+.consulta-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.2;
+    margin: 0 0 1.125rem;
+    letter-spacing: -0.025em;
+}
 
-  .consulta-home-image {
-    max-width: 350px;
-  }
+.consulta-title span {
+    color: #fb923c;
+}
 
-  .consulta-home-button {
-    padding: 1.125rem 2.5rem;
-    font-size: 1rem;
-  }
+/* SUBTÍTULO */
+.consulta-subtitle {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.65;
+    margin: 0 0 2rem;
+    max-width: 480px;
+}
+
+/* BOTÓN */
+.consulta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f97316;
+    color: white;
+    border: none;
+    padding: 0.875rem 2rem;
+    border-radius: 3rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(249, 115, 22, 0.35);
+    transition: all 0.3s ease;
+}
+
+.consulta-btn:hover {
+    background: #ea580c;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(249, 115, 22, 0.45);
+}
+
+.consulta-btn:hover svg {
+    transform: translateX(4px);
+}
+
+.consulta-btn svg {
+    transition: transform 0.3s ease;
+}
+
+/* IMAGEN */
+.consulta-image-wrap {
+    flex-shrink: 0;
+}
+
+.consulta-image {
+    width: 320px;
+    height: auto;
+    object-fit: contain;
+    animation: consultaFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.4));
+}
+
+@keyframes consultaFloat {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-16px); }
+}
+
+/* ==========================================
+   PARALLAX — JavaScript hook
+   ========================================== */
+
+/* La clase .consulta-parallax-bg recibe transform via JS */
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 1024px) {
+    .consulta-parallax-content {
+        padding: 0 2.5rem;
+        gap: 2rem;
+    }
+    .consulta-title { font-size: 1.9rem; }
+    .consulta-image { width: 260px; }
+}
+
+@media (max-width: 768px) {
+    .consulta-parallax { height: auto; min-height: 420px; }
+    .consulta-parallax-bg { inset: -40px 0; }
+    .consulta-parallax-content {
+        flex-direction: column-reverse;
+        padding: 3rem 1.5rem;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    .consulta-subtitle { max-width: 100%; }
+    .consulta-image { width: 180px; }
+    .consulta-title { font-size: 1.6rem; }
+    .consulta-tag { margin-bottom: 0.875rem; }
+}
+
+@media (max-width: 480px) {
+    .consulta-parallax { min-height: 380px; }
+    .consulta-title { font-size: 1.35rem; }
+    .consulta-subtitle { font-size: 0.9rem; }
+    .consulta-image { width: 140px; }
+    .consulta-btn { font-size: 0.875rem; padding: 0.75rem 1.5rem; }
 }

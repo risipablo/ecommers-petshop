@@ -7,7 +7,7 @@
    ========================================== */
 
 .shipping-section {
-    margin: 3rem auto;
+    margin: 7rem auto;
     background: linear-gradient(135deg, rgba(224, 223, 224, 0.7) 0%, rgba(235, 234, 235, 0.5) 100%);
     display: flex;
     flex-direction: column;
@@ -200,7 +200,7 @@
 
 @media (max-width: 360px) {
     .shipping-section {
-        margin: 2rem auto;
+        margin: 4rem auto;
         padding: 1.5rem 0.75rem;
         border-radius: 0.75rem;
     }
@@ -239,7 +239,7 @@
 
 @media (max-width: 480px) {
     .shipping-section {
-        margin: 2.5rem auto;
+        margin: 4rem auto;
         padding: 1.75rem 1rem;
         border-radius: 0.875rem;
     }

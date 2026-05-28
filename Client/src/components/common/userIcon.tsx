@@ -33,8 +33,8 @@ export const UserIcon = () => {
     // Si no está autenticado, mostrar solo el ícono
     if (!isAuthenticated) {
         return (
-            <>
-                <div className="user-icon-wrapper" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+            <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center'}} >
+                <div className="user-icon-wrapper" onClick={() => setIsDropdownOpen(!isDropdownOpen)}  style={{ position: 'relative' }}>
                     <div className="user-icon-container">
                         <User size={24} />
                     </div>
@@ -82,7 +82,7 @@ export const UserIcon = () => {
                         setShowLogin(true);
                     }}
                 />
-            </>
+            </div>
         );
     }
 

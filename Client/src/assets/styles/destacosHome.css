@@ -26,7 +26,7 @@
     gap: 1rem;
     padding: 2rem 1rem;
     max-width: 1200px;
-    margin: 4rem auto;
+    margin: 7rem auto;
     box-sizing: border-box;
     width: 100%;
 }
@@ -343,7 +343,7 @@
 
     .featured-section {
         padding: 1rem 0.375rem;
-        margin: 2rem auto;
+        margin: 4rem auto;
     }
 
     .featured-carousel-wrapper {
