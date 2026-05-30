@@ -3,10 +3,11 @@ import Carousel from "../components/layout/sliderHeader";
 import "../assets/styles/bodyHome.css"
 import { EnviosHome } from "../components/layout/enviosHome";
 import { Destacados } from "../components/layout/destacados";
-import { ConsultaHome } from "../components/layout/consultaHome";
+import { ContactoBanner } from "../components/layout/consultaHome";
 import { SliderMarcas } from "../components/layout/sliderMarcas";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { ArticulosHome } from "../components/layout/articulos";
 // import { Newsletter } from "../components/layout/newsletter";
 
 export function BodyHome(){
@@ -25,8 +26,9 @@ export function BodyHome(){
             <GridCategory/>
             <EnviosHome/>
             <Destacados/>
+            <ArticulosHome/>
             <SliderMarcas/>
-            <ConsultaHome/>
+            <ContactoBanner/>
             
         </div>
     )

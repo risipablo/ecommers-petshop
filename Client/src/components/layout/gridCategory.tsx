@@ -1,3 +1,4 @@
+// components/layout/gridCategory.tsx (ya está bien, solo verificamos)
 import { useNavigate } from 'react-router-dom';
 import { imageGrid } from "../data/images";
 import "../../assets/styles/gridheader.css";

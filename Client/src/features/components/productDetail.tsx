@@ -21,8 +21,6 @@ export function ProductDetail() {
     const { relatedProducts, loading: loadingRelated } = useRelatedProducts(
         id || '', 
         product?.category || '',
-        product?.pet,
-        product?.brand
     );
     const { isAdmin } = useAuth();
     const [backPath, setBackPath] = useState<string>('/');
@@ -33,6 +31,10 @@ export function ProductDetail() {
     const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
     const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    
+    // Obtener categoryPath de la URL para filtrar kg
+    const currentPath = location.pathname;
+    const categoryPath = currentPath.substring(1);
 
     const images = (product?.images && Array.isArray(product.images) && product.images.length > 0)
         ? product.images 
@@ -120,11 +122,11 @@ export function ProductDetail() {
             await axios.delete(`${API_URL}/products/${id}`, {
                 withCredentials: true
             });
-            alert('✅ Producto eliminado exitosamente');
+            alert(' Producto eliminado exitosamente');
             navigate('/');
         } catch (error) {
             console.error('Error al eliminar:', error);
-            alert('❌ Error al eliminar el producto');
+            alert('Error al eliminar el producto');
         }
     };
 
@@ -181,6 +183,10 @@ export function ProductDetail() {
     const prevImage = () => {
         setSelectedImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
+
+    // Determinar qué campos mostrar según la categoría
+    const isAlimentos = categoryPath === 'alimentos' || product?.category === 'alimentos';
+    const isIndumentaria = categoryPath === 'indumentaria' || product?.category === 'indumentaria';
 
     return (
         <div className="product-detail-container">
@@ -257,6 +263,22 @@ export function ProductDetail() {
                         <div className="brand-section">
                             <span className="brand-label">Marca:</span>
                             <span className="brand-value">{product.brand}</span>
+                        </div>
+                    )}
+
+                    {/* 🔥 Kilos - SOLO para categoría ALIMENTOS */}
+                    {isAlimentos && product.kg && (
+                        <div className="kg-section">
+                            <span className="kg-label">Kilos: </span>
+                            <span className="kg-value">{product.kg} kg</span>
+                        </div>
+                    )}
+
+                    {/* 🔥 Talle - SOLO para categoría INDUMENTARIA */}
+                    {isIndumentaria && product.kg && (
+                        <div className="size-section">
+                            <span className="size-label">Talle:</span>
+                            <span className="size-value">{product.kg}</span>
                         </div>
                     )}
 
@@ -338,6 +360,14 @@ export function ProductDetail() {
                                                 
                                                 <div className="related-content">
                                                     <h3 className="related-name">{relatedProduct.name}</h3>
+                                                    {/* Mostrar kg SOLO si la categoría es alimentos */}
+                                                    {relatedProduct.category === 'alimentos' && relatedProduct.kg && (
+                                                        <p className="product-kg">Kilos: {relatedProduct.kg} kg</p>
+                                                    )}
+                                                    {/* Mostrar talle SOLO si la categoría es indumentaria */}
+                                                    {relatedProduct.category === 'indumentaria' && relatedProduct.kg && (
+                                                        <p className="product-size">Talle: {relatedProduct.kg}</p>
+                                                    )}
                                                     <div className="related-footer">
                                                         <span className="related-price">
                                                             ${formatPrice(relatedProduct.price)}

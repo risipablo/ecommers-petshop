@@ -1,0 +1,93 @@
+.contacto-banner {
+    margin: 5rem auto;
+    position: relative;
+    width: 100%;
+    min-height: 55vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-items: center;
+    gap: 1.2rem;
+    padding: 2.5rem 8%;
+    background: linear-gradient(135deg, #82119f 0%, #5a0c6e 100%);
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    text-align: center;
+}
+
+.contacto-banner:hover {
+    transform: scale(1.005);
+}
+
+.contacto-banner-deco {
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.contacto-banner-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.contacto-banner-title {
+    font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+    line-height: 1.3;
+    color: #ffffff;
+    margin: 1rem 0;
+    font-weight: 600;
+}
+
+.contacto-banner-left p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.72);
+    margin: 1rem auto 0;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+}
+
+.contacto-banner-right {
+    display: flex;
+    justify-content: center;
+}
+
+.contacto-banner-btn {
+    background: white;
+    color: #82119f;
+    padding: 0.8rem 1.9rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.contacto-banner-btn:hover {
+    background: #f5f5f5;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+}
+
+@media (max-width: 600px) {
+    .contacto-banner {
+        min-height: 40vh;
+        padding: 2rem 1.5rem;
+        gap: 1rem;
+    }
+
+    .contacto-banner-title {
+        font-size: 1.2rem;
+    }
+}

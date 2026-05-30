@@ -1,16 +1,14 @@
 // Server/controllers/authController.js
-const User = require('../models/user');
+const User = require('../models/user'); // 
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const { sendEmail } = require('../config/email')
+const { sendEmail } = require('../config/email');
+const { validateEmail, sanitizeUserInput, hasSQLInjection } = require('../middleware/security');
 
-
-
-
-
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL 
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+
 
 
 const validatePassword = (password) => {
@@ -47,8 +45,27 @@ const generateToken = (user) => {
 // Registro de usuario
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, confirmPassword } = req.body;
+    let { name, email, password, confirmPassword } = req.body;
     
+        name = sanitizeUserInput(name);
+        email = sanitizeUserInput(email);
+        
+          // Validar email
+        if (!validateEmail(email)) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Email inválido' 
+            });
+        }  
+
+      if (hasSQLInjection(name) || hasSQLInjection(email)) {
+        console.log(`⚠️ Posible ataque detectado: ${name} | ${email}`);
+        return res.status(400).json({ 
+          success: false, 
+          error: 'Datos inválidos' 
+        });
+      }    
+
     // Validar campos
     if (!name || !email || !password || !confirmPassword) {
       return res.status(400).json({ 

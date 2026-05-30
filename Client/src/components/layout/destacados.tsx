@@ -164,27 +164,31 @@ export const Destacados = () => {
                 onClick={() => handleProductClick(product._id)}
               >
                 <div className="featured-card-inner">
-
-                  {/* Imagen — igual que product-image-container */}
+                  {/* Imagen */}
                   <div className="featured-image-container">
                     <img
-                      src={product.imageUrl || product.images?.[0]?.url}
+                      src={product.imageUrl || product.images?.[0]?.url || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
                       alt={product.name}
                       className="featured-image"
                       loading="lazy"
                     />
                   </div>
 
-                  {/* Línea divisoria negra */}
+                  {/* Línea divisoria */}
                   <div className="featured-divider" />
 
-                  {/* Contenido — igual que product-content */}
+                  {/* Contenido */}
                   <div className="featured-content">
                     <h3 className="featured-name" title={product.name}>
                       {product.name}
                     </h3>
 
-                    {/* Fila precio + botón — igual que price-action-row */}
+                    {/* Mostrar kg SOLO si la categoría es alimentos */}
+                    {product.category === 'alimentos' && product.kg && (
+                      <p className="featured-kg">Kilos: {product.kg} kg</p>
+                    )}
+
+                    {/* Fila precio + botón */}
                     <div className="featured-price-action-row">
                       <div className="featured-price-section">
                         <span className="featured-currency">$</span>
@@ -203,7 +207,6 @@ export const Destacados = () => {
                       </button>
                     </div>
                   </div>
-
                 </div>
               </div>
             ))}

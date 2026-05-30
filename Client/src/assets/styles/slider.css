@@ -41,6 +41,19 @@
   }
 }
 
+@media (max-width: 480px){
+  .carousel-container{
+    height: 300px;
+  }
+} 
+
+@media (max-width: 380px){
+  .carousel-container{
+    height: 250px;
+  }
+} 
+
+
 /* Versión alternativa - más robusta */
 .carousel-container {
   position: relative;

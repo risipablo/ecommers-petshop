@@ -6,8 +6,8 @@ import type { Product } from '../types/product.type';
 export const useRelatedProducts = (
     currentProductId: string,
     currentCategory: string,
-    currentPet?: string,
-    currentBrand?: string
+    // currentPet?: string,
+    // currentBrand?: string
 ) => {
     const { products, isLoading } = useProducts();
     const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -27,41 +27,35 @@ export const useRelatedProducts = (
         }
 
         try {
+            // 🔥 Excluir el producto actual y filtrar por MISMA CATEGORÍA
             const otherProducts = products.filter(p => p._id !== currentProductId);
             
-            const productsWithScore = otherProducts.map(product => {
-                let score = 0;
-                
-                if (product.category === currentCategory) {
-                    score += 50;
-                }
-                
-                if (currentPet && product.pet === currentPet) {
-                    score += 30;
-                }
-                
-                if (currentBrand && product.brand === currentBrand) {
-                    score += 20;
-                }
-                
-                const currentPrice = typeof product.price === 'number' ? product.price : parseFloat(String(product.price));
-                const productPrice = typeof product.price === 'number' ? product.price : parseFloat(String(product.price));
-                const priceDiff = Math.abs(currentPrice - productPrice) / currentPrice;
-                if (priceDiff <= 0.3) {
-                    score += 15;
-                }
-                
-                if (product.age === currentCategory) {
-                    score += 10;
-                }
-                
-                return { product, score };
-            });
+            // Primero, productos de la misma categoría
+            const sameCategory = otherProducts.filter(p => p.category === currentCategory);
             
-            productsWithScore.sort((a, b) => b.score - a.score);
-            const topRelated = productsWithScore.slice(0, 6).map(item => item.product);
+            // Si hay suficientes de la misma categoría (más de 4), tomar esos
+            if (sameCategory.length >= 4) {
+                const shuffled = [...sameCategory];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                setRelatedProducts(shuffled.slice(0, 6));
+            } else {
+                // Si no hay suficientes, completar con productos aleatorios de otras categorías
+                const otherCategories = otherProducts.filter(p => p.category !== currentCategory);
+                const shuffledSame = [...sameCategory];
+                const shuffledOther = [...otherCategories];
+                
+                for (let i = shuffledOther.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffledOther[i], shuffledOther[j]] = [shuffledOther[j], shuffledOther[i]];
+                }
+                
+                const combined = [...shuffledSame, ...shuffledOther];
+                setRelatedProducts(combined.slice(0, 6));
+            }
             
-            setRelatedProducts(topRelated);
             setError(null);
         } catch (err) {
             console.error('Error al obtener productos relacionados:', err);
@@ -70,7 +64,7 @@ export const useRelatedProducts = (
         } finally {
             setLoading(false);
         }
-    }, [products, isLoading, currentProductId, currentCategory, currentPet, currentBrand]);
+    }, [products, isLoading, currentProductId, currentCategory]);
 
     return { relatedProducts, loading, error };
 };

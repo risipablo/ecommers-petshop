@@ -6,7 +6,7 @@
     position: relative;
     height: 480px;
     overflow: hidden;        /* recorta el bg que sobresale */
-    margin: 0;
+    margin: 5rem auto;
 }
 
 /* FONDO — más alto que la sección para que tenga recorrido */
@@ -156,25 +156,75 @@
     .consulta-image { width: 260px; }
 }
 
-@media (max-width: 768px) {
-    .consulta-parallax { height: auto; min-height: 420px; }
-    .consulta-parallax-bg { inset: -40px 0; }
-    .consulta-parallax-content {
-        flex-direction: column-reverse;
-        padding: 3rem 1.5rem;
-        text-align: center;
-        gap: 1.5rem;
-    }
-    .consulta-subtitle { max-width: 100%; }
-    .consulta-image { width: 180px; }
-    .consulta-title { font-size: 1.6rem; }
-    .consulta-tag { margin-bottom: 0.875rem; }
-}
 
+
+@media (max-width: 768px) {
+    .consulta-parallax-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 1rem; /* Margen lateral para que el texto no toque los bordes */
+    }
+
+    .consulta-text {
+        text-align: center; /* Centra el texto y el botón */
+        width: 100%;
+    }
+
+    .consulta-title {
+        font-size: 1.5rem; /* Ajuste de tamaño para evitar saltos de línea extraños */
+        line-height: 1.2;
+    }
+
+    .consulta-subtitle {
+        margin: 1rem auto; /* Centra el párrafo */
+        max-width: 90%; /* Evita que el texto sea demasiado ancho en móviles */
+    }
+
+    .consulta-btn {
+        margin: 0 auto; /* Centra el botón */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
 @media (max-width: 480px) {
-    .consulta-parallax { min-height: 380px; }
-    .consulta-title { font-size: 1.35rem; }
-    .consulta-subtitle { font-size: 0.9rem; }
-    .consulta-image { width: 140px; }
-    .consulta-btn { font-size: 0.875rem; padding: 0.75rem 1.5rem; }
+    .consulta-parallax { 
+        min-height: 360px; 
+        display: flex;        /* Activamos flex para alinear el contenido */
+        align-items: center;  /* Centrado vertical */
+        justify-content: center; /* Centrado horizontal */
+    }
+
+    .consulta-text {
+        text-align: center;   /* Centra el texto y el botón */
+        padding: 0 1rem;      /* Espacio lateral para que el texto no toque los bordes */
+        width: 100%;
+    }
+
+    .consulta-title { 
+        font-size: 1.35rem;
+        margin-bottom: 0.5rem; /* Ajuste para separar mejor el título del párrafo */
+    }
+
+    .consulta-subtitle { 
+        font-size: 0.9rem;
+        margin: 0 auto 1.5rem auto; 
+        max-width: 90%;            
+    }
+    
+    .consulta-image-wrap {
+        max-height: 130px;
+    }
+    
+    .consulta-image { width: 120px; }            
+    
+    .consulta-btn { 
+        font-size: 0.875rem; 
+        padding: 0.75rem 1.5rem;
+        margin: 0 auto;      
+        display: flex;       
+        align-items: center;
+        gap: 0.5rem;
+    }
 }
