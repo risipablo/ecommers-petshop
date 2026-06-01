@@ -6,10 +6,6 @@
     --primary-purple: #82119f;
 }
 
-/* ==========================================
-   CONTENEDOR PRINCIPAL
-   ========================================== */
-
 .navbar-container {
     display: flex;
     align-items: center;
@@ -22,10 +18,6 @@
     width: 100%;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
-
-/* ==========================================
-   MENÚ PRINCIPAL - DESKTOP CENTRADO
-   ========================================== */
 
 .menu {
     display: flex;
@@ -43,10 +35,6 @@
     gap: 1.5rem;
     align-items: center;
 }
-
-/* ==========================================
-   LINKS DE NAVEGACIÓN - DESKTOP
-   ========================================== */
 
 .nav-link {
     color: #fff;
@@ -70,42 +58,17 @@
     transition: transform 0.3s ease;
 }
 
-.borrar{
-    display: none;
-}
-.nav-link:hover {
-    color: rgb(242, 242, 27);
-}
+.borrar { display: none; }
 
-.nav-link:hover::after {
-    transform: scaleX(1);
-}
+.nav-link:hover { color: rgb(242, 242, 27); }
+.nav-link:hover::after { transform: scaleX(1); }
+.nav-link.active { color: rgb(242, 242, 27); font-weight: 700; }
+.nav-link.active::after { transform: scaleX(1); }
+.nav-link.home-link { display: none; }
+.admin-link { display: none; }
+.admin-title { display: none; }
 
-.nav-link.active {
-    color: rgb(242, 242, 27);
-    font-weight: 700;
-}
-
-.nav-link.active::after {
-    transform: scaleX(1);
-}
-
-.nav-link.home-link {
-    display: none;
-}
-
-.admin-link {
-    display: none;
-}
-
-.admin-title {
-    display: none;
-}
-
-/* ==========================================
-   ICONO HAMBURGUESA
-   ========================================== */
-
+/* ── Hamburguesa ── */
 .menu-icon {
     display: none;
     flex-direction: column;
@@ -123,22 +86,11 @@
     display: block;
 }
 
-.menu-icon.open span:nth-child(1) {
-    transform: rotate(45deg) translate(8px, 8px);
-}
+.menu-icon.open span:nth-child(1) { transform: rotate(45deg) translate(8px, 8px); }
+.menu-icon.open span:nth-child(2) { opacity: 0; }
+.menu-icon.open span:nth-child(3) { transform: rotate(-45deg) translate(8px, -8px); }
 
-.menu-icon.open span:nth-child(2) {
-    opacity: 0;
-}
-
-.menu-icon.open span:nth-child(3) {
-    transform: rotate(-45deg) translate(8px, -8px);
-}
-
-/* ==========================================
-   BOTÓN FAB ADMIN
-   ========================================== */
-
+/* ── FAB Admin ── */
 .admin-fab {
     display: none;
     position: fixed;
@@ -157,10 +109,7 @@
     transition: all 0.3s ease;
 }
 
-.admin-fab:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 30px rgba(130, 17, 159, 0.4);
-}
+.admin-fab:hover { transform: scale(1.1); box-shadow: 0 6px 30px rgba(130, 17, 159, 0.4); }
 
 .admin-fab-menu {
     position: absolute;
@@ -169,20 +118,14 @@
     background: #1f2937;
     border-radius: 0.75rem;
     min-width: 220px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
     overflow: hidden;
     animation: slideUp 0.3s ease;
 }
 
 @keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .fab-link {
@@ -191,58 +134,29 @@
     gap: 0.75rem;
     text-decoration: none;
     padding: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
     transition: all 0.3s ease;
     font-weight: 500;
     color: white;
 }
 
-.fab-link:last-child {
-    border-bottom: none;
-}
+.fab-link:last-child { border-bottom: none; }
+.fab-link:hover { background: var(--primary-purple); color: white; padding-left: 1.25rem; }
+.fab-link svg { flex-shrink: 0; }
 
-.fab-link:hover {
-    background: var(--primary-purple);
-    color: white;
-    padding-left: 1.25rem;
-}
+.mobile-user-section { display: none; }
 
-.fab-link svg {
-    flex-shrink: 0;
-}
-
-.mobile-user-section{
-    display: none;
-}
-/* ==========================================
-   RESPONSIVE - TABLET (768px)
-   ========================================== */
-
+/* ── Tablet ── */
 @media (max-width: 768px) {
-    .navbar-container {
-        padding: 0.5rem 1rem;
-        border-top: none;
-    }
-
-    .menu {
-        gap: 1.5rem;
-    }
-
-    .menu-section {
-        gap: 1.2rem;
-    }
-
-    .nav-link {
-        margin: 0.3rem 0.6rem;
-        font-size: 0.95rem;
-    }
+    .navbar-container { padding: 0.5rem 1rem; border-top: none; }
+    .menu { gap: 1.5rem; }
+    .menu-section { gap: 1.2rem; }
+    .nav-link { margin: 0.3rem 0.6rem; font-size: 0.95rem; }
 }
 
-/* ==========================================
-   RESPONSIVE - MOBILE (680px)
-   ========================================== */
-
+/* ── Mobile ── */
 @media (max-width: 680px) {
+
     .navbar-container {
         position: relative;
         padding: 1rem 0.8rem;
@@ -253,18 +167,15 @@
         border-top: none;
     }
 
-    .menu-icon {
-        display: flex;
-        position: relative;
-        margin-right: auto;
-    }
+    .menu-icon { display: flex; position: relative; margin-right: auto; }
 
     .menu {
         position: fixed;
         left: 0;
         top: 0;
-        width: 60vw;
-        max-width: 280px;
+        /* ▶ drawer más ancho para que los botones respiren */
+        width: 82vw;
+        max-width: 340px;
         height: 100vh;
         background: var(--primary-purple);
         flex-direction: column;
@@ -273,288 +184,31 @@
         transform: translateX(-100%);
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 999;
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+        box-shadow: 4px 0 20px rgba(0,0,0,0.2);
         overflow-y: auto;
-        justify-content: space-between;
-        margin: 0;
-    }
-
-    .menu.open {
-        transform: translateX(0);
-    }
-
-    .menu.open::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: -1;
-    }
-
-    .menu-section {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        width: 100%;
-        padding: 0;
-        border-bottom: none;
-    }
-
-    .menu-section:last-child {
-        border-bottom: none;
-    }
-
-    .admin-section {
-        display: block;
-        margin-top: 0;
-    }
-
-    .admin-title {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        font-size: 0.875rem;
-        font-weight: 700;
-        color: rgb(242, 242, 27);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        padding: 1rem 1rem 0.5rem 1rem;
-        margin: 0;
-    }
-
-    .nav-link {
-        padding: 0.75rem 1rem;
-        margin: 0;
-        border-radius: 0;
-        font-size: 1rem;
-        font-weight: 500;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: all 0.3s ease;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        color: white;
-    }
-
-    .nav-link::after {
-        display: none;
-    }
-
-    .nav-link:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: rgb(242, 242, 27);
-        padding-left: 1.25rem;
-    }
-
-    .nav-link.active {
-        background: rgba(255, 255, 255, 0.08);
-        color: rgb(242, 242, 27);
-        font-weight: 700;
-        border-left: 3px solid rgb(242, 242, 27);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .nav-link.home-link {
-        display: none;
-    }
-
-    .admin-link {
-        display: flex;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* ============================================
-       SECCIÓN DE USUARIO MÓVIL - INTEGRADA
-       ============================================ */
-    
-    .mobile-user-section {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 1rem 0.75rem;
-        margin-top: auto;
-        background: rgba(0, 0, 0, 0.2);
-        border-top: 2px solid rgba(255, 255, 255, 0.2);
-        flex-wrap: wrap;
-        width: 100%;
-    }
-
-    .mobile-user-btn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.25rem;
-        padding: 0.5rem;
-        background: transparent;
-        border: none;
-        color: white;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border-radius: 0.5rem;
-        font-size: 0.7rem;
-        flex: 1;
-        min-width: 65px;
-        font-weight: 500;
-    }
-
-    .mobile-user-btn svg {
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-    }
-
-    .mobile-user-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateY(-2px);
-    }
-
-    .mobile-user-btn:active {
-        transform: scale(0.95);
-    }
-
-    /* LOGIN BUTTON */
-    .mobile-user-btn.login-btn {
-        color: rgb(242, 242, 27);
-    }
-
-    .mobile-user-btn.login-btn:hover {
-        background: rgba(242, 242, 27, 0.15);
-        color: rgb(255, 255, 150);
-    }
-
-    /* REGISTER BUTTON */
-    .mobile-user-btn.register-btn {
-        color: rgb(242, 242, 27);
-    }
-
-    .mobile-user-btn.register-btn:hover {
-        background: rgba(242, 242, 27, 0.15);
-        color: rgb(255, 255, 150);
-    }
-
-    /* PROFILE BUTTON */
-    .mobile-user-btn.profile-btn {
-        color: #82119f;
-        background: rgba(130, 17, 159, 0.2);
-    }
-
-    .mobile-user-btn.profile-btn:hover {
-        background: rgba(130, 17, 159, 0.35);
-        color: #a333c6;
-    }
-
-    /* LOGOUT BUTTON */
-    .mobile-user-btn.logout-btn {
-        color: #ff6b6b;
-    }
-
-    .mobile-user-btn.logout-btn:hover {
-        background: rgba(255, 107, 107, 0.2);
-        color: #ff8585;
-    }
-
-    .mobile-user-greeting {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.25rem;
-        padding: 0.5rem;
-        color: rgb(242, 242, 27);
-        font-size: 0.7rem;
-        font-weight: 600;
-        flex: 1;
-        min-width: 70px;
-    }
-
-    .mobile-user-greeting svg {
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-    }
-
-    .admin-fab {
-        display: flex;
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - MÓVIL PEQUEÑO (480px)
-   ========================================== */
-
-/* ==========================================
-   RESPONSIVE - MOBILE (680px)
-   ========================================== */
-
-@media (max-width: 680px) {
-    .navbar-container {
-        position: relative;
-        padding: 1rem 0.8rem;
-        z-index: 1000;
-        width: 100%;
-        height: 60px;
         justify-content: flex-start;
-        border-top: none;
-    }
-
-    .menu-icon {
-        display: flex;
-        position: relative;
-        margin-right: auto;
-    }
-
-    .menu {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 75vw; /* Un poco más ancho para albergar cómodamente los textos horizontales */
-        max-width: 310px;
-        height: 100vh;
-        background: var(--primary-purple);
-        flex-direction: column;
-        gap: 0;
-        padding: 80px 0 0 0;
-        transform: translateX(-100%);
-        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 999;
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
-        overflow-y: auto;
-        justify-content: flex-start; /* Permite empujar la sección de usuario hacia abajo con margin-top: auto */
         margin: 0;
     }
 
-    .menu.open {
-        transform: translateX(0);
-    }
+    .menu.open { transform: translateX(0); }
 
     .menu.open::before {
         content: '';
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
+        inset: 0;
+        background: rgba(0,0,0,0.5);
         z-index: -1;
     }
 
     .menu-section {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem; /* Más espacio vertical entre items de lista */
+        gap: 0.5rem;
         width: 100%;
         padding: 0 0.5rem;
-        border-bottom: none;
     }
 
-    .admin-section {
-        display: block;
-        margin-top: 1rem;
-    }
+    .admin-section { display: block; margin-top: 1rem; }
 
     .admin-title {
         display: flex;
@@ -569,228 +223,196 @@
         margin: 0;
     }
 
-    
     .nav-link {
-        padding: 1rem 1.25rem; 
+        padding: 1rem 1.25rem;
         margin: 0;
-        border-radius: 0.5rem; 
+        border-radius: 0.5rem;
         font-size: 1.05rem;
         font-weight: 500;
         text-decoration: none;
         display: flex;
         align-items: center;
-        justify-content: flex-start; 
+        justify-content: flex-start;
         gap: 0.75rem;
         transition: all 0.25s ease;
-        border-bottom: none; 
+        border-bottom: none;
         color: white;
     }
 
-    .nav-link::after {
-        display: none;
-    }
+    .nav-link::after { display: none; }
+    .nav-link:hover { background: rgba(255,255,255,0.1); color: rgb(242,242,27); padding-left: 1.5rem; }
+    .nav-link.active { background: rgba(255,255,255,0.15); color: rgb(242,242,27); font-weight: 700; border-left: 4px solid rgb(242,242,27); padding-left: 1.25rem; }
+    .nav-link.home-link { display: flex; margin-top: 0.5rem; }
+    .admin-link { display: flex; }
 
-    .nav-link:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: rgb(242, 242, 27);
-        padding-left: 1.5rem; 
-    }
+    /* ══════════════════════════════════════════
+       SECCIÓN DE USUARIO — REDISEÑO
+       ══════════════════════════════════════════ */
 
-    .nav-link.active {
-        background: rgba(255, 255, 255, 0.15);
-        color: rgb(242, 242, 27);
-        font-weight: 700;
-        border-left: 4px solid rgb(242, 242, 27);
-        padding-left: 1.25rem;
-    }
-
-    .nav-link.home-link {
-        display: flex; 
-        margin-top: 0.5rem;
-    }
-
-    .admin-link {
+    .mobile-user-section {
         display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        padding: 1rem;
+        margin-top: auto;
+        background: rgba(0, 0, 0, 0.20);
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+        width: 100%;
+        box-sizing: border-box;
     }
 
-    /* ============================================
-       NUEVA SECCIÓN DE USUARIO HORIZONTAL (MOBILE)
-       ============================================ */
-    
-.mobile-user-section {
+    /* Avatar */
+    .mobile-user-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        position: relative;
+        color: white;
+    }
+
+    .mobile-user-avatar.authenticated {
+        background: rgb(242, 242, 27);
+        color: var(--primary-purple);
+    }
+
+    .mobile-status-dot {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 8px;
+        height: 8px;
+        background: #10b981;
+        border-radius: 50%;
+        border: 2px solid var(--primary-purple);
+    }
+
+.mobile-user-info {
     display: flex;
-    flex-direction: row;
     align-items: center;
+    justify-content: space-between;  /* ← esto empuja el botón a la derecha */
     gap: 0.6rem;
-    padding: 0.875rem 0.75rem;
-    margin-top: auto;
-    background: rgba(0, 0, 0, 0.18);
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
     width: 100%;
-    box-sizing: border-box;
 }
 
-/* Avatar circular */
-.mobile-user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.18);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    color: white;
+.mobile-user-actions-row {
+    margin-left: auto;  /* respaldo extra */
 }
+    .mobile-user-name {
+        color: white;
+        font-size: 0.875rem;
+        font-weight: 600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex: 1;
+    }
 
-.mobile-user-avatar.authenticated {
-    background: rgb(242, 242, 27);
-    color: var(--primary-purple);
-}
+    /* ── Fila de botones no autenticado ── */
+    /* Envolver login + register en <div className="mobile-user-btns-row"> en el JSX */
+    .mobile-user-btns-row {
+        display: flex;
+        gap: 0.6rem;
+        width: 100%;
+    }
 
-.mobile-status-dot {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 8px;
-    height: 8px;
-    background: #10b981;
-    border-radius: 50%;
-    border: 2px solid var(--primary-purple);
-}
+    /* Ambos botones comparten base */
+    .mobile-user-btn.login-btn,
+    .mobile-user-btn.register-btn {
+        flex: 1;               /* mismo ancho */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        height: 42px;          /* altura fija igual */
+        padding: 0 0.5rem;
+        border-radius: 10px;   /* rectángulo con esquinas suaves */
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background 0.2s, transform 0.15s;
+    }
 
-/* Nombre del usuario */
-.mobile-user-name {
-    color: white;
-    font-size: 0.875rem;
-    font-weight: 600;
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+    .mobile-user-btn.login-btn {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1.5px solid rgba(255, 255, 255, 0.40);
+        color: white;
+    }
 
-/* Solo botón perfil (ícono) */
-.mobile-user-btn.profile-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    border: none;
-    cursor: pointer;
-    flex-shrink: 0;
-}
+    .mobile-user-btn.login-btn:active {
+        background: rgba(255, 255, 255, 0.22);
+        transform: scale(0.97);
+    }
 
-.mobile-user-btn.profile-btn:hover {
-    background: rgba(255, 255, 255, 0.28);
-}
+    .mobile-user-btn.register-btn {
+        background: rgb(242, 242, 27);
+        border: none;
+        color: #1a0030;
+    }
 
-/* Botones login/register sin cambios */
-.mobile-user-btn.login-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 2rem;              /* pill */
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    color: white;
-    font-size: 0.78rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-.mobile-user-btn.login-btn:hover {
-    background: rgba(255, 255, 255, 0.22);
-}
+    .mobile-user-btn.register-btn:active {
+        background: rgb(255, 255, 120);
+        transform: scale(0.97);
+    }
 
-.mobile-user-btn.register-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 2rem;              /* pill */
-    background: rgb(242, 242, 27);
-    border: none;
-    color: #000;
-    font-size: 0.78rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.mobile-user-btn.register-btn:hover {
-    background: rgb(255, 255, 120);
-}
-
-
-    /* BOTONES MÓVIL ESTADO AUTENTICADO */
+    /* Acciones cuando autenticado */
     .mobile-user-actions-row {
         display: flex;
         gap: 0.5rem;
-        margin-left: auto; /* Empuja los botones de acción a la derecha */
+        margin-left: auto;
     }
 
     .mobile-user-btn.profile-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border-radius: 8px;
         background: rgba(255, 255, 255, 0.15);
         color: white;
-        padding: 0.5rem;
+        border: none;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background 0.2s;
     }
+
+    .mobile-user-btn.profile-btn:active { background: rgba(255,255,255,0.28); }
 
     .mobile-user-btn.logout-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border-radius: 8px;
         background: rgba(239, 68, 68, 0.2);
         color: #f87171;
-        padding: 0.5rem;
+        border: none;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: background 0.2s;
     }
 
-    .mobile-user-btn.logout-btn:hover {
-        background: rgba(239, 68, 68, 0.4);
-    }
+    .mobile-user-btn.logout-btn:active { background: rgba(239,68,68,0.4); }
 
-    .admin-fab {
-        display: flex;
-    }
+    .admin-fab { display: flex; }
 }
 
-/* ==========================================
-   SCROLLBAR PERSONALIZADA
-   ========================================== */
-
-.menu::-webkit-scrollbar {
-    width: 6px;
-}
-
-.menu::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.menu::-webkit-scrollbar-thumb {
-    background: rgb(242, 242, 27);
-    border-radius: 3px;
-}
-
-.menu::-webkit-scrollbar-thumb:hover {
-    background: rgba(242, 242, 27, 0.8);
-}
-
-/* ==========================================
-   IMPRESIÓN
-   ========================================== */
+/* ── Scrollbar ── */
+.menu::-webkit-scrollbar { width: 6px; }
+.menu::-webkit-scrollbar-track { background: transparent; }
+.menu::-webkit-scrollbar-thumb { background: rgb(242,242,27); border-radius: 3px; }
+.menu::-webkit-scrollbar-thumb:hover { background: rgba(242,242,27,0.8); }
 
 @media print {
-    .navbar-container,
-    .menu-icon,
-    .admin-fab {
-        display: none;
-    }
+    .navbar-container, .menu-icon, .admin-fab { display: none; }
 }

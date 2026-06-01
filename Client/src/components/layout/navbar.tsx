@@ -2,8 +2,8 @@ import { Link, useLocation } from 'react-router-dom';
 import '../../assets/styles/navbar.css';
 import { useState, useEffect } from 'react';
 import { useProducts } from '../../features/hooks/useProducts';
-import { useAuth } from '../../context/authProvider'; // Importamos el auth hook
-import { Shield, Package, Plus, Images, LayoutDashboard, User, LogIn, UserPlus, User as UserIconLucide } from 'lucide-react';
+import { useAuth } from '../../context/authProvider'; 
+import { Shield, Package, Plus, Images, LayoutDashboard, LogIn, UserPlus, User as UserIconLucide } from 'lucide-react';
 
 const Navbar = () => {
     const location = useLocation();
@@ -114,9 +114,7 @@ const Navbar = () => {
                 <div className="mobile-user-section">
                     {!isAuthenticated ? (
                         <>
-                            <div className="mobile-user-avatar">
-                                <User size={22} />
-                            </div>
+                        <div className="mobile-user-btns-row">
                             <Link to="/login" className="mobile-user-btn login-btn">
                                 <LogIn size={16} />
                                 <span>Iniciar Sesión</span>
@@ -125,21 +123,18 @@ const Navbar = () => {
                                 <UserPlus size={16} />
                                 <span>Registrarse</span>
                             </Link>
+                        </div>
                         </>
                     ) : (
                         <>
-                            <div className="mobile-user-avatar authenticated">
-                                <User size={22} />
-                                <span className="mobile-status-dot"></span>
-                            </div>
-                            <div className="mobile-user-info">
-                                <span className="mobile-user-name">¡Hola, {user?.name?.split(' ')[0]}!</span>
-                            </div>
-                            <div className="mobile-user-actions-row">
-                                <Link to="/profile" className="mobile-user-btn profile-btn">
-                                    <UserIconLucide size={16} />
-                                </Link>
-                            </div>
+    <div className="mobile-user-info">
+        <span className="mobile-user-name">¡Hola, {user?.name?.split(' ')[0]}!</span>
+        <div className="mobile-user-actions-row">
+            <Link to="/profile" className="mobile-user-btn profile-btn">
+                <UserIconLucide size={16} />
+            </Link>
+        </div>
+    </div>
                         </>
                     )}
                 </div>

@@ -1,10 +1,16 @@
 // pages/profilePage.tsx
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/authProvider';
 import { User, Mail, Shield, LogOut, Edit2, Key, Save, X, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const ProfilePage = () => {
+
+    useEffect(() => {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }, [location.pathname]);
+
+        
     const { user, isAdmin, logout, changeName, changePassword } = useAuth();
     const navigate = useNavigate();
     

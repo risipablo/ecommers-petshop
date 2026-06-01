@@ -1,5 +1,5 @@
 // components/auth/UserMenu.tsx (actualizar)
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { User, LogOut, Package, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../context/authProvider';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,18 @@ import '../../assets/styles/auth.css'
 export const UserMenu = () => {
     const { user, isAuthenticated, isAdmin, logout } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const handleLogout = async () => {
         await logout();
@@ -19,7 +30,7 @@ export const UserMenu = () => {
     if (!isAuthenticated) return null;
 
     return (
-        <div className="user-menu-container">
+        <div className="user-menu-container"  ref={containerRef}>
             <button className="user-menu-btn" onClick={() => setIsOpen(!isOpen)}>
                 
                 <User size={20} />

@@ -1,6 +1,7 @@
-// context/authProvider.tsx
-import { createContext, useContext, useState, useEffect, type ReactNode, } from 'react';
-import axios from 'axios';
+// context/authProvider.tsx (actualizado con seguridad)
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import axiosInstance from '../config/axiosConfig';
+import { sanitizeInput, validateEmail, validatePassword, hasSQLInjection } from '../components/utils/security';
 import type {
     User,
     AuthContextType,
@@ -12,13 +13,9 @@ import type {
     ResetPasswordCredentials
 } from '../features/types/auth.types';
 
-import  {config} from "../config/index"
-
-const API_URL = config.Api;
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-axios.defaults.withCredentials = true;
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
@@ -31,29 +28,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         if (!token) {
             setIsLoading(false);
-            setIsAuthenticated(false);
-            setUser(null);
             return;
         }
 
         try {
-            const response = await axios.get(`${API_URL}/auth/me`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            
+            const response = await axiosInstance.get(`${API_URL}/auth/me`);
             if (response.data.success && response.data.data) {
                 setUser(response.data.data);
                 setIsAuthenticated(true);
-            } else {
-                setUser(null);
-                setIsAuthenticated(false);
-                localStorage.removeItem('token');
             }
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (err) {
+            localStorage.removeItem('token');
             setUser(null);
             setIsAuthenticated(false);
-            localStorage.removeItem('token');
         } finally {
             setIsLoading(false);
         }
@@ -62,8 +50,42 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const register = async (credentials: RegisterCredentials) => {
         setIsLoading(true);
         setError(null);
+        
+        // Sanitizar inputs
+        const sanitizedName = sanitizeInput(credentials.name);
+        const sanitizedEmail = sanitizeInput(credentials.email);
+        
+        // Validar email
+        if (!validateEmail(sanitizedEmail)) {
+            setError('Email inválido');
+            setIsLoading(false);
+            throw new Error('Email inválido');
+        }
+        
+        // Validar contraseña
+        const passwordValidation = validatePassword(credentials.password);
+        if (!passwordValidation.valid) {
+            const passwordError = passwordValidation.error ?? 'Contraseña inválida';
+            setError(passwordError);
+            setIsLoading(false);
+            throw new Error(passwordError);
+        }
+        
+        // Detectar SQL Injection
+        if (hasSQLInjection(sanitizedName) || hasSQLInjection(sanitizedEmail)) {
+            setError('Datos inválidos');
+            setIsLoading(false);
+            throw new Error('Datos inválidos');
+        }
+        
         try {
-            const response = await axios.post(`${API_URL}/auth/register`, credentials);
+            const response = await axiosInstance.post(`${API_URL}/auth/register`, {
+                name: sanitizedName,
+                email: sanitizedEmail,
+                password: credentials.password,
+                confirmPassword: credentials.confirmPassword
+            });
+            
             if (response.data.success) {
                 setUser(response.data.data);
                 setIsAuthenticated(true);
@@ -73,7 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 return response.data;
             }
         } catch (err: unknown) {
-            const errorMsg = (err as { response?: { data?: { error: string } } }).response?.data?.error || 'Error al registrarse';
+            const errorMsg = (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Error al registrarse';
             setError(errorMsg);
             throw new Error(errorMsg);
         } finally {
@@ -84,8 +106,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = async (credentials: LoginCredentials) => {
         setIsLoading(true);
         setError(null);
+        
+        const sanitizedEmail = sanitizeInput(credentials.email);
+        
+        if (!validateEmail(sanitizedEmail)) {
+            setError('Email inválido');
+            setIsLoading(false);
+            throw new Error('Email inválido');
+        }
+        
         try {
-            const response = await axios.post(`${API_URL}/auth/login`, credentials);
+            const response = await axiosInstance.post(`${API_URL}/auth/login`, {
+                email: sanitizedEmail,
+                password: credentials.password
+            });
+            
             if (response.data.success) {
                 setUser(response.data.data);
                 setIsAuthenticated(true);
@@ -95,23 +130,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 return response.data;
             }
         } catch (err: unknown) {
-            const errorMsg = (err as { response?: { data?: { error: string } } }).response?.data?.error || 'Error al iniciar sesión';
+            const errorMsg = (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Error al iniciar sesión';
             setError(errorMsg);
             throw new Error(errorMsg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const logout = async () => {
-        setIsLoading(true);
-        try {
-            await axios.post(`${API_URL}/auth/logout`);
-            setUser(null);
-            setIsAuthenticated(false);
-            localStorage.removeItem('token');
-        } catch (err) {
-            console.error('Error al cerrar sesión:', err);
         } finally {
             setIsLoading(false);
         }
@@ -120,18 +141,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const changeName = async (credentials: ChangeNameCredentials) => {
         setIsLoading(true);
         setError(null);
+        
+        const sanitizedName = sanitizeInput(credentials.name);
+        
+        if (sanitizedName.length < 2) {
+            setError('El nombre debe tener al menos 2 caracteres');
+            setIsLoading(false);
+            throw new Error('El nombre debe tener al menos 2 caracteres');
+        }
+        
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.put(`${API_URL}/auth/change-name`, credentials, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            
+            const response = await axiosInstance.put(`${API_URL}/auth/change-name`, { name: sanitizedName });
             if (response.data.success) {
                 setUser(response.data.data);
                 return response.data;
             }
         } catch (err: unknown) {
-            const errorMsg = (err as { response?: { data?: { error: string } } }).response?.data?.error || 'Error al cambiar nombre';
+            const errorMsg = (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Error al cambiar nombre';
             setError(errorMsg);
             throw new Error(errorMsg);
         } finally {
@@ -142,17 +168,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const changePassword = async (credentials: ChangePasswordCredentials) => {
         setIsLoading(true);
         setError(null);
+        
+        const passwordValidation = validatePassword(credentials.newPassword);
+        if (!passwordValidation.valid) {
+            const passwordError = passwordValidation.error ?? 'Contraseña inválida';
+            setError(passwordError);
+            setIsLoading(false);
+            throw new Error(passwordError);
+        }
+        
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.put(`${API_URL}/auth/change-password`, credentials, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            
+            const response = await axiosInstance.put('/auth/change-password', credentials);
             if (response.data.success) {
                 return response.data;
             }
         } catch (err: unknown) {
-            const errorMsg = (err as { response?: { data?: { error: string } } }).response?.data?.error || 'Error al cambiar contraseña';
+            const errorMsg = (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Error al cambiar contraseña';
             setError(errorMsg);
             throw new Error(errorMsg);
         } finally {
@@ -163,11 +194,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const forgotPassword = async (credentials: ForgotPasswordCredentials) => {
         setIsLoading(true);
         setError(null);
+        
+        const sanitizedEmail = sanitizeInput(credentials.email);
+        
+        if (!validateEmail(sanitizedEmail)) {
+            setError('Email inválido');
+            setIsLoading(false);
+            throw new Error('Email inválido');
+        }
+        
         try {
-            const response = await axios.post(`${API_URL}/auth/forgot-password`, credentials);
+            const response = await axiosInstance.post(`${API_URL}/auth/forgot-password`, { email: sanitizedEmail });
             return response.data;
         } catch (err: unknown) {
-            const errorMsg = (err as { response?: { data?: { error: string } } }).response?.data?.error || 'Error al enviar email de recuperación';
+            const errorMsg = (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Error al enviar email de recuperación';
             setError(errorMsg);
             throw new Error(errorMsg);
         } finally {
@@ -178,15 +218,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const resetPassword = async (credentials: ResetPasswordCredentials) => {
         setIsLoading(true);
         setError(null);
+        
+        const passwordValidation = validatePassword(credentials.newPassword);
+        if (!passwordValidation.valid) {
+            const passwordError = passwordValidation.error ?? 'Contraseña inválida';
+            setError(passwordError);
+            setIsLoading(false);
+            throw new Error(passwordError);
+        }
+        
         try {
-            const response = await axios.post(`${API_URL}/auth/reset-password`, credentials);
+            const response = await axiosInstance.post(`${API_URL}/auth/reset-password`, credentials);
             return response.data;
         } catch (err: unknown) {
-            const errorMsg = (err as { response?: { data?: { error: string } } }).response?.data?.error || 'Error al restablecer contraseña';
+            const errorMsg = (err as { response?: { data?: { error?: string } } }).response?.data?.error || 'Error al restablecer contraseña';
             setError(errorMsg);
             throw new Error(errorMsg);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const logout = async () => {
+        try {
+            await axiosInstance.post(`${API_URL}/auth/logout`);
+            setUser(null);
+            setIsAuthenticated(false);
+            localStorage.removeItem('token');
+        } catch (err: unknown) {
+            console.error('Error al cerrar sesión:', (err as Error).message);
         }
     };
 

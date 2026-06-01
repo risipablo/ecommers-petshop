@@ -1,23 +1,22 @@
-// pages/ResetPasswordPage.tsx
+// pages/RegisterPage.tsx
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Lock, Eye, EyeOff, Key, ArrowLeft } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Mail, Lock, User, UserPlus, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/authProvider';
-import '../assets/styles/auth.css';
+import '../assets/styles/authpage.css';
 
-export const ResetPasswordPage = () => {
-    const { token } = useParams<{ token: string }>();
-    const navigate = useNavigate();
-    const { resetPassword } = useAuth();
-    
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmNewPassword, setConfirmNewPassword] = useState('');
+export const RegisterPage = () => {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState(false);
     const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
+    const { register } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
             window.scrollTo({ top: 0, behavior: 'instant' });
@@ -25,16 +24,21 @@ export const ResetPasswordPage = () => {
 
     const validatePassword = (pass: string) => {
         const errors = [];
-        if (pass.length < 7) errors.push('Mínimo 7 caracteres');
-        if (!/[A-Z]/.test(pass)) errors.push('Al menos una mayúscula');
-        if (!/[!@#$%^&*(),.?":{}|<>]/.test(pass)) errors.push('Al menos un carácter especial');
+        if (pass.length < 7) errors.push('• Mínimo 7 caracteres');
+        if (!/[A-Z]/.test(pass)) errors.push('• Al menos una mayúscula');
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(pass)) errors.push('• Al menos un carácter especial');
         return errors;
+    };
+
+    const handlePasswordChange = (pass: string) => {
+        setPassword(pass);
+        setPasswordErrors(validatePassword(pass));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        if (newPassword !== confirmNewPassword) {
+        if (password !== confirmPassword) {
             setError('Las contraseñas no coinciden');
             return;
         }
@@ -48,11 +52,8 @@ export const ResetPasswordPage = () => {
         setError('');
         
         try {
-            await resetPassword({ token: token!, newPassword, confirmNewPassword });
-            setSuccess(true);
-            setTimeout(() => {
-                navigate('/login');
-            }, 3000);
+            await register({ name, email, password, confirmPassword });
+            navigate('/');
         } catch (err: unknown) {
             setError((err as Error).message);
         } finally {
@@ -60,57 +61,56 @@ export const ResetPasswordPage = () => {
         }
     };
 
-    if (success) {
-        return (
-            <div className="auth-page-container">
-                <div className="auth-page-card success-card">
-                    <div className="auth-page-header">
-                        <div className="auth-page-icon success-icon">
-                            <Key size={40} />
-                        </div>
-                        <h1>¡Contraseña actualizada!</h1>
-                        <p>Tu contraseña ha sido cambiada exitosamente.</p>
-                        <p>Serás redirigido al inicio de sesión...</p>
-                    </div>
-                    <div className="auth-page-footer">
-                        <Link to="/login" className="auth-page-btn-link">
-                            Ir al inicio de sesión
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="auth-page-container">
             <div className="auth-page-card">
-                <Link to="/login" className="auth-back-link">
+                <Link to="/" className="auth-back-link">
                     <ArrowLeft size={18} />
-                    Volver al inicio de sesión
+                    Volver al inicio
                 </Link>
                 
-                <div className="auth-page-header">
-                    <div className="auth-page-icon">
-                        <Key size={40} />
-                    </div>
-                    <h1>Restablecer Contraseña</h1>
-                    <p>Ingresa tu nueva contraseña</p>
-                </div>
+  <div className="auth-page-header">
+    <div className="auth-page-header-title">
+        <div className="auth-page-icon">
+            <UserPlus size={36} />  
+        </div>
+        <h1>Crear Cuenta</h1>
+    </div>
+    <p>Regístrate para obtener una mejor experiencia</p>
+</div>
 
                 <form onSubmit={handleSubmit} className="auth-page-form">
                     {error && <div className="auth-page-error">{error}</div>}
                     
                     <div className="auth-page-input-group">
+                        <User size={18} />
+                        <input
+                            type="text"
+                            placeholder="Nombre completo"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                    </div>
+                    
+                    <div className="auth-page-input-group">
+                        <Mail size={18} />
+                        <input
+                            type="email"
+                            placeholder="Correo electrónico"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    
+                    <div className="auth-page-input-group">
                         <Lock size={18} />
                         <input
                             type={showPassword ? "text" : "password"}
-                            placeholder="Nueva contraseña"
-                            value={newPassword}
-                            onChange={(e) => {
-                                setNewPassword(e.target.value);
-                                setPasswordErrors(validatePassword(e.target.value));
-                            }}
+                            placeholder="Contraseña"
+                            value={password}
+                            onChange={(e) => handlePasswordChange(e.target.value)}
                             required
                         />
                         <button 
@@ -135,9 +135,9 @@ export const ResetPasswordPage = () => {
                         <Lock size={18} />
                         <input
                             type={showConfirmPassword ? "text" : "password"}
-                            placeholder="Confirmar nueva contraseña"
-                            value={confirmNewPassword}
-                            onChange={(e) => setConfirmNewPassword(e.target.value)}
+                            placeholder="Confirmar contraseña"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
                             required
                         />
                         <button 
@@ -150,9 +150,21 @@ export const ResetPasswordPage = () => {
                     </div>
                     
                     <button type="submit" className="auth-page-btn" disabled={loading}>
-                        {loading ? 'Actualizando...' : 'Actualizar Contraseña'}
+                        {loading ? 'Registrando...' : 'Registrarse'}
                     </button>
+
+                                    
+                    <div className="auth-page-footer">
+                        <p>
+                            ¿Ya tienes cuenta?{' '}
+                            <Link to="/login" className="auth-page-switch-link">
+                                Inicia sesión aquí
+                            </Link>
+                        </p>
+                    </div>
+                    
                 </form>
+
             </div>
         </div>
     );

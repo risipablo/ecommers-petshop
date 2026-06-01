@@ -1,10 +1,11 @@
-// config/axiosConfig.ts (crear este archivo)
+// config/axiosConfig.ts (versión minimalista y segura)
 import axios from 'axios';
 
-// Configuración global de axios
+// Configuración global
 axios.defaults.withCredentials = true;
+axios.defaults.timeout = 30000;
 
-// Interceptor para agregar token a todas las peticiones
+// Interceptor para agregar token
 axios.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
@@ -13,20 +14,26 @@ axios.interceptors.request.use(
         }
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
 
-// Interceptor para manejar errores de autenticación
+// Interceptor para manejar errores
 axios.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401 || error.response?.status === 403) {
-            // Token expirado o sin permisos
             localStorage.removeItem('token');
-            window.location.href = '/';
+            if (window.location.pathname !== '/') {
+                window.location.href = '/';
+            }
         }
+        
+        if (error.response?.status === 429) {
+            alert('Demasiadas peticiones. Por favor espera un momento.');
+        }
+        
         return Promise.reject(error);
     }
 );
+
+export default axios;

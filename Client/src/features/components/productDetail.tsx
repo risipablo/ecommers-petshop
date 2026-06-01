@@ -31,6 +31,7 @@ export function ProductDetail() {
     const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
     const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isTransitioning, setIsTransitioning] = useState(true);
     
     // Obtener categoryPath de la URL para filtrar kg
     const currentPath = location.pathname;
@@ -41,6 +42,14 @@ export function ProductDetail() {
         : (product?.imageUrl ? [{ _id: 'main', url: product.imageUrl, publicId: product.imagePublicId || '', isMain: true, order: 0 }] : []);
 
     const hasMultipleImages = images.length > 1;
+
+    // Clonar productos para efecto infinito
+    const cloneCount = itemsPerView;
+    const clonedProducts = relatedProducts.length > 0 && relatedProducts.length > itemsPerView
+        ? [...relatedProducts.slice(-cloneCount), ...relatedProducts, ...relatedProducts.slice(0, cloneCount)]
+        : [...relatedProducts];
+    const realStart = cloneCount;
+    const trackIndex = currentIndex + realStart;
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' });
@@ -64,10 +73,39 @@ export function ProductDetail() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // Resetear índice del slider relacionado
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrentIndex(0);
     }, [relatedProducts.length]);
+
+    // Efecto para loop infinito del slider
+    useEffect(() => {
+        if (relatedProducts.length === 0 || relatedProducts.length <= itemsPerView) return;
+        
+        if (currentIndex >= relatedProducts.length) {
+            const timer = setTimeout(() => {
+                setIsTransitioning(false);
+                setCurrentIndex(0);
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+        
+        if (currentIndex < 0) {
+            const timer = setTimeout(() => {
+                setIsTransitioning(false);
+                setCurrentIndex(relatedProducts.length - 1);
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [currentIndex, relatedProducts.length, itemsPerView]);
+
+    useEffect(() => {
+        if (!isTransitioning) {
+            const timer = setTimeout(() => setIsTransitioning(true), 50);
+            return () => clearTimeout(timer);
+        }
+    }, [isTransitioning]);
 
     useEffect(() => {
         if (!product) return;
@@ -122,11 +160,11 @@ export function ProductDetail() {
             await axios.delete(`${API_URL}/products/${id}`, {
                 withCredentials: true
             });
-            alert(' Producto eliminado exitosamente');
+            alert('✅ Producto eliminado exitosamente');
             navigate('/');
         } catch (error) {
             console.error('Error al eliminar:', error);
-            alert('Error al eliminar el producto');
+            alert('❌ Error al eliminar el producto');
         }
     };
 
@@ -136,6 +174,31 @@ export function ProductDetail() {
         const x = ((e.clientX - left) / width) * 100;
         const y = ((e.clientY - top) / height) * 100;
         setZoomPosition({ x: Math.min(Math.max(x, 0), 100), y: Math.min(Math.max(y, 0), 100) });
+    };
+
+    // Funciones del slider infinito
+    const nextSlide = () => {
+        if (relatedProducts.length <= itemsPerView) return;
+        setIsTransitioning(true);
+        setCurrentIndex((prev) => prev + 1);
+    };
+
+    const prevSlide = () => {
+        if (relatedProducts.length <= itemsPerView) return;
+        setIsTransitioning(true);
+        setCurrentIndex((prev) => prev - 1);
+    };
+
+    const handleRelatedProductClick = () => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    };
+
+    const nextImage = () => {
+        setSelectedImageIndex((prev) => (prev + 1) % images.length);
+    };
+
+    const prevImage = () => {
+        setSelectedImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
     if (loading) {
@@ -160,28 +223,6 @@ export function ProductDetail() {
     const formatPrice = (price: number | string) => {
         const numPrice = typeof price === 'number' ? price : parseFloat(price);
         return numPrice.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-    };
-
-    const maxIndex = Math.max(0, relatedProducts.length - itemsPerView);
-    
-    const nextSlide = () => {
-        setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
-    };
-
-    const prevSlide = () => {
-        setCurrentIndex((prev) => Math.max(prev - 1, 0));
-    };
-
-    const handleRelatedProductClick = () => {
-        window.scrollTo({ top: 0, behavior: 'instant' });
-    };
-
-    const nextImage = () => {
-        setSelectedImageIndex((prev) => (prev + 1) % images.length);
-    };
-
-    const prevImage = () => {
-        setSelectedImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
     // Determinar qué campos mostrar según la categoría
@@ -266,15 +307,13 @@ export function ProductDetail() {
                         </div>
                     )}
 
-                    {/* 🔥 Kilos - SOLO para categoría ALIMENTOS */}
                     {isAlimentos && product.kg && (
                         <div className="kg-section">
-                            <span className="kg-label">Kilos: </span>
+                            <span className="kg-label">Kilos:</span>
                             <span className="kg-value">{product.kg} kg</span>
                         </div>
                     )}
 
-                    {/* 🔥 Talle - SOLO para categoría INDUMENTARIA */}
                     {isIndumentaria && product.kg && (
                         <div className="size-section">
                             <span className="size-label">Talle:</span>
@@ -324,7 +363,6 @@ export function ProductDetail() {
                             {relatedProducts.length > itemsPerView && (
                                 <button 
                                     onClick={prevSlide} 
-                                    disabled={currentIndex === 0}
                                     className="related-nav related-nav-left"
                                     aria-label="Anterior"
                                 >
@@ -335,17 +373,19 @@ export function ProductDetail() {
                             <div className="related-carousel">
                                 <div 
                                     className="related-track"
-                                    style={{ 
-                                        transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
+                                    style={{
+                                        transform: `translateX(calc(-${trackIndex} * (${100 / itemsPerView}% + 24px)))`,
+                                        transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
                                     }}
                                 >
-                                    {relatedProducts.map((relatedProduct: Product) => (
+                                    {clonedProducts.map((relatedProduct, idx) => (
                                         <Link
-                                            key={relatedProduct._id}
+                                            key={`${relatedProduct._id}-${idx}`}
                                             to={`/item/${relatedProduct._id}`}
                                             state={{ from: backPath }}
                                             onClick={handleRelatedProductClick}
                                             className="related-product-card-link"
+                                            style={{ width: `calc(${100 / itemsPerView}% - 24px)` }}
                                         >
                                             <div className="related-product-card">
                                                 <div className="related-image-wrapper">
@@ -387,7 +427,6 @@ export function ProductDetail() {
                             {relatedProducts.length > itemsPerView && (
                                 <button 
                                     onClick={nextSlide} 
-                                    disabled={currentIndex === maxIndex}
                                     className="related-nav related-nav-right"
                                     aria-label="Siguiente"
                                 >
@@ -399,11 +438,14 @@ export function ProductDetail() {
                     
                     {relatedProducts.length > itemsPerView && (
                         <div className="related-dots">
-                            {Array.from({ length: maxIndex + 1 }).map((_, index) => (
+                            {Array.from({ length: Math.min(relatedProducts.length, 6) }).map((_, index) => (
                                 <button
                                     key={index}
-                                    className={`related-dot ${currentIndex === index ? 'active' : ''}`}
-                                    onClick={() => setCurrentIndex(index)}
+                                    className={`related-dot ${(currentIndex % relatedProducts.length) === index ? 'active' : ''}`}
+                                    onClick={() => {
+                                        setIsTransitioning(true);
+                                        setCurrentIndex(index);
+                                    }}
                                     aria-label={`Ir a slide ${index + 1}`}
                                 />
                             ))}

@@ -13,9 +13,13 @@ import { ProfilePage } from "./profilePage";
 import { EditProduct } from "../features/components/editProduct";
 import { ManageProductImages } from "../features/components/manageProductImage";
 import { ResetPasswordPage } from "./resetPasswordPage";
+
 import { Whatsapp } from "../components/layout/whatsappButton";
 import { ScrollTop } from "../components/layout/upButton";
-
+import { LoginPage } from "./loginPage";
+import { RegisterPage } from "./registerPage";
+import { ForgotPasswordPage } from "./forgotPassword";
+import ArticulosList from "../features/components/articulosList";
 
 export function Home() {
     return (
@@ -29,6 +33,12 @@ export function Home() {
                 <Route path="/item/:id" element={<ProductDetail />} />
                 <Route path="/contacto" element={<Contacto />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/articulos" element={<ArticulosList />} />
+                
+                {/* Rutas de autenticación */}
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
                 
                 {/* Rutas protegidas - solo admin */}
@@ -63,7 +73,7 @@ export function Home() {
                 } />
             </Routes>
             <ScrollTop />
-            <Whatsapp/>
+            <Whatsapp />
             <Footer />
         </>
     );
