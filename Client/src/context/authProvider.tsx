@@ -12,8 +12,9 @@ import type {
     ForgotPasswordCredentials,
     ResetPasswordCredentials
 } from '../features/types/auth.types';
+import { config } from '../config';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = config.Api;
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
