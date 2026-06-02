@@ -33,7 +33,7 @@ export const Search = ({ placeholder, filterData }: SearchProps) => {
             if (location.pathname !== '/search') {
                 navigate('/search');
             }
-            // ✅ Limpiar el input después de la búsqueda
+            // Limpiar el input después de la búsqueda
             setInputValue('');
         } else {
             clearSearch();

@@ -1,5 +1,5 @@
 // features/components/Destacados.tsx
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import '../../assets/styles/destacosHome.css';
@@ -9,10 +9,14 @@ export const Destacados = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(true);
+  const [cardWidth, setCardWidth] = useState(0);
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   const { products, fetch, loading } = UseDestacados();
   const navigate = useNavigate();
+
+  const GAP_PX = 16; // 1rem = 16px, debe coincidir con --card-gap base
 
   useEffect(() => {
     fetch();
@@ -29,6 +33,26 @@ export const Destacados = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Calcular ancho real de cada card desde el contenedor
+  const calculateCardWidth = useCallback(() => {
+    if (!carouselRef.current) return;
+    const containerWidth = carouselRef.current.offsetWidth;
+    const totalGap = GAP_PX * (itemsPerView - 1);
+    setCardWidth((containerWidth - totalGap) / itemsPerView);
+  }, [itemsPerView]);
+
+  useEffect(() => {
+    calculateCardWidth();
+    window.addEventListener('resize', calculateCardWidth);
+    return () => window.removeEventListener('resize', calculateCardWidth);
+  }, [calculateCardWidth]);
+
+  // Pequeño delay para asegurarse que el DOM ya renderizó
+  useEffect(() => {
+    const timer = setTimeout(calculateCardWidth, 50);
+    return () => clearTimeout(timer);
+  }, [calculateCardWidth, products.length]);
+
   const cloneCount = itemsPerView;
   const clonedProducts = products.length > 0
     ? [...products.slice(-cloneCount), ...products, ...products.slice(0, cloneCount)]
@@ -36,23 +60,28 @@ export const Destacados = () => {
   const realStart = cloneCount;
   const trackIndex = currentIndex + realStart;
 
-  const startAutoplay = () => {
+  // Offset en px reales
+  const trackOffset = cardWidth > 0 ? trackIndex * (cardWidth + GAP_PX) : 0;
+
+  const startAutoplay = useCallback(() => {
     if (autoplayRef.current) clearInterval(autoplayRef.current);
     autoplayRef.current = setInterval(() => {
+      setIsTransitioning(true);
       setCurrentIndex((prev) => prev + 1);
     }, 5000);
-  };
+  }, []);
 
-  const stopAutoplay = () => {
+  const stopAutoplay = useCallback(() => {
     if (autoplayRef.current) clearInterval(autoplayRef.current);
-  };
+  }, []);
 
   useEffect(() => {
     if (products.length === 0) return;
     startAutoplay();
     return () => stopAutoplay();
-  }, [products.length, itemsPerView]);
+  }, [products.length, itemsPerView, startAutoplay, stopAutoplay]);
 
+  // Loop infinito: saltar sin animación cuando llegamos a los clones
   useEffect(() => {
     if (products.length === 0) return;
     if (currentIndex >= products.length) {
@@ -122,7 +151,6 @@ export const Destacados = () => {
                 <div
                   key={item}
                   className="featured-card"
-                  style={{ width: `calc(${100 / itemsPerView}% - var(--card-gap))` }}
                 >
                   <div className="featured-card-inner">
                     <div className="featured-image skeleton-loading" />
@@ -148,11 +176,11 @@ export const Destacados = () => {
           <ChevronLeft />
         </button>
 
-        <div className="featured-carousel">
+        <div className="featured-carousel" ref={carouselRef}>
           <div
             className="featured-track"
             style={{
-              transform: `translateX(calc(-${trackIndex} * (${100 / itemsPerView}% + var(--card-gap))))`,
+              transform: `translateX(-${trackOffset}px)`,
               transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
             }}
           >
@@ -160,7 +188,10 @@ export const Destacados = () => {
               <div
                 key={`${product._id}-${index}`}
                 className="featured-card"
-                style={{ width: `calc(${100 / itemsPerView}% - var(--card-gap))` }}
+                style={{
+                  width: cardWidth > 0 ? `${cardWidth}px` : undefined,
+                  flexShrink: 0,
+                }}
                 onClick={() => handleProductClick(product._id)}
               >
                 <div className="featured-card-inner">
@@ -187,6 +218,11 @@ export const Destacados = () => {
                     {product.category === 'alimentos' && product.kg && (
                       <p className="featured-kg">Kilos: {product.kg} kg</p>
                     )}
+
+                    {product.category === 'indumentaria' && product.kg && (
+                      <p className="featured-kg">Talles: {product.kg}</p>
+                    )}
+
 
                     {/* Fila precio + botón */}
                     <div className="featured-price-action-row">

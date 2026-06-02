@@ -212,12 +212,15 @@ export const ProductList = () => {
                                 />
                             </div>
 
+                            <div className="featured-divider">
+                            </div>
+                            
                             <div className="product-content">
                                 <h3 className="product-name" title={product.name}>
                                     {product.name}
                                 </h3>
 
-                                {/*  kg SOLO en la categoría alimentos */}
+                                {/* Mostrar kg SOLO en la categoría alimentos */}
                                 {categoryPath === 'alimentos' && product.kg && (
                                     <p className="product-kg">Kilos: {product.kg} kg</p>
                                 )}
@@ -276,5 +279,5 @@ export const ProductList = () => {
             </div>
         )}
     </div>
-);
+    );
 };

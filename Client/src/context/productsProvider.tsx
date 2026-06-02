@@ -63,25 +63,36 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [location.pathname, products, searchQuery]);
 
+    // context/productsProvider.tsx (versión óptima)
     const applySearchFilter = useCallback((query: string) => {
         const lowerQuery = query.toLowerCase().trim();
+        
+       
+        const searchWords = lowerQuery.split(/\s+/).filter(word => word.length > 0);
         
         const filtered = products.filter(product => {
             if (!product) return false;
 
-            const searchableText = `
-                ${product.name || ''}
-                ${product.brand || ''}
-                ${product.category || ''}
-                ${product.pet || ''}
-                ${product.age || ''}
-                ${product.condition || ''}
-                ${product.description || ''}
-                ${product.price || ''}
-                ${product.kg || ''}
-            `.toLowerCase();
-
-            return searchableText.includes(lowerQuery);
+            // Crear un objeto con cada campo por separado para mejor búsqueda
+            const searchableText = [
+                product.name || '',
+                product.brand || '',
+                product.category || '',
+                product.pet || '',
+                product.age || '',
+                product.condition || '',
+                product.description || '',
+                String(product.price) || '',
+                product.kg || '',
+                product.special || ''
+            ].join(' ').toLowerCase();
+            
+            // Para búsqueda de múltiples palabras, todas deben estar presentes (AND)
+            const allWordsMatch = searchWords.length > 0 
+                ? searchWords.every(word => searchableText.includes(word))
+                : true;
+            
+            return allWordsMatch;
         });
 
         setFilteredProducts(filtered);
@@ -92,6 +103,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
             setSearchTerms([]);
         }
     }, [products]);
+
 
     const handleSearch = useCallback((term: string) => {
         setSearchQuery(term);

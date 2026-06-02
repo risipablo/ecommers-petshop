@@ -76,7 +76,7 @@
     background: white;
     border-radius: 1.2rem;
     overflow: hidden;
-    border: 1px solid var(--border-color);
+    border: 1.2px solid var(--border-color);
     transition: all var(--transition);
     box-shadow: var(--shadow-sm);
     position: relative;
@@ -103,7 +103,7 @@
 .product-image-container {
     position: relative;
     width: 100%;
-    height: 260px;
+    height: 250px;
     background: linear-gradient(180deg, #ffffff 0%, #faf8ff 100%);
     display: flex;
     align-items: center;
@@ -134,9 +134,9 @@
 }
 
 .product-name {
-    font-size: 1.08rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-size: 1.09rem;
+    font-weight: 600;
+    color: #6f6d71;
     line-height: 1.4;
     min-height: 1.2rem;
     display: -webkit-box;
@@ -176,7 +176,7 @@
 }
 
 .currency {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 700;
     background: linear-gradient(135deg, var(--roman-purple) 0%, var(--roman-purple-light) 100%);
     -webkit-background-clip: text;
@@ -185,8 +185,8 @@
 }
 
 .price-amount {
-    font-size: 1.5rem;
-    font-weight: 800;
+    font-size: 1.2rem;
+    font-weight: 700;
     background: linear-gradient(135deg, var(--roman-purple) 0%, var(--roman-purple-light) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -200,7 +200,7 @@
 
 .view-btn {
     background: var(--roman-purple);
-    min-width: 100px;
+    min-width: 90px;
     color: white;
     padding: 0.6rem 1rem;
     border-radius: 0.75rem;

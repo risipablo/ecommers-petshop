@@ -4,7 +4,7 @@ import { ArrowLeft, Eye, ChevronLeft, ChevronRight, ZoomIn, X, Edit, Trash2 } fr
 import '../../assets/styles/producDetail.css';
 import { useProduct } from '../hooks/useProducts';
 import { useRelatedProducts } from '../hooks/useRelatedProducts';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useAuth } from '../../context/authProvider';
 import axios from 'axios';
 import type { Product } from '../types/product.type';
@@ -19,7 +19,7 @@ export function ProductDetail() {
     const { product: productData, loading } = useProduct(id || '') as { product: Product | null; loading: boolean };
     const product = productData as Product | null;
     const { relatedProducts, loading: loadingRelated } = useRelatedProducts(
-        id || '', 
+        id || '',
         product?.category || '',
     );
     const { isAdmin } = useAuth();
@@ -27,29 +27,39 @@ export function ProductDetail() {
     const [backText, setBackText] = useState<string>('Volver');
     const [currentIndex, setCurrentIndex] = useState(0);
     const [itemsPerView, setItemsPerView] = useState(4);
+    const [cardWidth, setCardWidth] = useState(0);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
     const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isTransitioning, setIsTransitioning] = useState(true);
-    
-    // Obtener categoryPath de la URL para filtrar kg
+
+    const carouselRef = useRef<HTMLDivElement>(null);
+
     const currentPath = location.pathname;
     const categoryPath = currentPath.substring(1);
 
     const images = (product?.images && Array.isArray(product.images) && product.images.length > 0)
-        ? product.images 
+        ? product.images
         : (product?.imageUrl ? [{ _id: 'main', url: product.imageUrl, publicId: product.imagePublicId || '', isMain: true, order: 0 }] : []);
 
     const hasMultipleImages = images.length > 1;
 
-    // Clonar productos para efecto infinito
+    const GAP = 20;
     const cloneCount = itemsPerView;
     const clonedProducts = relatedProducts.length > 0 && relatedProducts.length > itemsPerView
         ? [...relatedProducts.slice(-cloneCount), ...relatedProducts, ...relatedProducts.slice(0, cloneCount)]
         : [...relatedProducts];
-    const realStart = cloneCount;
+    const realStart = relatedProducts.length > itemsPerView ? cloneCount : 0;
     const trackIndex = currentIndex + realStart;
+
+    // Calcular ancho real de cada card desde el contenedor
+    const calculateCardWidth = useCallback(() => {
+        if (!carouselRef.current) return;
+        const containerWidth = carouselRef.current.offsetWidth;
+        const totalGap = GAP * (itemsPerView - 1);
+        setCardWidth((containerWidth - totalGap) / itemsPerView);
+    }, [itemsPerView]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' });
@@ -67,22 +77,34 @@ export function ProductDetail() {
                 setItemsPerView(1);
             }
         };
-
         handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Resetear índice del slider relacionado
+    // Recalcular ancho cuando cambia itemsPerView o el contenedor monta
+    useEffect(() => {
+        calculateCardWidth();
+        window.addEventListener('resize', calculateCardWidth);
+        return () => window.removeEventListener('resize', calculateCardWidth);
+    }, [calculateCardWidth]);
+
+    // Pequeño delay para asegurarse que el DOM ya renderizó
+    useEffect(() => {
+        const timer = setTimeout(calculateCardWidth, 50);
+        return () => clearTimeout(timer);
+    }, [calculateCardWidth, relatedProducts.length]);
+
+    // Resetear índice al cambiar productos
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrentIndex(0);
     }, [relatedProducts.length]);
 
-    // Efecto para loop infinito del slider
+    // Loop infinito: saltar sin animación cuando llegamos a los clones
     useEffect(() => {
         if (relatedProducts.length === 0 || relatedProducts.length <= itemsPerView) return;
-        
+
         if (currentIndex >= relatedProducts.length) {
             const timer = setTimeout(() => {
                 setIsTransitioning(false);
@@ -90,7 +112,7 @@ export function ProductDetail() {
             }, 500);
             return () => clearTimeout(timer);
         }
-        
+
         if (currentIndex < 0) {
             const timer = setTimeout(() => {
                 setIsTransitioning(false);
@@ -111,12 +133,11 @@ export function ProductDetail() {
         if (!product) return;
 
         const fromState = location.state as { from?: string };
-        
+
         if (fromState?.from) {
             const fromPath = fromState.from;
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setBackPath(fromPath);
-            
             if (fromPath === '/') {
                 setBackText('Volver al inicio');
             } else if (fromPath.includes('/search')) {
@@ -134,7 +155,6 @@ export function ProductDetail() {
         const savedPath = sessionStorage.getItem('lastProductListPath');
         if (savedPath) {
             setBackPath(savedPath);
-            
             if (savedPath === '/') {
                 setBackText('Volver al inicio');
             } else if (savedPath.includes('/search')) {
@@ -176,7 +196,6 @@ export function ProductDetail() {
         setZoomPosition({ x: Math.min(Math.max(x, 0), 100), y: Math.min(Math.max(y, 0), 100) });
     };
 
-    // Funciones del slider infinito
     const nextSlide = () => {
         if (relatedProducts.length <= itemsPerView) return;
         setIsTransitioning(true);
@@ -225,9 +244,10 @@ export function ProductDetail() {
         return numPrice.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     };
 
-    // Determinar qué campos mostrar según la categoría
     const isAlimentos = categoryPath === 'alimentos' || product?.category === 'alimentos';
     const isIndumentaria = categoryPath === 'indumentaria' || product?.category === 'indumentaria';
+
+    const trackOffset = cardWidth > 0 ? trackIndex * (cardWidth + GAP) : 0;
 
     return (
         <div className="product-detail-container">
@@ -236,8 +256,7 @@ export function ProductDetail() {
                     <ArrowLeft size={20} strokeWidth={2} />
                     {backText}
                 </Link>
-                
-                {/* Botones de admin (solo visibles para admin) */}
+
                 {isAdmin && (
                     <div className="admin-detail-actions">
                         <button className="admin-detail-btn edit" onClick={handleEdit}>
@@ -255,13 +274,13 @@ export function ProductDetail() {
             <div className="product-detail-wrapper">
                 <div className="product-image-section">
                     <div className="main-image-wrapper">
-                        <img 
-                            src={images[selectedImageIndex]?.url || product.imageUrl || 'https://via.placeholder.com/500x500?text=Sin+Imagen'} 
-                            alt={product.name} 
+                        <img
+                            src={images[selectedImageIndex]?.url || product.imageUrl || 'https://via.placeholder.com/500x500?text=Sin+Imagen'}
+                            alt={product.name}
                             className="main-image"
                             loading="lazy"
                         />
-                        <button 
+                        <button
                             className="zoom-btn"
                             onClick={() => setIsZoomModalOpen(true)}
                             aria-label="Ampliar imagen"
@@ -274,17 +293,17 @@ export function ProductDetail() {
                             </div>
                         )}
                     </div>
-                    
+
                     {hasMultipleImages && (
                         <div className="thumbnails-wrapper">
                             {images.map((img, idx) => (
-                                <div 
+                                <div
                                     key={idx}
                                     className={`thumbnail ${selectedImageIndex === idx ? 'active' : ''}`}
                                     onClick={() => setSelectedImageIndex(idx)}
                                 >
-                                    <img 
-                                        src={img.url} 
+                                    <img
+                                        src={img.url}
                                         alt={`${product.name} - ${idx + 1}`}
                                     />
                                 </div>
@@ -295,6 +314,12 @@ export function ProductDetail() {
 
                 <div className="product-info-section">
                     <h1 className="product-title">{product.name}</h1>
+
+                    {isAlimentos && product.kg && (
+                        <div className="kg-section-front">
+                            <span className="brand-label">{product.kg} kg</span>
+                        </div>
+                    )}
 
                     <div className="price-section">
                         <span className="current-price">${formatPrice(product.price)}</span>
@@ -309,14 +334,14 @@ export function ProductDetail() {
 
                     {isAlimentos && product.kg && (
                         <div className="kg-section">
-                            <span className="kg-label">Kilos:</span>
-                            <span className="kg-value">{product.kg} kg</span>
+                            <span className="brand-label">Kilos: </span>
+                            <span className="brand-value"> {product.kg} kg</span>
                         </div>
                     )}
 
                     {isIndumentaria && product.kg && (
                         <div className="size-section">
-                            <span className="size-label">Talle:</span>
+                            <span className="size-label">Talle: </span>
                             <span className="size-value">{product.kg}</span>
                         </div>
                     )}
@@ -324,14 +349,14 @@ export function ProductDetail() {
                     {product.pet && (
                         <div className="pet-section">
                             <span className="pet-label">Mascota:</span>
-                            <span className="pet-value">{product.pet}</span>
+                            <span className="pet-value">{product.pet.charAt(0).toUpperCase() + product.pet.slice(1)}</span>
                         </div>
                     )}
 
                     {product.age && (
                         <div className="age-section">
                             <span className="age-label">Edad recomendada:</span>
-                            <span className="age-value">{product.age}</span>
+                            <span className="age-value">{product.age.charAt(0).toUpperCase() + product.age.slice(1)}</span>
                         </div>
                     )}
 
@@ -343,10 +368,10 @@ export function ProductDetail() {
                             </div>
                         </div>
                     )}
-                    
+
                     {product.category && (
                         <div className="category-section">
-                            <span className="category-label">Categoría:</span>
+                            <span className="age-label">Categoría: </span>
                             <span className="category-tag">{product.category}</span>
                         </div>
                     )}
@@ -361,8 +386,8 @@ export function ProductDetail() {
                     ) : (
                         <div className="related-carousel-wrapper">
                             {relatedProducts.length > itemsPerView && (
-                                <button 
-                                    onClick={prevSlide} 
+                                <button
+                                    onClick={prevSlide}
                                     className="related-nav related-nav-left"
                                     aria-label="Anterior"
                                 >
@@ -370,63 +395,78 @@ export function ProductDetail() {
                                 </button>
                             )}
 
-                            <div className="related-carousel">
-                                <div 
+                            <div className="related-carousel" ref={carouselRef}>
+                                <div
                                     className="related-track"
                                     style={{
-                                        transform: `translateX(calc(-${trackIndex} * (${100 / itemsPerView}% + 24px)))`,
-                                        transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
+                                        transform: `translateX(-${trackOffset}px)`,
+                                        transition: isTransitioning
+                                            ? 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                                            : 'none',
                                     }}
                                 >
-                                    {clonedProducts.map((relatedProduct, idx) => (
-                                        <Link
-                                            key={`${relatedProduct._id}-${idx}`}
-                                            to={`/item/${relatedProduct._id}`}
-                                            state={{ from: backPath }}
-                                            onClick={handleRelatedProductClick}
-                                            className="related-product-card-link"
-                                            style={{ width: `calc(${100 / itemsPerView}% - 24px)` }}
-                                        >
-                                            <div className="related-product-card">
-                                                <div className="related-image-wrapper">
-                                                    <img 
-                                                        src={relatedProduct.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'} 
-                                                        alt={relatedProduct.name}
-                                                        loading="lazy"
-                                                    />
-                                                </div>
-                                                
-                                                <div className="related-divider"></div>
-                                                
-                                                <div className="related-content">
-                                                    <h3 className="related-name">{relatedProduct.name}</h3>
-                                                    {/* Mostrar kg SOLO si la categoría es alimentos */}
-                                                    {relatedProduct.category === 'alimentos' && relatedProduct.kg && (
-                                                        <p className="product-kg">Kilos: {relatedProduct.kg} kg</p>
-                                                    )}
-                                                    {/* Mostrar talle SOLO si la categoría es indumentaria */}
-                                                    {relatedProduct.category === 'indumentaria' && relatedProduct.kg && (
-                                                        <p className="product-size">Talle: {relatedProduct.kg}</p>
-                                                    )}
-                                                    <div className="related-footer">
-                                                        <span className="related-price">
-                                                            ${formatPrice(relatedProduct.price)}
-                                                        </span>
-                                                        <div className="related-view-btn">
-                                                            <Eye size={16} strokeWidth={2.5} />
-                                                            Ver
+                                    {clonedProducts.map((relatedProduct, idx) => {
+                                        const isAlimentosRelated = relatedProduct.category === 'alimentos';
+                                        const isIndumentariaRelated = relatedProduct.category === 'indumentaria';
+
+                                        return (
+                                            <Link
+                                                key={`${relatedProduct._id}-${idx}`}
+                                                to={`/item/${relatedProduct._id}`}
+                                                state={{ from: backPath }}
+                                                onClick={handleRelatedProductClick}
+                                                className="related-product-card-link"
+                                                style={{
+                                                    width: cardWidth > 0 ? `${cardWidth}px` : undefined,
+                                                    flexShrink: 0,
+                                                }}
+                                            >
+                                                <div className="related-product-card">
+                                                    <div className="related-image-wrapper">
+                                                        <img
+                                                            src={relatedProduct.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
+                                                            alt={relatedProduct.name}
+                                                            loading="lazy"
+                                                        />
+                                                    </div>
+                                                    
+                                                    <div className="featured-divider">
+                                                    </div>
+
+                                                    <div className="related-content">
+                                                        <h3 className="related-name" title={relatedProduct.name}>
+                                                            {relatedProduct.name}
+                                                        </h3>
+
+                                                        {isAlimentosRelated && relatedProduct.kg && (
+                                                            <p className="product-kg">Kilos: {relatedProduct.kg} kg</p>
+                                                        )}
+
+                                                        {isIndumentariaRelated && relatedProduct.kg && (
+                                                            <p className="product-size">Talle: {relatedProduct.kg}</p>
+                                                        )}
+
+                                                        <div className="related-footer">
+                                                            <div className="price-section">
+                                                                <span className="currency">$</span>
+                                                                <span className="price-amount">{formatPrice(relatedProduct.price)}</span>
+                                                            </div>
+                                                            <div className="related-view-btn">
+                                                                <Eye size={16} strokeWidth={2.5} />
+                                                                <span>Ver</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </Link>
-                                    ))}
+                                            </Link>
+                                        );
+                                    })}
                                 </div>
                             </div>
 
                             {relatedProducts.length > itemsPerView && (
-                                <button 
-                                    onClick={nextSlide} 
+                                <button
+                                    onClick={nextSlide}
                                     className="related-nav related-nav-right"
                                     aria-label="Siguiente"
                                 >
@@ -435,7 +475,7 @@ export function ProductDetail() {
                             )}
                         </div>
                     )}
-                    
+
                     {relatedProducts.length > itemsPerView && (
                         <div className="related-dots">
                             {Array.from({ length: Math.min(relatedProducts.length, 6) }).map((_, index) => (
@@ -458,27 +498,27 @@ export function ProductDetail() {
             {isZoomModalOpen && (
                 <div className="zoom-modal" onClick={() => setIsZoomModalOpen(false)}>
                     <div className="zoom-modal-content" onClick={(e) => e.stopPropagation()}>
-                        <button 
+                        <button
                             className="zoom-close-btn"
                             onClick={() => setIsZoomModalOpen(false)}
                         >
                             <X size={24} />
                         </button>
-                        
+
                         {hasMultipleImages && (
-                            <button 
+                            <button
                                 className="zoom-nav zoom-prev"
                                 onClick={prevImage}
                             >
                                 <ChevronLeft size={32} />
                             </button>
                         )}
-                        
-                        <div 
+
+                        <div
                             className="zoom-image-container"
                             onMouseMove={handleZoom}
                         >
-                            <img 
+                            <img
                                 src={images[selectedImageIndex]?.url || product.imageUrl}
                                 alt={product.name}
                                 className="zoom-image"
@@ -488,20 +528,20 @@ export function ProductDetail() {
                                 }}
                             />
                         </div>
-                        
+
                         {hasMultipleImages && (
-                            <button 
+                            <button
                                 className="zoom-nav zoom-next"
                                 onClick={nextImage}
                             >
                                 <ChevronRight size={32} />
                             </button>
                         )}
-                        
+
                         {hasMultipleImages && (
                             <div className="zoom-thumbnails">
                                 {images.map((img, idx) => (
-                                    <div 
+                                    <div
                                         key={idx}
                                         className={`zoom-thumbnail ${selectedImageIndex === idx ? 'active' : ''}`}
                                         onClick={() => setSelectedImageIndex(idx)}

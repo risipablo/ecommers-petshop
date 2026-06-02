@@ -30,6 +30,7 @@ export interface ProductsContextType {
 }
 
 export interface Product {
+    special: string;
     id: string;
     _id: string;
     name: string;
