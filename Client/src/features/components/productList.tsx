@@ -225,6 +225,10 @@ export const ProductList = () => {
                                     <p className="product-kg">Kilos: {product.kg} kg</p>
                                 )}
 
+                                {categoryPath === 'indumentaria' && product.kg && (
+                                    <p className="product-kg">Talles: {product.kg} </p>
+                                )}
+
                                 <div className="price-action-row">
                                     <div className="price-section">
                                         <span className="currency">$</span>

@@ -127,14 +127,14 @@ const Navbar = () => {
                         </>
                     ) : (
                         <>
-    <div className="mobile-user-info">
-        <span className="mobile-user-name">¡Hola, {user?.name?.split(' ')[0]}!</span>
-        <div className="mobile-user-actions-row">
-            <Link to="/profile" className="mobile-user-btn profile-btn">
-                <UserIconLucide size={16} />
-            </Link>
-        </div>
-    </div>
+                            <div className="mobile-user-info">
+                                <span className="mobile-user-name">¡Hola, {user?.name?.split(' ')[0]}!</span>
+                                <div className="mobile-user-actions-row">
+                                    <Link to="/profile" className="mobile-user-btn profile-btn">
+                                        <UserIconLucide size={16} />
+                                    </Link>
+                                </div>
+                            </div>
                         </>
                     )}
                 </div>

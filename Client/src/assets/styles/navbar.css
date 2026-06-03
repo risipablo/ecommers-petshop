@@ -167,14 +167,14 @@
         border-top: none;
     }
 
-    .menu-icon { display: flex; position: relative; margin-right: auto; }
+    .menu-icon { display: flex; position: relative; margin-right: auto;}
 
     .menu {
         position: fixed;
         left: 0;
         top: 0;
-        /* ▶ drawer más ancho para que los botones respiren */
-        width: 82vw;
+
+        width: 86vw;
         max-width: 340px;
         height: 100vh;
         background: var(--primary-purple);

@@ -302,7 +302,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: .5rem;
+    gap: 1rem;
 }
 
 /* Carousel Container */
@@ -310,6 +310,7 @@
     overflow: hidden;
     flex: 1;
     min-width: 0;
+
 }
 
 /* Carousel Track */
@@ -321,8 +322,8 @@
 
 /* Related Product Card */
 .related-product-card-link {
-    padding: 2rem 1.25rem;
-    max-width: 1200px;
+    padding: 2rem;
+    
     text-decoration: none;
     flex-shrink: 0;
     min-width: 0;
@@ -355,7 +356,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1.2rem;
+    padding: 1rem;
 }
 
 .related-image-wrapper img {
@@ -389,7 +390,7 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    margin: 0;
+    margin: 0 auto;
 }
 
 .related-product-card:hover .related-name {
@@ -399,9 +400,10 @@
 /* Product Meta */
 .product-kg,
 .product-size {
+
     font-size: 0.8rem;
     color: var(--text-secondary);
-    margin: 0;
+    margin: .5rem auto;
 }
 
 /* Related Footer */
@@ -418,7 +420,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    margin-top: 0.25rem;
+    padding: 1rem;
 }
 
 .related-footer .currency {
@@ -445,7 +447,7 @@
     background: var(--roman-purple);
     min-width: 90px;
     color: white;
-    padding: 0.6rem 1rem;
+    padding: .5rem 1rem;
     border-radius: 0.75rem;
     font-weight: 600;
     font-size: 0.8rem;
@@ -658,7 +660,7 @@
 /* Mobile Landscape (Tablet pequeña) */
 @media (max-width: 768px) {
     .product-detail-container {
-        margin: 6rem auto 2rem;
+        margin: 15rem auto 2rem;
         padding: 0 1rem;
     }
     
@@ -669,6 +671,7 @@
     
     .product-title {
         font-size: 1.5rem;
+        
     }
     
     .current-price {
@@ -722,12 +725,13 @@
 /* Mobile Portrait - 1 card por slide */
 @media (max-width: 550px) {
     .product-detail-container {
-        margin: 12rem auto 1.5rem;
+        margin: 15rem auto 1.5rem;
         padding: 0 0.75rem;
     }
     
     .product-title {
         font-size: 1.25rem;
+        
     }
     
     .current-price {
@@ -836,7 +840,7 @@
 
 
 
-@media (max-width: 359px) {
+@media (max-width: 398px) {
     .product-detail-container {
         margin: 15rem auto 1rem;
         padding: 0rem 1rem;
@@ -844,10 +848,12 @@
     
     .product-title {
         font-size: 1.1rem;
+        
     }
 
     .product-kg{
-        display: none;
+        display: flex;
+        margin: 0 auto;
     }
 
     

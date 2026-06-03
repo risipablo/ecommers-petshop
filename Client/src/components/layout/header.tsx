@@ -7,6 +7,8 @@ import { Box } from "@mui/material"
 import { Facebook, Instagram, HelpCircle } from "lucide-react"
 import { useEffect, useState } from "react"
 import { UserIcon } from "../common/userIcon"
+import { WelcomeModal } from "./welcome"
+
 
 export const Header = () => {
   const [scrolled, setScrolled] = useState(false)
@@ -19,8 +21,6 @@ export const Header = () => {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  const toggleHelp = () => setIsHelpOpen(!isHelpOpen)
 
   return (
     <Box className={`container-header ${scrolled ? 'scrolled' : ''}`}>
@@ -49,26 +49,16 @@ export const Header = () => {
               <SearchWrapper />
             </Box>
 
-            {/* User + Help — visible en desktop Y mobile */}
+            {/* User + Help */}
             <Box className="user-help-wrapper">
               <span className="user-icon-mobile-hide"><UserIcon /></span>
-              <div className="help-icon-container" onClick={toggleHelp}>
+              <div
+                className="help-icon-container"
+                onClick={() => setIsHelpOpen(true)}
+                aria-label="Abrir ayuda"
+              >
                 <HelpCircle size={24} />
                 <span className="help-text">Ayuda</span>
-
-                {isHelpOpen && (
-                  <div className="help-dropdown">
-                    <a href="/preguntas-frecuentes" className="help-link">
-                      Preguntas frecuentes
-                    </a>
-                    <a href="/contacto" className="help-link">
-                      Contacto
-                    </a>
-                    <a href="/terminos" className="help-link">
-                      Términos y condiciones
-                    </a>
-                  </div>
-                )}
               </div>
             </Box>
 
@@ -78,6 +68,12 @@ export const Header = () => {
           </Box>
         </Box>
       </Box>
+
+      {/* Modal de bienvenida / ayuda */}
+      <WelcomeModal
+        isOpen={isHelpOpen}
+        onClose={() => setIsHelpOpen(false)}
+      />
     </Box>
   )
 }

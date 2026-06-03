@@ -333,7 +333,7 @@ export function ProductDetail() {
                     )}
 
                     {isAlimentos && product.kg && (
-                        <div className="kg-section">
+                        <div className="brand-section">
                             <span className="brand-label">Kilos: </span>
                             <span className="brand-value"> {product.kg} kg</span>
                         </div>

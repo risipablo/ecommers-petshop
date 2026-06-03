@@ -113,6 +113,12 @@ const categoryColor: Record<string, string> = {
    SLIDER MODAL
    ════════════════════════════════════════════════ */
 const SliderModal = ({ article, onClose }: { article: Article; onClose: () => void }) => {
+
+      useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }, [location.pathname]);
+
+
     const [current, setCurrent] = useState(0);
     const [dragging, setDragging] = useState(false);
     const startX = useRef(0);
@@ -120,6 +126,11 @@ const SliderModal = ({ article, onClose }: { article: Article; onClose: () => vo
 
     const prev = useCallback(() => setCurrent(c => (c - 1 + total) % total), [total]);
     const next = useCallback(() => setCurrent(c => (c + 1) % total), [total]);
+
+    
+    
+    
+    
 
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => {
@@ -143,6 +154,8 @@ const SliderModal = ({ article, onClose }: { article: Article; onClose: () => vo
         else if (diff > 40) prev();
         setDragging(false);
     };
+
+    
 
     return (
         <div
@@ -303,6 +316,10 @@ export const ArticulosPage = () => {
         ? articles
         : articles.filter(a => a.category === activeCategory);
 
+          useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }, [location.pathname]);
+    
     return (
         <div className="art-page">
             <div className="art-inner">
