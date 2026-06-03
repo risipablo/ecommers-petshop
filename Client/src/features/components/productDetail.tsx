@@ -443,7 +443,7 @@ export function ProductDetail() {
                                                         )}
 
                                                         {isIndumentariaRelated && relatedProduct.kg && (
-                                                            <p className="product-size">Talle: {relatedProduct.kg}</p>
+                                                            <p className="product-kg">Talle: {relatedProduct.kg}</p>
                                                         )}
 
                                                         <div className="related-footer">

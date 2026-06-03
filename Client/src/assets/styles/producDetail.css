@@ -735,7 +735,7 @@
     }
 
     .description-section{
-        margin: 1.5rem auto;
+        margin: 1.5rem 0;
     }
     
     /* Related - 1 card por slide */
@@ -763,15 +763,16 @@
     
     .product-kg,
     .product-size {
+        text-align: left;
         font-size: 0.75rem;
     }
     
     .related-footer .currency {
-        font-size: 0.9rem;
+        font-size: 1.2rem;
     }
     
     .related-footer .price-amount {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
     
     .related-view-btn {
@@ -832,16 +833,23 @@
     }
 }
 
-/* Móvil muy pequeño (hasta 360px) */
-@media (max-width: 380px) {
+
+
+
+@media (max-width: 359px) {
     .product-detail-container {
-        margin: 10rem auto 1rem;
-        padding: 0 0.5rem;
+        margin: 15rem auto 1rem;
+        padding: 0rem 1rem;
     }
     
     .product-title {
         font-size: 1.1rem;
     }
+
+    .product-kg{
+        display: none;
+    }
+
     
     .current-price {
         font-size: 1.3rem;
@@ -880,6 +888,7 @@
     .related-footer {
         flex-wrap: wrap;
         gap: 0.5rem;
+        
     }
     
     .related-footer .price-section {
