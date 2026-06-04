@@ -18,6 +18,8 @@ export const ProductList = () => {
     const navigate = useNavigate();
     const currentPath = location.pathname;
     const categoryPath = currentPath.substring(1);
+    const searchParams = new URLSearchParams(location.search);
+    const petFilter = searchParams.get('pet')
 
     const [localProducts, setLocalProducts] = useState<Product[]>([]);
     const [filteredProductsState, setFilteredProductsState] = useState<Product[]>([]);
@@ -78,6 +80,35 @@ export const ProductList = () => {
         setCurrentPage(1);
     }, []);
 
+    useEffect(() => {
+        if (!isLoading) {
+            let products = [...contextFilteredProducts];
+
+            // Filtrar por categoría (desde la ruta)
+            if (
+                categoryPath &&
+                categoryPath !== 'todos' &&
+                categoryPath !== 'search' &&
+                !categoryPath.includes('edit-product') &&
+                !categoryPath.includes('admin')
+            ) {
+                products = products.filter(
+                    (p) => p.category?.toLowerCase() === categoryPath.toLowerCase()
+                );
+            }
+
+            // 🔥 Filtrar por mascota (desde query param ?pet=)
+            if (petFilter && petFilter !== 'todos') {
+                products = products.filter(
+                    (p) => p.pet?.toLowerCase() === petFilter.toLowerCase()
+                );
+            }
+
+            setLocalProducts(products);
+            setFilteredProductsState(products);
+        }
+    }, [contextFilteredProducts, isLoading, categoryPath, petFilter]);
+
     const getTitle = () => {
         if (searchTerms && searchQuery.trim() !== '' && currentPath === '/search') {
             return `Resultados para: "${searchQuery}"`;
@@ -105,6 +136,16 @@ export const ProductList = () => {
         sessionStorage.setItem('lastProductListPath', location.pathname);
         navigate(`/item/${productId}`, { state: { from: location.pathname } });
     };
+
+    // const handlePetFilter = (pet: string) => {
+    //     const newParams = new URLSearchParams(location.search);
+    //     if (pet) {
+    //         newParams.set('pet', pet);
+    //     } else {
+    //         newParams.delete('pet');
+    //     }
+    //     navigate(`${location.pathname}?${newParams.toString()}`);
+    // };
 
     const handleEdit = (e: React.MouseEvent, productId: string) => {
         e.stopPropagation();

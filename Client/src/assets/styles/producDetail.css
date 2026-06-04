@@ -870,12 +870,11 @@
     
     .product-title {
         font-size: 1.1rem;
-        
     }
 
     .product-kg{
         display: flex;
-        margin: 0 auto;
+        margin: -.3rem auto .3rem;
     }
 
     

@@ -205,7 +205,7 @@
     background: var(--roman-purple);
     min-width: 90px;
     color: white;
-    padding: 0.6rem 1rem;
+    padding: 0.3rem 1rem;
     border-radius: 0.75rem;
     font-weight: 600;
     font-size: 0.8rem;
@@ -739,4 +739,112 @@
 
 @media (max-width: 359px){
     .products-kg { font-size: 0.9rem; text-align: center; }
+}
+
+
+.no-results-filter {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.no-results-filter h3 {
+    color: var(--roman-purple);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.no-results-filter p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.back-to-home {
+    background: var(--roman-purple);
+    color: white;
+    border: none;
+    padding: 0.9rem 1.8rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+}
+
+.back-to-home:hover {
+    background: var(--roman-purple-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.back-to-home:active {
+    transform: translateY(0);
+}
+
+.products-layout {
+    min-height: 70vh;
+    padding: 2rem 1rem;
+}
+
+.products-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.product-list-title {
+    color: var(--text-primary);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Efecto decorativo */
+.no-results-filter::before {
+    content: "🛍️";
+    display: block;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .no-results-filter {
+        margin: 3rem 1rem;
+        padding: 2.5rem 1.5rem;
+    }
+
+    .back-to-home {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .no-results-filter {
+        padding: 2rem 1.2rem;
+        border-radius: 18px;
+    }
+
+    .no-results-filter::before {
+        font-size: 2.5rem;
+    }
+
+    .no-results-filter p {
+        font-size: 0.95rem;
+    }
+
+    .back-to-home {
+        width: 100%;
+    }
 }
