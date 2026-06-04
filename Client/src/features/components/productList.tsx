@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
 import '../../assets/styles/productList.css';
-import { Eye, Edit, Trash2 } from 'lucide-react';
+import '../../assets/styles/pagination.css';
+import { Eye, Edit, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { ProductSkeletonGrid } from '../../components/common/productSkeleton';
 import { useAuth } from '../../context/authProvider';
@@ -23,6 +24,12 @@ export const ProductList = () => {
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null);
+    
+    // Paginación
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(9);
+    const [totalPages, setTotalPages] = useState(1);
+    const [paginatedProducts, setPaginatedProducts] = useState<Product[]>([]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' });
@@ -46,11 +53,29 @@ export const ProductList = () => {
 
             setLocalProducts(products);
             setFilteredProductsState(products);
+            // Resetear a la primera página cuando cambian los productos
+            setCurrentPage(1);
         }
     }, [contextFilteredProducts, isLoading, categoryPath]);
 
+    // Actualizar productos paginados cuando cambian los filtros o la página
+    useEffect(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const newTotalPages = Math.ceil(filteredProductsState.length / itemsPerPage);
+        setTotalPages(newTotalPages);
+        
+        // Si la página actual es mayor que el total de páginas, ir a la primera
+        if (currentPage > newTotalPages && newTotalPages > 0) {
+            setCurrentPage(1);
+        } else {
+            setPaginatedProducts(filteredProductsState.slice(startIndex, endIndex));
+        }
+    }, [filteredProductsState, currentPage, itemsPerPage]);
+
     const handleFilterChange = useCallback((filtered: Product[]) => {
         setFilteredProductsState(filtered);
+        setCurrentPage(1);
     }, []);
 
     const getTitle = () => {
@@ -116,6 +141,64 @@ export const ProductList = () => {
         return numPrice.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     };
 
+    // Funciones de paginación
+    const goToPage = (page: number) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    const goToPreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    const goToNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    // Generar números de página para mostrar
+    const getPageNumbers = () => {
+        const pageNumbers: (number | string)[] = [];
+        const maxPagesToShow = 5;
+        
+        if (totalPages <= maxPagesToShow) {
+            for (let i = 1; i <= totalPages; i++) {
+                pageNumbers.push(i);
+            }
+        } else {
+            if (currentPage <= 3) {
+                for (let i = 1; i <= 4; i++) {
+                    pageNumbers.push(i);
+                }
+                pageNumbers.push('...');
+                pageNumbers.push(totalPages);
+            } else if (currentPage >= totalPages - 2) {
+                pageNumbers.push(1);
+                pageNumbers.push('...');
+                for (let i = totalPages - 3; i <= totalPages; i++) {
+                    pageNumbers.push(i);
+                }
+            } else {
+                pageNumbers.push(1);
+                pageNumbers.push('...');
+                for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                    pageNumbers.push(i);
+                }
+                pageNumbers.push('...');
+                pageNumbers.push(totalPages);
+            }
+        }
+        
+        return pageNumbers;
+    };
+
     if (isLoading && localProducts.length === 0) {
         return (
             <div className="products-layout">
@@ -163,125 +246,160 @@ export const ProductList = () => {
     }
 
     return (
-    <div className="products-layout">
-        <div className="products-header">
-            <h1 className="product-list-title">{getTitle()}</h1>
-            <p className="products-count">{filteredProductsState.length} productos encontrados</p>
-        </div>
-
-        <div className="products-grid-filters">
-            <aside className="filters-sidebar">
-                <Filters products={localProducts} onFilterChange={handleFilterChange} />
-            </aside>
-
-            <main className="products-main-content">
-                <div className="product-grid">
-                    {filteredProductsState.map((product, index) => (
-                        <div
-                            key={product._id}
-                            className="product-card"
-                            style={{ animationDelay: `${index * 0.05}s` }}
-                            onClick={() => handleProductClick(product._id)}
-                        >
-                            {isAdmin && (
-                                <div className="admin-actions-overlay">
-                                    <button
-                                        className="admin-action-btn edit"
-                                        onClick={(e) => handleEdit(e, product._id)}
-                                        title="Editar producto"
-                                    >
-                                        <Edit size={16} />
-                                    </button>
-                                    <button
-                                        className="admin-action-btn delete"
-                                        onClick={(e) => handleDeleteClick(e, product._id, product.name)}
-                                        disabled={isDeleting === product._id}
-                                        title="Eliminar producto"
-                                    >
-                                        {isDeleting === product._id ? '...' : <Trash2 size={16} />}
-                                    </button>
-                                </div>
-                            )}
-
-                            <div className="product-image-container">
-                                <img
-                                    src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
-                                    alt={product.name}
-                                    className="product-image"
-                                    loading="lazy"
-                                />
-                            </div>
-
-                            <div className="featured-divider">
-                            </div>
-                            
-                            <div className="product-content">
-                                <h3 className="product-name" title={product.name}>
-                                    {product.name}
-                                </h3>
-
-                                {/* Mostrar kg SOLO en la categoría alimentos */}
-                                {categoryPath === 'alimentos' && product.kg && (
-                                    <p className="products-kg">Kilos: {product.kg} kg</p>
-                                )}
-
-                                {categoryPath === 'indumentaria' && product.kg && (
-                                    <p className="products-kg">Talles: {product.kg} </p>
-                                )}
-
-                                <div className="price-action-row">
-                                    <div className="price-section">
-                                        <span className="currency">$</span>
-                                        <span className="price-amount">{formatPrice(product.price)}</span>
-                                    </div>
-
-                                    <button
-                                        className="view-btn"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleProductClick(product._id);
-                                        }}
-                                    >
-                                        <Eye size={16} />
-                                        <span>Ver</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </main>
-        </div>
-
-        {/* Modal de confirmación para eliminar */}
-        {showDeleteModal && productToDelete && (
-            <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
-                <div className="modal-content-delete" onClick={(e) => e.stopPropagation()}>
-                    <button className="modal-close" onClick={() => setShowDeleteModal(false)}>
-                        ✕
-                    </button>
-                    <div className="modal-header">
-                        <Trash2 size={40} color="#dc2626" />
-                        <h2>Confirmar eliminación</h2>
-                        <p>
-                            ¿Estás seguro de eliminar el producto{' '}
-                            <strong>"{productToDelete.name}"</strong>?
-                        </p>
-                        <p className="warning-text">
-                            Esta acción no se puede deshacer y eliminará todas las imágenes asociadas.
-                        </p>
-                    </div>
-                    <div className="modal-actions">
-                        <button className="btn-cancel" onClick={() => setShowDeleteModal(false)}>
-                            Cancelar
-                        </button>
-                        <button className="btn-confirm-delete" onClick={confirmDelete}>
-                            Eliminar permanentemente
-                        </button>
-                    </div>
-                </div>
+        <div className="products-layout">
+            <div className="products-header">
+                <h1 className="product-list-title">{getTitle()}</h1>
+                <p className="products-count">{filteredProductsState.length} productos encontrados</p>
             </div>
-        )}
-    </div>
+
+            <div className="products-grid-filters">
+                <aside className="filters-sidebar">
+                    <Filters products={localProducts} onFilterChange={handleFilterChange} />
+                </aside>
+
+                <main className="products-main-content">
+                    <div className="product-grid">
+                        {paginatedProducts.map((product, index) => (
+                            <div
+                                key={product._id}
+                                className="product-card"
+                                style={{ animationDelay: `${index * 0.05}s` }}
+                                onClick={() => handleProductClick(product._id)}
+                            >
+                                {isAdmin && (
+                                    <div className="admin-actions-overlay">
+                                        <button
+                                            className="admin-action-btn edit"
+                                            onClick={(e) => handleEdit(e, product._id)}
+                                            title="Editar producto"
+                                        >
+                                            <Edit size={16} />
+                                        </button>
+                                        <button
+                                            className="admin-action-btn delete"
+                                            onClick={(e) => handleDeleteClick(e, product._id, product.name)}
+                                            disabled={isDeleting === product._id}
+                                            title="Eliminar producto"
+                                        >
+                                            {isDeleting === product._id ? '...' : <Trash2 size={16} />}
+                                        </button>
+                                    </div>
+                                )}
+
+                                <div className="product-image-container">
+                                    <img
+                                        src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
+                                        alt={product.name}
+                                        className="product-image"
+                                        loading="lazy"
+                                    />
+                                </div>
+
+                                <div className="product-content">
+                                    <h3 className="product-name" title={product.name}>
+                                        {product.name}
+                                    </h3>
+
+                                    {categoryPath === 'alimentos' && product.kg && (
+                                        <p className="products-kg">Kilos: {product.kg} kg</p>
+                                    )}
+
+                                     {categoryPath === 'indumentaria' && product.kg && (
+                                        <p className="products-kg">Talle: {product.kg}</p>
+                                    )}
+
+
+                                    <div className="price-action-row">
+                                        <div className="price-section">
+                                            <span className="currency">$</span>
+                                            <span className="price-amount">{formatPrice(product.price)}</span>
+                                        </div>
+
+                                        <button
+                                            className="view-btn"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleProductClick(product._id);
+                                            }}
+                                        >
+                                            <Eye size={16} />
+                                            <span>Ver</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Paginación */}
+                    {totalPages > 1 && (
+                        <div className="pagination-container">
+                            <button
+                                onClick={goToPreviousPage}
+                                disabled={currentPage === 1}
+                                className="pagination-btn pagination-prev"
+                                aria-label="Página anterior"
+                            >
+                                <ChevronLeft size={18} />
+                                Anterior
+                            </button>
+
+                            <div className="pagination-numbers">
+                                {getPageNumbers().map((page, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => typeof page === 'number' && goToPage(page)}
+                                        className={`pagination-number ${currentPage === page ? 'active' : ''} ${typeof page !== 'number' ? 'dots' : ''}`}
+                                        disabled={typeof page !== 'number'}
+                                    >
+                                        {page}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={goToNextPage}
+                                disabled={currentPage === totalPages}
+                                className="pagination-btn pagination-next"
+                                aria-label="Página siguiente"
+                            >
+                                Siguiente
+                                <ChevronRight size={18} />
+                            </button>
+                        </div>
+                    )}
+                </main>
+            </div>
+
+            {/* Modal de confirmación para eliminar */}
+            {showDeleteModal && productToDelete && (
+                <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
+                    <div className="modal-content-delete" onClick={(e) => e.stopPropagation()}>
+                        <button className="modal-close" onClick={() => setShowDeleteModal(false)}>
+                            ✕
+                        </button>
+                        <div className="modal-header">
+                            <Trash2 size={40} color="#dc2626" />
+                            <h2>Confirmar eliminación</h2>
+                            <p>
+                                ¿Estás seguro de eliminar el producto{' '}
+                                <strong>"{productToDelete.name}"</strong>?
+                            </p>
+                            <p className="warning-text">
+                                Esta acción no se puede deshacer y eliminará todas las imágenes asociadas.
+                            </p>
+                        </div>
+                        <div className="modal-actions">
+                            <button className="btn-cancel" onClick={() => setShowDeleteModal(false)}>
+                                Cancelar
+                            </button>
+                            <button className="btn-confirm-delete" onClick={confirmDelete}>
+                                Eliminar permanentemente
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 };

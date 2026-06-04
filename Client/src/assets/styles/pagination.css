@@ -1,0 +1,134 @@
+/* assets/styles/pagination.css */
+
+/* ==========================================
+   PAGINACIÓN - ROMAN PURPLE THEME
+   ========================================== */
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 3rem;
+    padding: 1rem 0;
+    flex-wrap: wrap;
+}
+
+/* Botones de navegación */
+.pagination-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid var(--border-color, #e7def7);
+    border-radius: 0.5rem;
+    color: var(--text-secondary, #6c6480);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: var(--roman-purple-bg, rgba(109, 75, 163, 0.08));
+    border-color: var(--roman-purple, #6d4ba3);
+    color: var(--roman-purple, #6d4ba3);
+    transform: translateY(-2px);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Números de página */
+.pagination-numbers {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pagination-number {
+    min-width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px solid var(--border-color, #e7def7);
+    border-radius: 0.5rem;
+    color: var(--text-secondary, #6c6480);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0 0.5rem;
+}
+
+.pagination-number:hover:not(.active):not(.dots) {
+    background: var(--roman-purple-bg, rgba(109, 75, 163, 0.08));
+    border-color: var(--roman-purple, #6d4ba3);
+    color: var(--roman-purple, #6d4ba3);
+    transform: translateY(-2px);
+}
+
+.pagination-number.active {
+    background: linear-gradient(135deg, var(--roman-purple, #6d4ba3) 0%, var(--roman-purple-dark, #563584) 100%);
+    border-color: var(--roman-purple, #6d4ba3);
+    color: white;
+    box-shadow: 0 2px 8px rgba(109, 75, 163, 0.3);
+}
+
+.pagination-number.dots {
+    border: none;
+    background: transparent;
+    cursor: default;
+    pointer-events: none;
+    color: var(--text-secondary, #6c6480);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pagination-container {
+        gap: 0.375rem;
+        margin-top: 2rem;
+    }
+    
+    .pagination-btn {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .pagination-btn span {
+        display: none;
+    }
+    
+    .pagination-btn {
+        gap: 0;
+    }
+    
+    .pagination-number {
+        min-width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .pagination-container {
+        gap: 0.25rem;
+    }
+    
+    .pagination-number {
+        min-width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+    
+    .pagination-btn {
+        padding: 0.375rem 0.625rem;
+    }
+}
