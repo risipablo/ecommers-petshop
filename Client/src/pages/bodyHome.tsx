@@ -11,6 +11,8 @@ import { Destacados } from "../components/layout/destacados";
 import { ContactoBanner } from "../components/layout/consultaHome";
 import { SliderMarcas } from "../components/layout/sliderMarcas";
 import { ArticulosHome } from "../components/layout/articulos";
+import { WelcomeModal } from "../components/layout/welcome";
+import { useWelcomeModal } from "../features/hooks/useWelcome";
 
 export function BodyHome() {
 
@@ -22,12 +24,14 @@ export function BodyHome() {
 
     useEffect(() => {
         AOS.init({
-            duration: 700,        // duración de cada animación en ms
-            once: true,           // la animación ocurre solo la primera vez
+            duration: 700,        
+            once: true,           
             easing: "ease-out-cubic",
-            offset: 60,           // px desde el borde inferior del viewport para disparar
+            offset: 60,           
         });
     }, []);
+
+    const { isOpen, handleClose, handleDontShowAgain } = useWelcomeModal()
 
     return (
         <div className="body-container">
@@ -64,8 +68,13 @@ export function BodyHome() {
 
             
             
-                <ContactoBanner />
+            <ContactoBanner />
             
+            <WelcomeModal 
+                    isOpen={isOpen} 
+                    onClose={handleClose}
+                    onDontShowAgain={handleDontShowAgain}
+                />
 
         </div>
     );

@@ -222,11 +222,11 @@ export const ProductList = () => {
 
                                 {/* Mostrar kg SOLO en la categoría alimentos */}
                                 {categoryPath === 'alimentos' && product.kg && (
-                                    <p className="product-kg">Kilos: {product.kg} kg</p>
+                                    <p className="products-kg">Kilos: {product.kg} kg</p>
                                 )}
 
                                 {categoryPath === 'indumentaria' && product.kg && (
-                                    <p className="product-kg">Talles: {product.kg} </p>
+                                    <p className="products-kg">Talles: {product.kg} </p>
                                 )}
 
                                 <div className="price-action-row">

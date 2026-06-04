@@ -17,6 +17,55 @@
     animation: overlayIn 0.25s ease forwards;
 }
 
+.welcome-dont-show {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #f0ebf9;
+}
+
+.welcome-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.welcome-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #6d4ba3;
+}
+
+.welcome-checkbox-text {
+    font-size: 0.8rem;
+    color: #6b7280;
+    user-select: none;
+}
+
+.welcome-checkbox-text:hover {
+    color: #6d4ba3;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .welcome-dont-show {
+        margin-top: 0.25rem;
+        padding-top: 0.5rem;
+    }
+    
+    .welcome-checkbox-label {
+        font-size: 0.75rem;
+    }
+    
+    .welcome-checkbox {
+        width: 14px;
+        height: 14px;
+    }
+}
+
 @keyframes overlayIn {
     from { opacity: 0; }
     to   { opacity: 1; }
@@ -27,7 +76,7 @@
     background: white;
     border-radius: 1.5rem;
     width: 100%;
-    max-width: 560px;
+    max-width: 750px;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
@@ -76,7 +125,7 @@
    ========================================== */
 
 .welcome-header {
-    background: linear-gradient(135deg, #82119f 0%, #6d4ba3 60%, #8a6bc2 100%);
+    background: #82119f;
     padding: 2rem 2rem 1.5rem;
     border-radius: 1.5rem 1.5rem 0 0;
     text-align: center;
@@ -105,7 +154,7 @@
     color: white;
     font-size: 1.5rem;
     display: block;
-    margin-top: 0.25rem;
+    /* margin-top: 0.25rem; */
 }
 
 /* ==========================================
