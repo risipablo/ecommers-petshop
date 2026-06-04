@@ -30,7 +30,6 @@ export function ProductDetail() {
     const [cardWidth, setCardWidth] = useState(0);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
-    const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isTransitioning, setIsTransitioning] = useState(true);
 
@@ -188,13 +187,6 @@ export function ProductDetail() {
         }
     };
 
-    const handleZoom = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        if (!isZoomModalOpen) return;
-        const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-        const x = ((e.clientX - left) / width) * 100;
-        const y = ((e.clientY - top) / height) * 100;
-        setZoomPosition({ x: Math.min(Math.max(x, 0), 100), y: Math.min(Math.max(y, 0), 100) });
-    };
 
     const nextSlide = () => {
         if (relatedProducts.length <= itemsPerView) return;
@@ -498,46 +490,29 @@ export function ProductDetail() {
             {isZoomModalOpen && (
                 <div className="zoom-modal" onClick={() => setIsZoomModalOpen(false)}>
                     <div className="zoom-modal-content" onClick={(e) => e.stopPropagation()}>
-                        <button
-                            className="zoom-close-btn"
-                            onClick={() => setIsZoomModalOpen(false)}
-                        >
-                            <X size={24} />
+                        <button className="zoom-close-btn" onClick={() => setIsZoomModalOpen(false)}>
+                                <X size={24} />
                         </button>
 
                         {hasMultipleImages && (
-                            <button
-                                className="zoom-nav zoom-prev"
-                                onClick={prevImage}
-                            >
-                                <ChevronLeft size={32} />
-                            </button>
-                        )}
+                                <button className="zoom-nav zoom-prev" onClick={prevImage}>
+                                    <ChevronLeft size={32} />
+                                </button>
+                            )}
 
-                        <div
-                            className="zoom-image-container"
-                            onMouseMove={handleZoom}
-                        >
+                    <div className="zoom-image-container">
                             <img
                                 src={images[selectedImageIndex]?.url || product.imageUrl}
                                 alt={product.name}
                                 className="zoom-image"
-                                style={{
-                                    transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
-                                    transform: 'scale(2.5)'
-                                }}
                             />
                         </div>
 
-                        {hasMultipleImages && (
-                            <button
-                                className="zoom-nav zoom-next"
-                                onClick={nextImage}
-                            >
-                                <ChevronRight size={32} />
-                            </button>
-                        )}
-
+{hasMultipleImages && (
+        <button className="zoom-nav zoom-next" onClick={nextImage}>
+            <ChevronRight size={32} />
+        </button>
+    )}
                         {hasMultipleImages && (
                             <div className="zoom-thumbnails">
                                 {images.map((img, idx) => (
