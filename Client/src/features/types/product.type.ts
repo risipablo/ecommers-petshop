@@ -41,6 +41,8 @@ export interface Product {
     age: string;
     condition: string;
     price: number;
+    stock?:string;
+    descuento?:string;
     kg?: string;
     imageUrl?: string;
     imagePublicId?: string;
@@ -66,5 +68,6 @@ export interface ProductFormData {
     condition: string;
     price: string;
     kg: string;
-
+    stock?: string;
+    descuento?: string;
 }

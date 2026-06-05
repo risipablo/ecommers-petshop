@@ -848,3 +848,151 @@
         width: 100%;
     }
 }
+
+/* ==========================================
+   PRODUCTOS AGOTADOS - STOCK AGOTADO
+   ========================================== */
+
+.product-card.out-of-stock {
+    opacity: 0.7;
+    background: #f9fafb;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-card.out-of-stock::before {
+    content: '❌';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    z-index: 10;
+    font-weight: bold;
+}
+
+.product-card.out-of-stock::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(200, 200, 200, 0.3);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.product-card.out-of-stock .product-image {
+    filter: grayscale(0.3);
+}
+
+.product-card.out-of-stock:hover {
+    opacity: 0.8;
+    transform: translateY(-4px);
+}
+
+/* Badde de "Sin stock" */
+.stock-badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    background: #dc2626;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.5rem;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================
+   PRODUCTOS EN LIQUIDACIÓN / DESCUENTO
+   ========================================== */
+
+.product-card.discount {
+    border: 2px solid #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.product-card.discount::before {
+    content: '🏷️';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.5rem;
+    z-index: 10;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Badge de "Descuento" */
+.discount-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.5rem;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 5px rgba(245, 158, 11, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+    }
+}
+
+/* Combinación: agotado + descuento */
+.product-card.out-of-stock.discount {
+    border: 2px solid #f59e0b;
+    opacity: 0.7;
+}
+
+.product-card.out-of-stock.discount::before {
+    content: '❌';
+    left: 10px;
+    right: auto;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.product-card.out-of-stock.discount::after {
+    content: '🏷️';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.5rem;
+    z-index: 10;
+    font-weight: bold;
+}

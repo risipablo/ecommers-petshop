@@ -122,6 +122,34 @@
     align-items: center;
     justify-content: center;
 }
+/* AGOTADO - imagen gris con candado */
+.main-image-wrapper.image-out-of-stock .main-image {
+    filter: grayscale(100%) opacity(0.5);
+    transition: filter 0.3s ease;
+}
+
+.main-image-wrapper.image-out-of-stock::after {
+    content: '🔒 Sin stock';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(220, 38, 38, 0.85);
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 2rem;
+    letter-spacing: 0.5px;
+    pointer-events: none; /* ← no bloquea clicks */
+    white-space: nowrap;
+    z-index: 1; /* ← debajo del zoom-btn que está en z-index auto */
+}
+
+/* Zoom btn y thumbnails por encima del overlay */
+.main-image-wrapper .zoom-btn {
+    z-index: 2;
+}
 
 .main-image {
     max-width: 100%;
@@ -246,6 +274,153 @@
     font-size: 0.875rem;
     display: inline-block;
 }
+
+
+/* ==========================================
+   STOCK SECTION
+   ========================================== */
+
+.footer-detail {
+    margin: 3rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 45%;
+    
+}
+
+.stock-section {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1.5px solid transparent;
+}
+
+.stock-section.in-stock {
+    background: #f0fdf4;
+    border-color: #86efac;
+    color: #15803d;
+}
+
+.stock-section.Agotado {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #dc2626;
+}
+
+.stock-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.in-stock .stock-label {
+    background: #16a34a;
+    color: white;
+}
+
+.Agotado .stock-label {
+    background: #dc2626;
+    color: white;
+}
+
+.stock-label svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2.5;
+}
+
+.stock-value {
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+/* ==========================================
+   DISCOUNT SECTION
+   ========================================== */
+
+.discount-section {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1.5px solid transparent;
+}
+
+/* descuento === 'si' → clase "no" (hay descuento) */
+.discount-section.no {
+    background: #fffbeb;
+    border-color: #fcd34d;
+    color: #b45309;
+}
+
+/* descuento === 'liquidacion' */
+.discount-section.liquidacion {
+    background: #fff1f2;
+    border-color: #fb7185;
+    color: #be123c;
+}
+
+/* cualquier otro valor (sin descuento) */
+.discount-section:not(.no):not(.liquidacion) {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #64748b;
+}
+
+.discount-section::before {
+    content: '';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.discount-section.no::before {
+    content: '%';
+    background: #d97706;
+    color: white;
+}
+
+.discount-section.liquidacion::before {
+    content: '🔥';
+    background: transparent;
+    font-size: 1.1rem;
+}
+
+.discount-section:not(.no):not(.liquidacion)::before {
+    content: '—';
+    background: #94a3b8;
+    color: white;
+}
+
+.discount-section span {
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+@media (max-width: 550px){
+    .footer-detail {
+        width: 100%;
+    }
+}
+
 
 /* ==========================================
    DESCRIPTION SECTION
@@ -953,3 +1128,4 @@
         display: none;
     }
 }
+

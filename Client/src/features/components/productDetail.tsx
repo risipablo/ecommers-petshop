@@ -1,6 +1,6 @@
 // features/components/productDetail.tsx
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, ChevronLeft, ChevronRight, ZoomIn, X, Edit, Trash2 } from 'lucide-react';
+import { ArrowLeft, Eye, ChevronLeft, ChevronRight, ZoomIn, X, Edit, Trash2, Check, XCircle } from 'lucide-react';
 import '../../assets/styles/producDetail.css';
 import { useProduct } from '../hooks/useProducts';
 import { useRelatedProducts } from '../hooks/useRelatedProducts';
@@ -265,13 +265,25 @@ export function ProductDetail() {
 
             <div className="product-detail-wrapper">
                 <div className="product-image-section">
-                    <div className="main-image-wrapper">
-                        <img
-                            src={images[selectedImageIndex]?.url || product.imageUrl || 'https://via.placeholder.com/500x500?text=Sin+Imagen'}
-                            alt={product.name}
-                            className="main-image"
-                            loading="lazy"
-                        />
+                    <div 
+                        className={`main-image-wrapper 
+                            ${product.stock === 'Agotado' ? 'image-out-of-stock' : ''} 
+                            ${product.descuento === 'si' || product.descuento === 'liquidacion' ? 'image-on-sale' : ''}
+                            ${product.descuento === 'liquidacion' ? 'liquidacion-badge' : ''}
+                        `}
+                        data-discount-label={
+                            product.descuento === 'liquidacion' ? '🔥 Liquidación' : 
+                            product.descuento === 'si' ? '% Descuento' : ''
+                        }
+                    >
+
+                          <img
+        src={images[selectedImageIndex]?.url || product.imageUrl || 'https://via.placeholder.com/500x500?text=Sin+Imagen'}
+        alt={product.name}
+        className="main-image"
+        loading="lazy"
+    />
+
                         <button
                             className="zoom-btn"
                             onClick={() => setIsZoomModalOpen(true)}
@@ -368,7 +380,44 @@ export function ProductDetail() {
                         </div>
                     )}
                 </div>
+
+
+
+        
+
             </div>
+
+                    <div className="footer-detail">
+                {/* Stock */}
+                {product.stock && (
+                    <div className={`stock-section ${product.stock === 'Disponible' ? 'in-stock' : 'Agotado'}`}>
+                        <span className="stock-label">
+                            {product.stock === 'Disponible' ? <Check /> : <XCircle />}
+                        </span>
+                        <span className="stock-value">
+                            {product.stock === 'Disponible'
+                                ? 'Este producto tiene stock disponible'
+                                : 'Este producto no tiene stock por el momento'}
+                        </span>
+                    </div>
+                )}
+
+                {/* Descuento */}
+                {product.descuento && (
+                    <div className={`discount-section ${product.descuento === 'si' ? 'no' : product.descuento === 'liquidacion' ? 'liquidacion' : ''}`}>
+                        <span>
+                            {product.descuento === 'si'
+                                ? 'Este producto tiene descuento, consultar por mensaje'
+                                : product.descuento === 'liquidacion'
+                                ? 'Este producto está en liquidación'
+                                : product.descuento === ' '
+                                ? ' '
+                                : 'Este producto no tiene descuento actualmente'}
+                        </span>
+                    </div>
+                )}
+
+                </div>
 
             {relatedProducts.length > 0 && (
                 <div className="related-products-section">

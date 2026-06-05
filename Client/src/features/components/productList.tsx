@@ -19,7 +19,7 @@ export const ProductList = () => {
     const currentPath = location.pathname;
     const categoryPath = currentPath.substring(1);
     const searchParams = new URLSearchParams(location.search);
-    const petFilter = searchParams.get('pet')
+    const petFilter = searchParams.get('pet');
 
     const [localProducts, setLocalProducts] = useState<Product[]>([]);
     const [filteredProductsState, setFilteredProductsState] = useState<Product[]>([]);
@@ -37,6 +37,7 @@ export const ProductList = () => {
         window.scrollTo({ top: 0, behavior: 'instant' });
     }, [location.pathname]);
 
+    // Filtrar productos por categoría y mascota
     useEffect(() => {
         if (!isLoading) {
             let products = [...contextFilteredProducts];
@@ -53,21 +54,26 @@ export const ProductList = () => {
                 );
             }
 
+            // Filtrar por mascota (desde query param ?pet=)
+            if (petFilter && petFilter !== 'todos') {
+                products = products.filter(
+                    (p) => p.pet?.toLowerCase() === petFilter.toLowerCase()
+                );
+            }
+
             setLocalProducts(products);
             setFilteredProductsState(products);
-            // Resetear a la primera página cuando cambian los productos
             setCurrentPage(1);
         }
-    }, [contextFilteredProducts, isLoading, categoryPath]);
+    }, [contextFilteredProducts, isLoading, categoryPath, petFilter]);
 
-    // Actualizar productos paginados cuando cambian los filtros o la página
+    // Actualizar productos paginados
     useEffect(() => {
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const newTotalPages = Math.ceil(filteredProductsState.length / itemsPerPage);
         setTotalPages(newTotalPages);
         
-        // Si la página actual es mayor que el total de páginas, ir a la primera
         if (currentPage > newTotalPages && newTotalPages > 0) {
             setCurrentPage(1);
         } else {
@@ -79,35 +85,6 @@ export const ProductList = () => {
         setFilteredProductsState(filtered);
         setCurrentPage(1);
     }, []);
-
-    useEffect(() => {
-        if (!isLoading) {
-            let products = [...contextFilteredProducts];
-
-            // Filtrar por categoría (desde la ruta)
-            if (
-                categoryPath &&
-                categoryPath !== 'todos' &&
-                categoryPath !== 'search' &&
-                !categoryPath.includes('edit-product') &&
-                !categoryPath.includes('admin')
-            ) {
-                products = products.filter(
-                    (p) => p.category?.toLowerCase() === categoryPath.toLowerCase()
-                );
-            }
-
-            // 🔥 Filtrar por mascota (desde query param ?pet=)
-            if (petFilter && petFilter !== 'todos') {
-                products = products.filter(
-                    (p) => p.pet?.toLowerCase() === petFilter.toLowerCase()
-                );
-            }
-
-            setLocalProducts(products);
-            setFilteredProductsState(products);
-        }
-    }, [contextFilteredProducts, isLoading, categoryPath, petFilter]);
 
     const getTitle = () => {
         if (searchTerms && searchQuery.trim() !== '' && currentPath === '/search') {
@@ -136,16 +113,6 @@ export const ProductList = () => {
         sessionStorage.setItem('lastProductListPath', location.pathname);
         navigate(`/item/${productId}`, { state: { from: location.pathname } });
     };
-
-    // const handlePetFilter = (pet: string) => {
-    //     const newParams = new URLSearchParams(location.search);
-    //     if (pet) {
-    //         newParams.set('pet', pet);
-    //     } else {
-    //         newParams.delete('pet');
-    //     }
-    //     navigate(`${location.pathname}?${newParams.toString()}`);
-    // };
 
     const handleEdit = (e: React.MouseEvent, productId: string) => {
         e.stopPropagation();
@@ -204,7 +171,6 @@ export const ProductList = () => {
         }
     };
 
-    // Generar números de página para mostrar
     const getPageNumbers = () => {
         const pageNumbers: (number | string)[] = [];
         const maxPagesToShow = 5;
@@ -300,76 +266,100 @@ export const ProductList = () => {
 
                 <main className="products-main-content">
                     <div className="product-grid">
-                        {paginatedProducts.map((product, index) => (
-                            <div
-                                key={product._id}
-                                className="product-card"
-                                style={{ animationDelay: `${index * 0.05}s` }}
-                                onClick={() => handleProductClick(product._id)}
-                            >
-                                {isAdmin && (
-                                    <div className="admin-actions-overlay">
-                                        <button
-                                            className="admin-action-btn edit"
-                                            onClick={(e) => handleEdit(e, product._id)}
-                                            title="Editar producto"
-                                        >
-                                            <Edit size={16} />
-                                        </button>
-                                        <button
-                                            className="admin-action-btn delete"
-                                            onClick={(e) => handleDeleteClick(e, product._id, product.name)}
-                                            disabled={isDeleting === product._id}
-                                            title="Eliminar producto"
-                                        >
-                                            {isDeleting === product._id ? '...' : <Trash2 size={16} />}
-                                        </button>
-                                    </div>
-                                )}
-
-                                <div className="product-image-container">
-                                    <img
-                                        src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
-                                        alt={product.name}
-                                        className="product-image"
-                                        loading="lazy"
-                                    />
-                                </div>
-
-                                <div className="product-content">
-                                    <h3 className="product-name" title={product.name}>
-                                        {product.name}
-                                    </h3>
-
-                                    {categoryPath === 'alimentos' && product.kg && (
-                                        <p className="products-kg">Kilos: {product.kg} kg</p>
-                                    )}
-
-                                     {categoryPath === 'indumentaria' && product.kg && (
-                                        <p className="products-kg">Talle: {product.kg}</p>
-                                    )}
-
-
-                                    <div className="price-action-row">
-                                        <div className="price-section">
-                                            <span className="currency">$</span>
-                                            <span className="price-amount">{formatPrice(product.price)}</span>
+                        {paginatedProducts.map((product, index) => {
+                            const isOutOfStock = product.stock === 'Agotado';
+                            const hasDiscount = product.descuento === 'si';
+                            
+                            return (
+                                <div
+                                    key={product._id}
+                                    className={`product-card 
+                                        ${isOutOfStock ? 'out-of-stock' : ''} 
+                                        ${hasDiscount ? 'discount' : ''}
+                                    `}
+                                    style={{ animationDelay: `${index * 0.05}s` }}
+                                    onClick={() => handleProductClick(product._id)}
+                                >
+                                    {/* Badge de "Sin stock" */}
+                                    {isOutOfStock && (
+                                        <div className="stock-badge">
+                                            ❌ Sin stock
                                         </div>
+                                    )}
+                                    
+                                    {/* Badge de "Oferta" - solo si tiene descuento y NO está agotado */}
+                                    {hasDiscount && !isOutOfStock && (
+                                        <div className="discount-badge">
+                                            🏷️ Oferta
+                                        </div>
+                                    )}
 
-                                        <button
-                                            className="view-btn"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleProductClick(product._id);
-                                            }}
-                                        >
-                                            <Eye size={16} />
-                                            <span>Ver</span>
-                                        </button>
+                                    {/* Admin Actions */}
+                                    {isAdmin && (
+                                        <div className="admin-actions-overlay">
+                                            <button
+                                                className="admin-action-btn edit"
+                                                onClick={(e) => handleEdit(e, product._id)}
+                                                title="Editar producto"
+                                            >
+                                                <Edit size={16} />
+                                            </button>
+                                            <button
+                                                className="admin-action-btn delete"
+                                                onClick={(e) => handleDeleteClick(e, product._id, product.name)}
+                                                disabled={isDeleting === product._id}
+                                                title="Eliminar producto"
+                                            >
+                                                {isDeleting === product._id ? '...' : <Trash2 size={16} />}
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    <div className="product-image-container">
+                                        <img
+                                            src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
+                                            alt={product.name}
+                                            className="product-image"
+                                            loading="lazy"
+                                        />
+                                    </div>
+
+                                    <div className="product-content">
+                                        <h3 className="product-name" title={product.name}>
+                                            {product.name}
+                                        </h3>
+
+                                        {/* Mostrar kg solo en alimentos */}
+                                        {categoryPath === 'alimentos' && product.kg && (
+                                            <p className="products-kg">Kilos: {product.kg} kg</p>
+                                        )}
+
+                                        {/* Mostrar talle solo en indumentaria */}
+                                        {categoryPath === 'indumentaria' && product.kg && (
+                                            <p className="products-kg">Talle: {product.kg}</p>
+                                        )}
+
+                                        <div className="price-action-row">
+                                            <div className="price-section">
+                                                <span className="currency">$</span>
+                                                <span className="price-amount">{formatPrice(product.price)}</span>
+                                            </div>
+
+                                            <button
+                                                className="view-btn"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleProductClick(product._id);
+                                                }}
+                                            >
+                                                <Eye size={16} />
+                                                <span>Ver</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
 
                     {/* Paginación */}
@@ -386,9 +376,9 @@ export const ProductList = () => {
                             </button>
 
                             <div className="pagination-numbers">
-                                {getPageNumbers().map((page, index) => (
+                                {getPageNumbers().map((page, idx) => (
                                     <button
-                                        key={index}
+                                        key={idx}
                                         onClick={() => typeof page === 'number' && goToPage(page)}
                                         className={`pagination-number ${currentPage === page ? 'active' : ''} ${typeof page !== 'number' ? 'dots' : ''}`}
                                         disabled={typeof page !== 'number'}

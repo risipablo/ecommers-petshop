@@ -9,7 +9,7 @@ export const Crud = () => {
  
     const [formData, setFormData] = useState({
         name: "", brand: "", pet: "", category: "", description: "",
-        age: "", price: "", kg: "", condition: ""
+        age: "", price: "", kg: "", condition: "", stock: "", descuento: ""
     })
     
     const [imageFiles, setImageFiles] = useState<File[]>([])
@@ -78,6 +78,8 @@ export const Crud = () => {
     formDataToSend.append('price', formData.price)
     formDataToSend.append('condition', formData.condition)
     if (formData.kg) formDataToSend.append('kg', formData.kg)
+    if (formData.stock) formDataToSend.append('stock', formData.stock)
+    if (formData.descuento) formDataToSend.append('descuento', formData.descuento)
 
     imageFiles.forEach(file => {
         formDataToSend.append('images', file)
@@ -89,7 +91,7 @@ export const Crud = () => {
             // LIMPIAR FORMULARIO
             setFormData({
                 name: "", brand: "", pet: "", category: "", description: "",
-                age: "", price: "", kg: "", condition: ""
+                age: "", price: "", kg: "", condition: "", stock: "", descuento: ""
             })
             imagePreviews.forEach(preview => URL.revokeObjectURL(preview))
             setImageFiles([])
@@ -137,7 +139,7 @@ export const Crud = () => {
                         <label data-required="*">Marca</label>
                         <input 
                             type="text" 
-                            placeholder="Ej: Purina" 
+                            placeholder="Ej: Excellent" 
                             value={formData.brand} 
                             onChange={(e) => handleInputChange('brand', e.target.value)}
                             disabled={isLoading}
@@ -243,6 +245,35 @@ export const Crud = () => {
                             <option value="Castrado">Castrado</option>
                             <option value="Light">Light</option>
                             <option value=" ">Ninguno</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Stock (opcional)</label>
+                        <select 
+                            value={formData.stock} 
+                            onChange={(e) => handleInputChange('stock', e.target.value)}
+                            disabled={isLoading}
+                        >
+                            <option value="">Seleccionar stock</option>
+                            <option value="Disponible">Disponible</option>
+                            <option value="Agotado">Agotado</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Descuento (opcional)</label>
+                        <select 
+    
+                            value={formData.descuento} 
+                            onChange={(e) => handleInputChange('descuento', e.target.value)}
+                            disabled={isLoading}
+                        >
+                            <option value=" ">Seleccionar descuento</option>
+                            <option value="si">si</option>
+                            <option value="no">no</option>
+                            <option value="liquidacion">liquidacion</option>
+                            
                         </select>
                     </div>
  

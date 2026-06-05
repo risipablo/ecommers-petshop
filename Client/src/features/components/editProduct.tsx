@@ -51,7 +51,9 @@ export const EditProduct = () => {
                 age: product.age || "",
                 condition: product.condition || "",
                 price: String(product.price) || "",
-                kg: product.kg || ""
+                kg: product.kg || "",
+                stock: product.stock || "",
+                descuento: product.descuento || ""
             });
             
             // Cargar imágenes existentes
@@ -169,7 +171,7 @@ export const EditProduct = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        const requiredFields = ['name', 'brand', 'pet', 'category', 'description', 'age', 'condition', 'price'];
+        const requiredFields = ['name', 'brand', 'pet', 'category', 'description', 'age', 'condition', 'price', 'kg', 'stock', 'descuento'];
         const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
         
         if (missingFields.length > 0) {
@@ -343,6 +345,34 @@ export const EditProduct = () => {
                             value={formData.kg} 
                             onChange={(e) => handleInputChange('kg', e.target.value)}
                         />
+                    </div>
+
+                                        <div className="form-group">
+                        <label>Stock (opcional)</label>
+                        <select 
+                            value={formData.stock} 
+                            onChange={(e) => handleInputChange('stock', e.target.value)}
+                            disabled={isLoading}
+                        >
+                            <option value="">Seleccionar stock</option>
+                            <option value="Disponible">Disponible</option>
+                            <option value="Agotado">Agotado</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Descuento (opcional)</label>
+                        <select 
+    
+                            value={formData.descuento} 
+                            onChange={(e) => handleInputChange('descuento', e.target.value)}
+                            disabled={isLoading}
+                        >
+                            <option value=" ">Seleccionar descuento</option>
+                            <option value="si">si</option>
+                            <option value="no">no</option>
+                            <option value="liquidacion">liquidacion</option>
+                        </select>
                     </div>
 
                     {/* 🔥 IMÁGENES EXISTENTES */}

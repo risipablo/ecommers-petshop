@@ -7,6 +7,7 @@
   position: fixed;
   top: 0;
   transition: all 0.3s ease;
+  
 }
 
 .container-header.scrolled {
@@ -26,7 +27,7 @@
   margin: 0 auto;
   background: #82119f;
   transition: padding 0.3s ease;
-  padding: 0.5rem 0;
+  padding: .5rem auto .2rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
