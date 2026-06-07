@@ -23,6 +23,7 @@
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.6",
     "react-scroll": "^1.9.3",
+    "sharp": "^0.34.5",
     "vercel": "^50.17.1"
   },
   "devDependencies": {

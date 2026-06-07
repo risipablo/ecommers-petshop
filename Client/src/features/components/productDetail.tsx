@@ -140,7 +140,7 @@ export function ProductDetail() {
             if (fromPath === '/') {
                 setBackText('Volver al inicio');
             } else if (fromPath.includes('/search')) {
-                setBackText('Volver a búsqueda');
+                setBackText('Volver a buscar');
             } else {
                 const category = fromPath.substring(1);
                 if (category) {
@@ -157,7 +157,7 @@ export function ProductDetail() {
             if (savedPath === '/') {
                 setBackText('Volver al inicio');
             } else if (savedPath.includes('/search')) {
-                setBackText('Volver a búsqueda');
+                setBackText('Volver a buscar');
             } else {
                 const category = savedPath.substring(1);
                 const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
@@ -278,11 +278,11 @@ export function ProductDetail() {
                     >
 
                           <img
-        src={images[selectedImageIndex]?.url || product.imageUrl || 'https://via.placeholder.com/500x500?text=Sin+Imagen'}
-        alt={product.name}
-        className="main-image"
-        loading="lazy"
-    />
+                                src={images[selectedImageIndex]?.url || product.imageUrl || 'https://via.placeholder.com/500x500?text=Sin+Imagen'}
+                                alt={product.name}
+                                className="main-image"
+                                loading="lazy"
+                            />
 
                         <button
                             className="zoom-btn"

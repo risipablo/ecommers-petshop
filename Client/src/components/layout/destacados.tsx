@@ -187,16 +187,16 @@ export const Destacados = () => {
             {clonedProducts.map((product, index) => (
               <div
                 key={`${product._id}-${index}`}
-                className="featured-card"
+                className="related-product-card-link"
                 style={{
                   width: cardWidth > 0 ? `${cardWidth}px` : undefined,
                   flexShrink: 0,
                 }}
                 onClick={() => handleProductClick(product._id)}
               >
-                <div className="featured-card-inner">
+                <div className="related-product-card">
                   {/* Imagen */}
-                  <div className="featured-image-container">
+                  <div className="related-image-wrapper">
                     <img
                       src={product.imageUrl || product.images?.[0]?.url || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
                       alt={product.name}
@@ -209,30 +209,30 @@ export const Destacados = () => {
                   <div className="featured-divider" />
 
                   {/* Contenido */}
-                  <div className="featured-content">
-                    <h3 className="featured-name" title={product.name}>
+                  <div className="related-content">
+                    <h3 className="related-name" title={product.name}>
                       {product.name}
                     </h3>
 
                     {/* Mostrar kg SOLO si la categoría es alimentos */}
                     {product.category === 'alimentos' && product.kg && (
-                      <p className="featured-kg">Kilos: {product.kg} kg</p>
+                      <p className="product-kg">Kilos: {product.kg} kg</p>
                     )}
 
                     {product.category === 'indumentaria' && product.kg && (
-                      <p className="featured-kg">Talles: {product.kg}</p>
+                      <p className="product-kg">Talles: {product.kg}</p>
                     )}
 
 
                     {/* Fila precio + botón */}
-                    <div className="featured-price-action-row">
-                      <div className="featured-price-section">
-                        <span className="featured-currency">$</span>
-                        <span className="featured-price">{formatPrice(product.price)}</span>
+                    <div className="related-footer">
+                      <div className="price-section">
+                        <span className="currency">$</span>
+                        <span className="price-amount">{formatPrice(product.price)}</span>
                       </div>
 
                       <button
-                        className="featured-btn"
+                        className="related-view-btn"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleProductClick(product._id);

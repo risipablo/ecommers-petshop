@@ -28,10 +28,10 @@ export const Header = () => {
         <Box className="promo-bar">
           <div className="promo-bar-content">
             <div className="promo-social">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <a href="https://www.facebook.com/Bambina.alimentosyaccesorios?locale=es_LA" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                 <Facebook size={15} />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <a href="https://www.instagram.com/bambinapetshop?igsh=YWY5cWZucnYzamc0" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                 <Instagram size={15} />
               </a>
             </div>

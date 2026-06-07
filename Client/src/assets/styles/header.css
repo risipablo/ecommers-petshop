@@ -232,6 +232,12 @@
    ========================================== */
 
 @media (max-width: 680px) {
+
+  .header-wrapper {
+  padding: .5rem 0;
+
+}
+
   .main-bar {
     padding: 0 0.75rem;
   }

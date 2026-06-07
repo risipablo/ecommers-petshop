@@ -1,7 +1,6 @@
 // pages/ArticulosPage.tsx
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-
 import { articles } from '../../components/data/articles';
 import { categoryColor, categories } from '../../components/constants/articulos.constants';
 import type { Article } from '../types/articulos.types';

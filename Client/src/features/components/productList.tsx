@@ -99,7 +99,7 @@ export const ProductList = () => {
             !categoryPath.includes('admin')
         ) {
             const categoryName = categoryPath.charAt(0).toUpperCase() + categoryPath.slice(1);
-            return `Productos de ${categoryName}`;
+            return ` ${categoryName}`;
         }
 
         if (currentPath === '/search') {

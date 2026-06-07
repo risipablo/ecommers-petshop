@@ -1,6 +1,6 @@
 import image1 from "../../assets/images/Indumentaria.jpg";
 import image2 from "../../assets/images/juguetegato.jpg";
-import image3 from "../../assets/images/moises.jpg";
+import image3 from "../../assets/images/gridhigiene.png";
 
 export const imageGrid = [
     {
@@ -20,8 +20,8 @@ export const imageGrid = [
     {
         id: 3,
         image: image3,
-        title: "Colchonetas",
-        alt: "Colchonetas y moisés",
-        path: "accesorios",
+        title: "Higiene",
+        alt: "Productos de higiene para mascotas",
+        path: "higiene",
     },
 ];

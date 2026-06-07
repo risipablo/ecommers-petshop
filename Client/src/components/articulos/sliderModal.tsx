@@ -3,16 +3,19 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { X, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import type { SliderModalProps } from '../../features/types/articulos.types';
 
-
 export const SliderModal = ({ article, onClose }: SliderModalProps) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [dragOffset, setDragOffset] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
+    const [isAnimating, setIsAnimating] = useState(false);
     const startX = useRef(0);
     const totalImages = article.images.length;
 
     // Resetear índice al abrir
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrentImageIndex(0);
+        setDragOffset(0);
     }, [article.id]);
 
     // Scroll to top al abrir
@@ -20,93 +23,131 @@ export const SliderModal = ({ article, onClose }: SliderModalProps) => {
         window.scrollTo({ top: 0, behavior: 'instant' });
     }, []);
 
+    const goTo = useCallback((index: number) => {
+        if (isAnimating) return;
+        const clamped = (index + totalImages) % totalImages;
+        setIsAnimating(true);
+        setCurrentImageIndex(clamped);
+        setDragOffset(0);
+        setTimeout(() => setIsAnimating(false), 320);
+    }, [totalImages, isAnimating]);
+
+    const goToPrevious = useCallback(() => goTo(currentImageIndex - 1), [currentImageIndex, goTo]);
+    const goToNext = useCallback(() => goTo(currentImageIndex + 1), [currentImageIndex, goTo]);
+
     // Navegación con teclado
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            // eslint-disable-next-line react-hooks/immutability
             if (e.key === 'ArrowLeft') goToPrevious();
-            // eslint-disable-next-line react-hooks/immutability
             if (e.key === 'ArrowRight') goToNext();
             if (e.key === 'Escape') onClose();
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [currentImageIndex]);
+    }, [goToPrevious, goToNext, onClose]);
 
-    const goToPrevious = useCallback(() => {
-        setCurrentImageIndex(prev => (prev - 1 + totalImages) % totalImages);
-    }, [totalImages]);
-
-    const goToNext = useCallback(() => {
-        setCurrentImageIndex(prev => (prev + 1) % totalImages);
-    }, [totalImages]);
-
+    // ── Pointer events (drag / swipe) ──────────────────────────────────────
     const handlePointerDown = (e: React.PointerEvent) => {
+        if (isAnimating) return;
         startX.current = e.clientX;
         setIsDragging(true);
+        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    };
+
+    const handlePointerMove = (e: React.PointerEvent) => {
+        if (!isDragging) return;
+        const diff = e.clientX - startX.current;
+        // Resistencia en los extremos
+        if ((currentImageIndex === 0 && diff > 0) || (currentImageIndex === totalImages - 1 && diff < 0)) {
+            setDragOffset(diff * 0.25);
+        } else {
+            setDragOffset(diff);
+        }
     };
 
     const handlePointerUp = (e: React.PointerEvent) => {
         if (!isDragging) return;
         const diff = e.clientX - startX.current;
-        if (diff < -40) goToNext();
-        else if (diff > 40) goToPrevious();
         setIsDragging(false);
+        if (diff < -50) goToNext();
+        else if (diff > 50) goToPrevious();
+        else setDragOffset(0);
     };
 
+    const stripTranslate = `translateX(calc(${-currentImageIndex * 100}% + ${dragOffset}px))`;
+
     return (
-        <div className="art-modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+        <div
+            className="art-modal-overlay"
+            onClick={(e) => e.target === e.currentTarget && onClose()}
+        >
             <div className="art-modal">
+
                 {/* Botón cerrar */}
                 <button className="art-modal-close" onClick={onClose} aria-label="Cerrar">
                     <X size={18} />
                 </button>
 
-                {/* Slider de imágenes */}
+                {/* ── Slider estilo Instagram ── */}
                 <div
-                    className={`art-slider ${isDragging ? 'dragging' : ''}`}
+                    className={`art-slider${isDragging ? ' dragging' : ''}`}
                     onPointerDown={handlePointerDown}
+                    onPointerMove={handlePointerMove}
                     onPointerUp={handlePointerUp}
-                    onPointerLeave={() => setIsDragging(false)}
+                    onPointerLeave={handlePointerUp}
                 >
-                    {article.images.map((img, idx) => (
-                        <img
-                            key={idx}
-                            src={img.url}
-                            alt={img.caption}
-                            draggable={false}
-                            className={`art-slider-img ${idx === currentImageIndex ? 'active' : ''}`}
-                        />
-                    ))}
-                    <div className="art-slider-gradient" />
-                    <p className="art-slider-caption">{article.images[currentImageIndex]?.caption}</p>
-
-                    {/* Dots de navegación */}
-                    <div className="art-slider-dots">
-                        {article.images.map((_, idx) => (
-                            <button
-                                key={idx}
-                                className={`art-dot ${idx === currentImageIndex ? 'active' : ''}`}
-                                onClick={() => setCurrentImageIndex(idx)}
-                                aria-label={`Imagen ${idx + 1}`}
-                            />
+                    {/* Strip horizontal */}
+                    <div
+                        className="art-slider-strip"
+                        style={{
+                            transform: stripTranslate,
+                            transition: isDragging ? 'none' : 'transform 0.32s cubic-bezier(0.4, 0, 0.2, 1)',
+                        }}
+                    >
+                        {article.images.map((img, idx) => (
+                            <div key={idx} className="art-slider-slide">
+                                <img
+                                    src={img.url}
+                                    alt={img.caption}
+                                    draggable={false}
+                                    className="art-slider-img"
+                                />
+                            </div>
                         ))}
                     </div>
 
-                    {/* Flechas de navegación */}
+                    {/* Flechas — solo si no estamos en el extremo */}
                     {totalImages > 1 && (
                         <>
-                            <button className="art-arrow prev" onClick={goToPrevious} aria-label="Anterior">
-                                <ChevronLeft size={20} />
-                            </button>
-                            <button className="art-arrow next" onClick={goToNext} aria-label="Siguiente">
-                                <ChevronRight size={20} />
-                            </button>
+                            {currentImageIndex > 0 && (
+                                <button className="art-arrow prev" onClick={goToPrevious} aria-label="Anterior">
+                                    <ChevronLeft size={18} />
+                                </button>
+                            )}
+                            {currentImageIndex < totalImages - 1 && (
+                                <button className="art-arrow next" onClick={goToNext} aria-label="Siguiente">
+                                    <ChevronRight size={18} />
+                                </button>
+                            )}
                         </>
+                    )}
+
+                    {/* Dots centrados abajo */}
+                    {totalImages > 1 && (
+                        <div className="art-slider-dots">
+                            {article.images.map((_, idx) => (
+                                <button
+                                    key={idx}
+                                    className={`art-dot${idx === currentImageIndex ? ' active' : ''}`}
+                                    onClick={() => goTo(idx)}
+                                    aria-label={`Imagen ${idx + 1}`}
+                                />
+                            ))}
+                        </div>
                     )}
                 </div>
 
-                {/* Contenido del modal */}
+                {/* ── Contenido ── */}
                 <div className="art-modal-body">
                     <div className="art-modal-tags">
                         <span
@@ -120,16 +161,23 @@ export const SliderModal = ({ article, onClose }: SliderModalProps) => {
                             {article.readTime} de lectura
                         </span>
                     </div>
+
                     <h2 className="art-modal-title">{article.title}</h2>
                     <p className="art-modal-excerpt">{article.excerpt}</p>
+
+                    {article.images[currentImageIndex]?.caption && (
+                        <p className="art-modal-caption">
+                            {article.images[currentImageIndex].caption}
+                        </p>
+                    )}
 
                     {/* Miniaturas */}
                     <div className="art-thumbs">
                         {article.images.map((img, idx) => (
                             <button
                                 key={idx}
-                                className={`art-thumb ${idx === currentImageIndex ? 'active' : ''}`}
-                                onClick={() => setCurrentImageIndex(idx)}
+                                className={`art-thumb${idx === currentImageIndex ? ' active' : ''}`}
+                                onClick={() => goTo(idx)}
                                 style={idx === currentImageIndex ? { outlineColor: article.color } : undefined}
                                 aria-label={`Ver imagen ${idx + 1}`}
                             >

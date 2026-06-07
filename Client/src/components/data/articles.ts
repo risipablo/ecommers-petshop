@@ -1,5 +1,8 @@
 import type { Article } from "../../features/types/articulos.types";
-
+import art1 from "../../assets/images/articulos/art1.jpeg"
+import art2 from "../../assets/images/articulos/art2.jpeg"
+import art3 from "../../assets/images/articulos/art3.jpeg"
+import art4 from "../../assets/images/articulos/art4.jpeg"
 
 export const articles: Article[] = [
     {
@@ -23,9 +26,10 @@ export const articles: Article[] = [
         readTime: '4 min',
         color: '#e07b39',
         images: [
-            { url: 'https://images.unsplash.com/photo-1518791841217-8f162f1912da?w=900&q=80', caption: 'Gato jugando con plumas' },
-            { url: 'https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=900&q=80', caption: 'Túnel interactivo' },
-            { url: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=900&q=80', caption: 'Ratón de tela artesanal' },
+            { url: art1, caption: 'Gato jugando con plumas' },
+            { url: art2, caption: 'Túnel interactivo' },
+            { url: art3, caption: 'Ratón de tela artesanal' },
+            { url: art4, caption: 'Juguete de inteligencia' },
         ],
     },
     {
