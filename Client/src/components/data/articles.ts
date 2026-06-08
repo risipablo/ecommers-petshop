@@ -4,32 +4,42 @@ import art2 from "../../assets/images/articulos/art2.jpeg"
 import art3 from "../../assets/images/articulos/art3.jpeg"
 import art4 from "../../assets/images/articulos/art4.jpeg"
 
+import ali1 from "../../assets/images/articulos/alimento1.png"
+import ali2 from "../../assets/images/articulos/alimento2.png"
+import ali3 from "../../assets/images/articulos/alimento3.png"
+import ali4 from "../../assets/images/articulos/alimento4.png"
+import ali5 from "../../assets/images/articulos/alimento5.png"
+import ali6 from "../../assets/images/articulos/alimento6.png"
+
 export const articles: Article[] = [
     {
         id: 1,
-        title: 'Alimentación saludable para perros adultoss',
-        excerpt: 'Descubrí qué nutrientes son esenciales en cada etapa de la vida de tu perro y cómo elegir el alimento ideal según su raza y tamaño.',
+        title: 'Alimentación ideal para perros: Guía por etapas de vida',
+        excerpt: 'La nutrición de tu perro es clave para su salud. Descubrí qué alimentos son mejores para cachorros, adultos y seniors, y cómo elegir el balanceado adecuado.',
         category: 'Nutrición',
         readTime: '5 min',
         color: '#6d4ba3',
         images: [
-            { url: 'https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?w=900&q=80', caption: 'Bowl de comida balanceada' },
-            { url: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=900&q=80', caption: 'Perro disfrutando su comida' },
-            { url: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=900&q=80', caption: 'Snacks naturales para premios' },
+            { url: ali1, caption: 'Alimento balanceado para perros' },
+            { url: ali2, caption: 'Snacks naturales para premios' },
+            { url: ali3, caption: 'Snacks naturales para premios' },
+            { url: ali4, caption: 'Alimento húmedo para perros' },
+            { url: ali5, caption: 'Alimento húmedo para perros' },
+            { url: ali6, caption: 'Alimento húmedo para perros' },
         ],
     },
     {
         id: 2,
-        title: 'Los mejores juguetes para gatos curiosos',
-        excerpt: 'Los gatos necesitan estimulación mental y física a diario. Te mostramos los juguetes más recomendados por veterinarios.',
-        category: 'Juguetes',
-        readTime: '4 min',
-        color: '#e07b39',
+        title: '¿Tu mascota siente frio?',
+        excerpt: 'Algunas razas son más sensibles al frío que otras. Conocé cómo proteger a tu perro o gato durante el invierno con ropa adecuada y cuidados especiales.',
+        category: 'Indumentaria',
+        readTime: '5 min',
+        color: '#c77dff',
         images: [
-            { url: art1, caption: 'Gato jugando con plumas' },
-            { url: art2, caption: 'Túnel interactivo' },
-            { url: art3, caption: 'Ratón de tela artesanal' },
-            { url: art4, caption: 'Juguete de inteligencia' },
+            { url: art1, caption: '' },
+            { url: art2, caption: '' },
+            { url: art3, caption: '' },
+            { url: art4, caption: '' },
         ],
     },
     {

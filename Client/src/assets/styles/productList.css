@@ -207,8 +207,8 @@
     background: var(--roman-purple);
     min-width: 90px;
     color: white;
-    padding: 0.3rem 1rem;
-    border-radius: 0.75rem;
+    padding: .5rem 1rem;
+    border-radius: 1rem;
     font-weight: 600;
     font-size: 0.8rem;
     display: flex;
@@ -472,7 +472,7 @@
     .products-kg { font-size: 0.78rem; margin: 0 auto .5rem; color: var(--text-secondary);}
     .currency { font-size: 1.1rem; }
     .price-amount { font-size: 1.1rem; }
-    .view-btn { padding: 0.55rem 0.9rem; font-size: 0.78rem; min-width: 82px; }
+    .view-btn { padding:  0.9rem; font-size: 0.78rem; min-width: 82px; }
 }
 
 

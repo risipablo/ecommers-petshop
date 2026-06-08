@@ -22,7 +22,7 @@ export const ArticleCard = ({ article, index, onClick }: ArticleCardProps) => (
             </span>
             <span className="art-card-photo-count">
                 <Eye size={12} />
-                {article.images.length}
+                {/* {article.images.length} */}
             </span>
         </div>
         <div className="art-card-body">

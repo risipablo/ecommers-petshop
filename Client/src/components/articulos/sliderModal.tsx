@@ -40,11 +40,11 @@ export const SliderModal = ({ article, onClose }: SliderModalProps) => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [goToPrevious, goToNext, onClose]);
 
-     const articleUrl = `https://ecommers-petshop.vercel.app/articulos/${article.id}`
+    const articleUrl = `https://ecommers-petshop.vercel.app/articulos/${article.id}`;
 
     return (
         <div className="art-modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-            <SEO 
+            <SEO
                 title={article.title}
                 description={article.excerpt}
                 keywords={`${article.category}, mascotas, cuidado de mascotas, ${article.title}`}
@@ -60,9 +60,7 @@ export const SliderModal = ({ article, onClose }: SliderModalProps) => {
                 </button>
 
                 {/* Slider principal */}
-                <div
-                    className="art-slider-container"
-                >
+                <div className="art-slider-container">
                     <div
                         className="art-slider-strip"
                         style={{
@@ -83,17 +81,17 @@ export const SliderModal = ({ article, onClose }: SliderModalProps) => {
                         ))}
                     </div>
 
-                    {/* Contador de imágenes */}
+                    {/* Contador */}
                     <div className="art-image-counter">
                         {currentImageIndex + 1} / {totalImages}
                     </div>
 
-                    {/* Flechas de navegación */}
+                    {/* Flechas */}
                     {totalImages > 1 && (
                         <>
                             {currentImageIndex > 0 && (
-                                <button 
-                                    className="art-arrow-simple prev" 
+                                <button
+                                    className="art-arrow prev"
                                     onClick={goToPrevious}
                                     aria-label="Imagen anterior"
                                 >
@@ -101,8 +99,8 @@ export const SliderModal = ({ article, onClose }: SliderModalProps) => {
                                 </button>
                             )}
                             {currentImageIndex < totalImages - 1 && (
-                                <button 
-                                    className="art-arrow-simple next" 
+                                <button
+                                    className="art-arrow next"
                                     onClick={goToNext}
                                     aria-label="Imagen siguiente"
                                 >
@@ -112,13 +110,13 @@ export const SliderModal = ({ article, onClose }: SliderModalProps) => {
                         </>
                     )}
 
-                    {/* Dots indicadores */}
+                    {/* Dots — ahora con las clases correctas */}
                     {totalImages > 1 && (
-                        <div className="art-dots-simple">
+                        <div className="art-dots">
                             {article.images.map((_, idx) => (
                                 <button
                                     key={idx}
-                                    className={`art-dot-simple ${idx === currentImageIndex ? 'active' : ''}`}
+                                    className={`art-dot ${idx === currentImageIndex ? 'active' : ''}`}
                                     onClick={() => goTo(idx)}
                                     aria-label={`Ir a imagen ${idx + 1}`}
                                 />
