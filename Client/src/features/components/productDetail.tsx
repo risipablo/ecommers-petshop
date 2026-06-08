@@ -9,6 +9,7 @@ import { useAuth } from '../../context/authProvider';
 import axios from 'axios';
 import type { Product } from '../types/product.type';
 import { config } from '../../config/index';
+import { SEO } from '../../components/common/SEO';
 
 const API_URL = config.Api;
 
@@ -212,6 +213,11 @@ export function ProductDetail() {
         setSelectedImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
+    if (!product) return null
+  const productImage = product.imageUrl || product.images?.[0]?.url
+  const productUrl = `https://ecommers-petshop.vercel.app/item/${product._id}`
+  const productPrice = typeof product.price === 'number' ? product.price : parseFloat(product.price)
+
     if (loading) {
         return (
             <div className="loading-container">
@@ -243,6 +249,16 @@ export function ProductDetail() {
 
     return (
         <div className="product-detail-container">
+            <SEO 
+                title={product.name}
+                description={`${product.name} - ${product.brand}. ${product.description?.slice(0, 150)}... Precio: $${productPrice}. Envíos a todo el país.`}
+                keywords={`${product.name}, ${product.brand}, ${product.category}, ${product.pet}, alimento para mascotas`}
+                image={productImage}
+                url={productUrl}
+                type="product"
+            />
+
+
             <div className="detail-header">
                 <Link to={backPath} className="back-link">
                     <ArrowLeft size={20} strokeWidth={2} />

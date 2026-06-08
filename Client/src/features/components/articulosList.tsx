@@ -7,6 +7,7 @@ import type { Article } from '../types/articulos.types';
 import '../../assets/styles/articulos.css';
 import { ArticleCard } from '../../components/articulos/articleCard';
 import { SliderModal } from '../../components/articulos/sliderModal';
+import { SEO } from '../../components/common/SEO';
 
 export const ArticulosPage = () => {
     const location = useLocation();
@@ -25,6 +26,11 @@ export const ArticulosPage = () => {
 
     return (
         <div className="art-page">
+            <SEO 
+                title="Artículos y Consejos para Mascotas"
+                description="Consejos de expertos sobre alimentación, salud, higiene y cuidado de tus mascotas. Artículos actualizados para dueños responsables."
+                url="https://ecommers-petshop.vercel.app/articulos"
+            />
             <div className="art-inner">
                 {/* Header */}
                 <header className="art-header">

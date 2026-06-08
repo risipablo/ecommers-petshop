@@ -10,6 +10,7 @@ import { ProductSkeletonGrid } from '../../components/common/productSkeleton';
 import { useAuth } from '../../context/authProvider';
 import { Filters } from './filters';
 import type { Product } from '../types/product.type';
+import { SEO } from '../../components/common/SEO';
 
 export const ProductList = () => {
     const { filteredProducts: contextFilteredProducts, searchTerms, searchQuery, isLoading, deleteProduct } = useProducts();
@@ -206,6 +207,22 @@ export const ProductList = () => {
         return pageNumbers;
     };
 
+
+    const getSEOTitle = () => {
+        if (categoryPath === 'alimentos') return 'Alimentos para Mascotas'
+        if (categoryPath === 'accesorios') return 'Accesorios para Mascotas'
+        if (categoryPath === 'higiene') return 'Higiene y Cuidado para Mascotas'
+        if (categoryPath === 'indumentaria') return 'Indumentaria para Mascotas'
+        return 'Productos para Mascotas'
+    }
+
+    const getSEODescription = () => {
+        if (categoryPath === 'alimentos') return 'Los mejores alimentos balanceados para perros y gatos. Marcas premium, nutrición completa y sabores que aman tus mascotas.'
+        if (categoryPath === 'accesorios') return 'Descubrí nuestra colección de accesorios para mascotas. Collares, correas, camas, juguetes y mucho más.'
+        return 'Productos de calidad para el bienestar de tu mascota. Envíos a todo el país.'
+    }
+
+
     if (isLoading && localProducts.length === 0) {
         return (
             <div className="products-layout">
@@ -254,6 +271,11 @@ export const ProductList = () => {
 
     return (
         <div className="products-layout">
+            <SEO 
+                title={getSEOTitle()}
+                description={getSEODescription()}
+                url={`https://ecommers-petshop.vercel.app/${categoryPath}`}
+            />
             <div className="products-header">
                 <h1 className="product-list-title">{getTitle()}</h1>
                 <p className="products-count">{filteredProductsState.length} productos encontrados</p>

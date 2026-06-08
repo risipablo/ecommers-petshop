@@ -4,6 +4,7 @@ import "../../assets/styles/contact.css";
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { config } from '../../config/index';
+import { SEO } from '../common/SEO';
 
 interface ContactFormData {
     name: string;
@@ -121,6 +122,13 @@ export const Contacto = () => {
 
     return (
         <div className="contact-container">
+
+            <SEO 
+                title="Contacto"
+                description="Contactate con Bambina Petshop. Estamos en Cipolletti, Río Negro. Respondemos todas tus consultas sobre productos, precios y envíos."
+                url="https://ecommers-petshop.vercel.app/contacto"
+            />
+
             {/* Toast Notification */}
             {toast && (
                 <div className={`toast-notification ${toast.type}`}>

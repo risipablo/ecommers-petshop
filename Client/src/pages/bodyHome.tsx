@@ -13,6 +13,7 @@ import { SliderMarcas } from "../components/layout/sliderMarcas";
 import { ArticulosHome } from "../components/layout/articulos";
 import { WelcomeModal } from "../components/layout/welcome";
 import { useWelcomeModal } from "../features/hooks/useWelcome";
+import { SEO } from "../components/common/SEO";
 
 export function BodyHome() {
 
@@ -36,6 +37,11 @@ export function BodyHome() {
     return (
         <div className="body-container">
 
+                  <SEO 
+        title="Bambina Petshop"
+        description="Tienda online de productos para mascotas. Alimentos premium, accesorios, juguetes y más para perros y gatos. ¡Enviamos a todo el país!"
+        url="https://ecommers-petshop.vercel.app"
+      />
             
             <div data-aos="fade-down" data-aos-duration="800">
                 <Carousel />
