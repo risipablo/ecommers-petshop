@@ -29,10 +29,10 @@ exports.getProductById = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const { 
-      name, brand, pet, category, age, price, description, condition, kg, stock, descuento
+      name, brand, pet, category, age, price, description, condition, kg, stock, descuento,destacado
     } = req.body;
 
-    console.log('📦 Datos recibidos:', { name, brand, pet, category, age, price, condition, kg, descuento });
+    console.log('📦 Datos recibidos:', { name, brand, pet, category, age, price, condition, kg, descuento, destacado });
 
     const requiredFields = ['name', 'brand', 'pet', 'category', 'age', 'price', 'description', 'condition'];
     const missingFields = requiredFields.filter(field => !req.body[field]);
@@ -75,6 +75,7 @@ exports.createProduct = async (req, res) => {
       stock: stock || null,
       descuento: descuento || null,
       kg: kg || null,
+      destacado: destacado || false,
       images: images,
       imageUrl: images[0]?.url || null,
       imagePublicId: images[0]?.publicId || null
@@ -119,7 +120,7 @@ exports.updateProduct = async (req, res) => {
     }
     
     // Actualizar campos básicos
-    const { name, brand, pet, category, age, price, description, condition, kg, stock, descuento } = req.body;
+    const { name, brand, pet, category, age, price, description, condition, kg, stock, descuento, destacado } = req.body;
     
     if (name) product.name = name;
     if (brand) product.brand = brand;
@@ -132,7 +133,7 @@ exports.updateProduct = async (req, res) => {
     if (kg !== undefined) product.kg = kg || null;
     if (stock !== undefined) product.stock = stock || null;
     if (descuento !== undefined) product.descuento = descuento || null;
-
+    if (destacado !== undefined) product.destacado = destacado === 'true' ? true : false;
     
     // Agregar nuevas imágenes
     if (req.files && req.files.length > 0) {

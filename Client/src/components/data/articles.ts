@@ -11,6 +11,10 @@ import ali4 from "../../assets/images/articulos/alimento4.png"
 import ali5 from "../../assets/images/articulos/alimento5.png"
 import ali6 from "../../assets/images/articulos/alimento6.png"
 
+import ali1b from "../../assets/images/articulos/alimento1b.png"
+import ali2b from "../../assets/images/articulos/alimento2b.png"
+import ali3b from "../../assets/images/articulos/alimento3b.png"
+
 export const articles: Article[] = [
     {
         id: 1,
@@ -68,17 +72,17 @@ export const articles: Article[] = [
             { url: 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=900&q=80', caption: 'Accesorios de temporada' },
         ],
     },
-    {
+  {
         id: 5,
-        title: 'Cómo bañar a tu gato sin drama',
-        excerpt: 'El baño de un gato puede ser una odisea… o no. Con la técnica y los productos adecuados, lograrás que sea una experiencia tranquila.',
-        category: 'Higiene',
+        title: 'La Transición Nutricional: ¿Cuándo cambiar su alimento?',
+        excerpt: 'Aprende los momentos clave para realizar el cambio de fórmula alimenticia y cómo hacerlo de forma segura para no afectar su sistema digestivo.',
+        category: 'Nutrición',
         readTime: '5 min',
-        color: '#e9c46a',
+        color: '#6d4ba3',
         images: [
-            { url: 'https://images.unsplash.com/photo-1513245543132-31f507417b26?w=900&q=80', caption: 'Gato en la bañera' },
-            { url: 'https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?w=900&q=80', caption: 'Shampoo especial para felinos' },
-            { url: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=900&q=80', caption: 'Secado con toalla suave' },
+            { url: ali1b, caption: 'Alimento balanceado para perros' },
+            { url: ali2b, caption: 'Snacks naturales para premios' },
+            { url: ali3b, caption: 'Snacks naturales para premios' },
         ],
     },
     {

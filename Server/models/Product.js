@@ -41,6 +41,10 @@ const productSchema = new mongoose.Schema({
     type: String, 
     required: false,
   },
+  destacado:{
+    type: Boolean,
+    default: false
+  },
   images: [imageSchema],
   imageUrl: { type: String, required: false },
   imagePublicId: { type: String, required: false }

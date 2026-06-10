@@ -44,6 +44,7 @@ export interface Product {
     stock?:string;
     descuento?:string;
     kg?: string;
+    destacado?: boolean;
     imageUrl?: string;
     imagePublicId?: string;
     images?: ProductImage[];
@@ -70,4 +71,5 @@ export interface ProductFormData {
     kg: string;
     stock?: string;
     descuento?: string;
+    destacado?: boolean;
 }

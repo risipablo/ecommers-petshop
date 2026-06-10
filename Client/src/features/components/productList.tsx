@@ -291,6 +291,7 @@ export const ProductList = () => {
                         {paginatedProducts.map((product, index) => {
                             const isOutOfStock = product.stock === 'Agotado';
                             const hasDiscount = product.descuento === 'si';
+                            const hasLiquidacion = product.descuento === 'liquidacion';
                             
                             return (
                                 <div
@@ -298,6 +299,7 @@ export const ProductList = () => {
                                     className={`product-card 
                                         ${isOutOfStock ? 'out-of-stock' : ''} 
                                         ${hasDiscount ? 'discount' : ''}
+                                        ${hasLiquidacion ? 'liquidacion' : ''}
                                     `}
                                     style={{ animationDelay: `${index * 0.05}s` }}
                                     onClick={() => handleProductClick(product._id)}
@@ -313,6 +315,13 @@ export const ProductList = () => {
                                     {hasDiscount && !isOutOfStock && (
                                         <div className="discount-badge">
                                             🏷️ Oferta
+                                        </div>
+                                    )}
+
+                                    {/* Badge de "Liquidación" - solo si tiene liquidación y NO está agotado */}
+                                    {hasLiquidacion && !isOutOfStock && (
+                                        <div className="discount-badge">
+                                            🔥 Liquidación
                                         </div>
                                     )}
 
@@ -359,6 +368,10 @@ export const ProductList = () => {
                                         {/* Mostrar talle solo en indumentaria */}
                                         {categoryPath === 'indumentaria' && product.kg && (
                                             <p className="products-kg">Talle: {product.kg}</p>
+                                        )}
+
+                                         {categoryPath === 'higiene' && product.kg && (
+                                            <p className="products-kg">{product.kg}</p>
                                         )}
 
                                         <div className="price-action-row">

@@ -290,6 +290,7 @@ export function ProductDetail() {
                         data-discount-label={
                             product.descuento === 'liquidacion' ? '🔥 Liquidación' : 
                             product.descuento === 'si' ? '% Descuento' : ''
+                            
                         }
                     >
 

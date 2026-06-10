@@ -30,7 +30,7 @@ export const EditProduct = () => {
 
     const [formData, setFormData] = useState<ProductFormData>({
         name: "", brand: "", pet: "", category: "", description: "",
-        age: "", condition: "", price: "", kg: ""
+        age: "", condition: "", price: "", kg: "", stock: "", descuento: "", destacado: false
     });
     
     // Estados para imágenes existentes
@@ -53,7 +53,8 @@ export const EditProduct = () => {
                 price: String(product.price) || "",
                 kg: product.kg || "",
                 stock: product.stock || "",
-                descuento: product.descuento || ""
+                descuento: product.descuento || "",
+                destacado: product.destacado ?? false
             });
             
             // Cargar imágenes existentes
@@ -318,13 +319,13 @@ export const EditProduct = () => {
                             onChange={(e) => handleInputChange('condition', e.target.value)}
                             required
                         >
-                            <option value="">Seleccionar</option>
+                            <option value="">Seleccionar tipo</option>
+                            <option value="Derma adulto">Derma Adulto</option>
+                            <option value="Derma mini adulto">Derma Mini Adulto</option>
+                            <option value="Urinary">Urinary</option>
+                            <option value="Castrado">Castrado</option>
+                            <option value="Light">Light</option>
                             <option value=" ">Ninguno</option>
-                            <option value="derma adulto">Derma Adulto</option>
-                            <option value="derma mini adulto">Derma Mini Adulto</option>
-                            <option value="urinary">Urinary</option>
-                            <option value="castrado">Castrado</option>
-                            <option value="light">Light</option>
                         </select>
                     </div>
 
@@ -372,6 +373,19 @@ export const EditProduct = () => {
                             <option value="si">si</option>
                             <option value="no">no</option>
                             <option value="liquidacion">liquidacion</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Destacado</label>
+                        <select 
+                            value={formData.destacado=== true ? "si" : "no"} 
+                            onChange={(e) => handleInputChange('destacado', e.target.value === "si" ? "true" : "false")}
+                            disabled={isLoading}
+                        >
+                            <option value=" ">Seleccionar </option>
+                            <option value="no">No</option>
+                            <option value="si">Sí</option>
                         </select>
                     </div>
 

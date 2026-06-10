@@ -122,6 +122,11 @@
     align-items: center;
     justify-content: center;
 }
+
+.liquidacion-badge{
+    background-color: none;
+}
+
 /* AGOTADO - imagen gris con candado */
 .main-image-wrapper.image-out-of-stock .main-image {
     filter: grayscale(100%) opacity(0.5);

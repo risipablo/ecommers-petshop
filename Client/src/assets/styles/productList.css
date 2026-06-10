@@ -131,19 +131,20 @@
    ========================================== */
 
 .product-content {
-    padding: 1.25rem;
+    padding: .3rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
 .product-name {
-    font-size: 1.05rem;
+    font-size: 1.03rem;
     margin: 0 auto -.5rem;
-    font-weight: 600;
+    font-weight: 500;
     color: #7d7c7f;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    text-align: center;
     -webkit-box-orient: vertical;
     overflow: hidden;
     letter-spacing: 1px;
@@ -917,6 +918,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+
 /* ==========================================
    PRODUCTOS EN LIQUIDACIÓN / DESCUENTO
    ========================================== */
@@ -1000,3 +1002,8 @@
     z-index: 10;
     font-weight: bold;
 }
+
+
+/* ==========================================
+   BADGE DE LIQUIDACIÓN
+   ========================================== */

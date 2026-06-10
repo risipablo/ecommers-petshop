@@ -9,7 +9,7 @@ export const Crud = () => {
  
     const [formData, setFormData] = useState({
         name: "", brand: "", pet: "", category: "", description: "",
-        age: "", price: "", kg: "", condition: "", stock: "", descuento: ""
+        age: "", price: "", kg: "", condition: "", stock: "", descuento: "",destacado: ""
     })
     
     const [imageFiles, setImageFiles] = useState<File[]>([])
@@ -80,6 +80,7 @@ export const Crud = () => {
     if (formData.kg) formDataToSend.append('kg', formData.kg)
     if (formData.stock) formDataToSend.append('stock', formData.stock)
     if (formData.descuento) formDataToSend.append('descuento', formData.descuento)
+    if (formData.destacado) formDataToSend.append('destacado', formData.destacado)
 
     imageFiles.forEach(file => {
         formDataToSend.append('images', file)
@@ -91,7 +92,7 @@ export const Crud = () => {
             // LIMPIAR FORMULARIO
             setFormData({
                 name: "", brand: "", pet: "", category: "", description: "",
-                age: "", price: "", kg: "", condition: "", stock: "", descuento: ""
+                age: "", price: "", kg: "", condition: "", stock: "", descuento: "", destacado: ""
             })
             imagePreviews.forEach(preview => URL.revokeObjectURL(preview))
             setImageFiles([])
@@ -110,7 +111,7 @@ export const Crud = () => {
  
     return(
         <div className="product-list-container">
-            <h2>➕ Agregar Nuevo Producto</h2>
+            <h2> Agregar Nuevo Producto</h2>
             
             {/* MENSAJES DE ERROR Y ÉXITO */}
             {error && <div className="error-message">❌ {error}</div>}
@@ -232,13 +233,13 @@ export const Crud = () => {
                     </div>
  
                     <div className="form-group">
-                        <label>Especial (opcional)</label>
+                        <label>Especial</label>
                         <select 
                             value={formData.condition} 
                             onChange={(e) => handleInputChange('condition', e.target.value)}
                             disabled={isLoading}
                         >
-                            
+                            <option value="">Seleccionar tipo</option>
                             <option value="Derma adulto">Derma Adulto</option>
                             <option value="Derma mini adulto">Derma Mini Adulto</option>
                             <option value="Urinary">Urinary</option>
@@ -274,6 +275,18 @@ export const Crud = () => {
                             <option value="no">no</option>
                             <option value="liquidacion">liquidacion</option>
                             
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Destacado</label>
+                        <select 
+                            value={formData.destacado ? "si" : "no"} 
+                            onChange={(e) => handleInputChange('destacado', e.target.value === "si" ? "true" : "false")}
+                            disabled={isLoading}
+                        >
+                            <option value="no">No</option>
+                            <option value="si">Sí</option>
                         </select>
                     </div>
  

@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useProducts } from './useProducts';
 
+
 export const UseDestacados = () => {
     const { products, isLoading, fetchProducts } = useProducts();
     const [loading, setLoading] = useState(true);
@@ -12,8 +13,8 @@ export const UseDestacados = () => {
         setLoading(false);
     };
 
-    // Mostrar los primeros 8 productos (los más recientes)
-    const destacados = products.slice(0, 8);
+    // 🔥 Filtrar solo productos que tienen destacado = true
+    const destacados = products.filter(product => product.destacado === true);
 
     return {
         products: destacados,
