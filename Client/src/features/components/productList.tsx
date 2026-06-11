@@ -354,6 +354,8 @@ export const ProductList = () => {
                                             loading="lazy"
                                         />
                                     </div>
+                                    <div className="featured-divider">
+                                        </div>
 
                                     <div className="product-content">
                                         <h3 className="product-name" title={product.name}>

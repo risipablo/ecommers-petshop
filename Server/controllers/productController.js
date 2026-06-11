@@ -75,7 +75,7 @@ exports.createProduct = async (req, res) => {
       stock: stock || null,
       descuento: descuento || null,
       kg: kg || null,
-      destacado: destacado || false,
+      destacado: destacado || 'false',
       images: images,
       imageUrl: images[0]?.url || null,
       imagePublicId: images[0]?.publicId || null
@@ -133,7 +133,7 @@ exports.updateProduct = async (req, res) => {
     if (kg !== undefined) product.kg = kg || null;
     if (stock !== undefined) product.stock = stock || null;
     if (descuento !== undefined) product.descuento = descuento || null;
-    if (destacado !== undefined) product.destacado = destacado === 'true' ? true : false;
+    if (destacado !== undefined) product.destacado = destacado;
     
     // Agregar nuevas imágenes
     if (req.files && req.files.length > 0) {

@@ -13,8 +13,8 @@ export const UseDestacados = () => {
         setLoading(false);
     };
 
-    // 🔥 Filtrar solo productos que tienen destacado = true
-    const destacados = products.filter(product => product.destacado === true);
+    // 🔥 Filtrar solo productos que tienen destacado = 'si'
+    const destacados = products.filter(product => product.destacado === 'true');
 
     return {
         products: destacados,

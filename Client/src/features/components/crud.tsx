@@ -80,7 +80,6 @@ export const Crud = () => {
     if (formData.kg) formDataToSend.append('kg', formData.kg)
     if (formData.stock) formDataToSend.append('stock', formData.stock)
     if (formData.descuento) formDataToSend.append('descuento', formData.descuento)
-    if (formData.destacado) formDataToSend.append('destacado', formData.destacado)
 
     imageFiles.forEach(file => {
         formDataToSend.append('images', file)
@@ -111,7 +110,7 @@ export const Crud = () => {
  
     return(
         <div className="product-list-container">
-            <h2> Agregar Nuevo Producto</h2>
+            <h2>➕ Agregar Nuevo Producto</h2>
             
             {/* MENSAJES DE ERROR Y ÉXITO */}
             {error && <div className="error-message">❌ {error}</div>}

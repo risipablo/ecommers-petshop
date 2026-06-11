@@ -30,7 +30,7 @@ export const EditProduct = () => {
 
     const [formData, setFormData] = useState<ProductFormData>({
         name: "", brand: "", pet: "", category: "", description: "",
-        age: "", condition: "", price: "", kg: "", stock: "", descuento: "", destacado: false
+        age: "", condition: "", price: "", kg: "", stock: "", descuento: "", destacado: ""
     });
     
     // Estados para imágenes existentes
@@ -54,7 +54,7 @@ export const EditProduct = () => {
                 kg: product.kg || "",
                 stock: product.stock || "",
                 descuento: product.descuento || "",
-                destacado: product.destacado ?? false
+                destacado: product.destacado || "",
             });
             
             // Cargar imágenes existentes
@@ -379,7 +379,7 @@ export const EditProduct = () => {
                     <div className="form-group">
                         <label>Destacado</label>
                         <select 
-                            value={formData.destacado=== true ? "si" : "no"} 
+                            value={formData.destacado=== "true" ? "si" : "no"} 
                             onChange={(e) => handleInputChange('destacado', e.target.value === "si" ? "true" : "false")}
                             disabled={isLoading}
                         >

@@ -16,7 +16,7 @@ export const Destacados = () => {
   const { products, fetch, loading } = UseDestacados();
   const navigate = useNavigate();
 
-  const GAP_PX = 16; // 1rem = 16px, debe coincidir con --card-gap base
+  const GAP_PX = 16;
 
   useEffect(() => {
     fetch();
@@ -33,7 +33,6 @@ export const Destacados = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Calcular ancho real de cada card desde el contenedor
   const calculateCardWidth = useCallback(() => {
     if (!carouselRef.current) return;
     const containerWidth = carouselRef.current.offsetWidth;
@@ -47,7 +46,6 @@ export const Destacados = () => {
     return () => window.removeEventListener('resize', calculateCardWidth);
   }, [calculateCardWidth]);
 
-  // Pequeño delay para asegurarse que el DOM ya renderizó
   useEffect(() => {
     const timer = setTimeout(calculateCardWidth, 50);
     return () => clearTimeout(timer);
@@ -59,8 +57,6 @@ export const Destacados = () => {
     : [];
   const realStart = cloneCount;
   const trackIndex = currentIndex + realStart;
-
-  // Offset en px reales
   const trackOffset = cardWidth > 0 ? trackIndex * (cardWidth + GAP_PX) : 0;
 
   const startAutoplay = useCallback(() => {
@@ -81,7 +77,6 @@ export const Destacados = () => {
     return () => stopAutoplay();
   }, [products.length, itemsPerView, startAutoplay, stopAutoplay]);
 
-  // Loop infinito: saltar sin animación cuando llegamos a los clones
   useEffect(() => {
     if (products.length === 0) return;
     if (currentIndex >= products.length) {
@@ -148,10 +143,7 @@ export const Destacados = () => {
           <div className="featured-carousel">
             <div className="featured-track">
               {[1, 2, 3, 4].map((item) => (
-                <div
-                  key={item}
-                  className="featured-card"
-                >
+                <div key={item} className="featured-card">
                   <div className="featured-card-inner">
                     <div className="featured-image skeleton-loading" />
                     <div className="featured-content">
@@ -184,68 +176,93 @@ export const Destacados = () => {
               transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
             }}
           >
-            {clonedProducts.map((product, index) => (
-              <div
-                key={`${product._id}-${index}`}
-                className="related-product-card-link"
-                style={{
-                  width: cardWidth > 0 ? `${cardWidth}px` : undefined,
-                  flexShrink: 0,
-                }}
-                onClick={() => handleProductClick(product._id)}
-              >
-                <div className="related-product-card">
-                  {/* Imagen */}
-                  <div className="related-image-wrapper">
-                    <img
-                      src={product.imageUrl || product.images?.[0]?.url || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
-                      alt={product.name}
-                      className="featured-image"
-                      loading="lazy"
-                    />
-                  </div>
+            {clonedProducts.map((product, index) => {
+              const isOutOfStock = product.stock === 'Agotado';
+              const hasDiscount = product.descuento === 'si';
+              const hasLiquidacion = product.descuento === 'liquidacion';
 
-                  {/* Línea divisoria */}
-                  <div className="featured-divider" />
+              return (
+                <div
+                  key={`${product._id}-${index}`}
+                  className={`related-product-card-link ${isOutOfStock ? 'out-of-stock' : ''} ${hasDiscount ? 'discount' : ''} ${hasLiquidacion ? 'liquidacion' : ''}`}
+                  style={{
+                    width: cardWidth > 0 ? `${cardWidth}px` : undefined,
+                    flexShrink: 0,
+                    position: 'relative',
+                  }}
+                  onClick={() => handleProductClick(product._id)}
+                >
+                  {/* Badges */}
+                  {isOutOfStock && (
+                    <div className="stock-badge-destacado">
+                      ❌ Sin stock
+                    </div>
+                  )}
+                  
+                  {hasDiscount && !isOutOfStock && (
+                    <div className="discount-badge-destacado">
+                      🏷️ Oferta
+                    </div>
+                  )}
 
-                  {/* Contenido */}
-                  <div className="related-content">
-                    <h3 className="related-name" title={product.name}>
-                      {product.name}
-                    </h3>
+                  {hasLiquidacion && !isOutOfStock && (
+                    <div className="liquidacion-badge-destacado">
+                      🔥 Liquidación
+                    </div>
+                  )}
 
-                    {/* Mostrar kg SOLO si la categoría es alimentos */}
-                    {product.category === 'alimentos' && product.kg && (
-                      <p className="product-kg">Kilos: {product.kg} kg</p>
-                    )}
+                  <div className="related-product-card">
+                    {/* Imagen */}
+                    <div className="related-image-wrapper">
+                      <img
+                        src={product.imageUrl || product.images?.[0]?.url || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
+                        alt={product.name}
+                        className="featured-image"
+                        loading="lazy"
+                      />
+                    </div>
 
-                    {product.category === 'indumentaria' && product.kg && (
-                      <p className="product-kg">Talles: {product.kg}</p>
-                    )}
+                    {/* Línea divisoria */}
+                    <div className="featured-divider" />
 
+                    {/* Contenido */}
+                    <div className="related-content">
+                      <h3 className="related-name" title={product.name}>
+                        {product.name}
+                      </h3>
 
-                    {/* Fila precio + botón */}
-                    <div className="related-footer">
-                      <div className="price-section">
-                        <span className="currency">$</span>
-                        <span className="price-amount">{formatPrice(product.price)}</span>
+                      {/* Mostrar kg SOLO si la categoría es alimentos */}
+                      {product.category === 'alimentos' && product.kg && (
+                        <p className="product-kg">Kilos: {product.kg} kg</p>
+                      )}
+
+                      {product.category === 'indumentaria' && product.kg && (
+                        <p className="product-kg">Talles: {product.kg}</p>
+                      )}
+
+                      {/* Fila precio + botón */}
+                      <div className="related-footer">
+                        <div className="price-section">
+                          <span className="currency">$</span>
+                          <span className="price-amount">{formatPrice(product.price)}</span>
+                        </div>
+
+                        <button
+                          className="related-view-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleProductClick(product._id);
+                          }}
+                        >
+                          <Eye size={13} />
+                          <span>Ver</span>
+                        </button>
                       </div>
-
-                      <button
-                        className="related-view-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleProductClick(product._id);
-                        }}
-                      >
-                        <Eye size={13} />
-                        <span>Ver</span>
-                      </button>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

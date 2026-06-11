@@ -244,6 +244,7 @@ export function ProductDetail() {
 
     const isAlimentos = categoryPath === 'alimentos' || product?.category === 'alimentos';
     const isIndumentaria = categoryPath === 'indumentaria' || product?.category === 'indumentaria';
+    const isHigiene = categoryPath === 'higiene' || product?.category === 'higiene';
 
     const trackOffset = cardWidth > 0 ? trackIndex * (cardWidth + GAP) : 0;
 
@@ -342,6 +343,20 @@ export function ProductDetail() {
                         </div>
                     )}
 
+                    {isHigiene && product.kg && (
+                        <div className="kg-section-front">
+                            <span className="brand-label">{product.kg}</span>
+                        </div>
+                    )}
+
+                    {isIndumentaria && product.kg && (
+                        <div className="kg-section-front">
+                            <span className="brand-label">Talle {product.kg}</span>
+                        </div>
+                    )}
+
+                    
+
                     <div className="price-section">
                         <span className="current-price">${formatPrice(product.price)}</span>
                     </div>
@@ -436,122 +451,144 @@ export function ProductDetail() {
 
                 </div>
 
-            {relatedProducts.length > 0 && (
-                <div className="related-products-section">
-                    <h2 className="section-title">Productos relacionados</h2>
-                    {loadingRelated ? (
-                        <div className="loading-related">Cargando productos relacionados...</div>
-                    ) : (
-                        <div className="related-carousel-wrapper">
-                            {relatedProducts.length > itemsPerView && (
-                                <button
-                                    onClick={prevSlide}
-                                    className="related-nav related-nav-left"
-                                    aria-label="Anterior"
-                                >
-                                    <ChevronLeft />
-                                </button>
-                            )}
+ {relatedProducts.length > 0 && (
+    <div className="related-products-section">
+        <h2 className="section-title">Productos relacionados</h2>
+        {loadingRelated ? (
+            <div className="loading-related">Cargando productos relacionados...</div>
+        ) : (
+            <div className="related-carousel-wrapper">
+                {relatedProducts.length > itemsPerView && (
+                    <button
+                        onClick={prevSlide}
+                        className="related-nav related-nav-left"
+                        aria-label="Anterior"
+                    >
+                        <ChevronLeft />
+                    </button>
+                )}
 
-                            <div className="related-carousel" ref={carouselRef}>
-                                <div
-                                    className="related-track"
+                <div className="related-carousel" ref={carouselRef}>
+                    <div
+                        className="related-track"
+                        style={{
+                            transform: `translateX(-${trackOffset}px)`,
+                            transition: isTransitioning
+                                ? 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                                : 'none',
+                        }}
+                    >
+                        {clonedProducts.map((relatedProduct, idx) => {
+                            const isAlimentosRelated = relatedProduct.category === 'alimentos';
+                            const isIndumentariaRelated = relatedProduct.category === 'indumentaria';
+                            const isOutOfStock = relatedProduct.stock === 'Agotado';
+                            const hasDiscount = relatedProduct.descuento === 'si';
+                            const hasLiquidacion = relatedProduct.descuento === 'liquidacion';
+
+                            return (
+                                <Link
+                                    key={`${relatedProduct._id}-${idx}`}
+                                    to={`/item/${relatedProduct._id}`}
+                                    state={{ from: backPath }}
+                                    onClick={handleRelatedProductClick}
+                                    className={`related-product-card-link ${isOutOfStock ? 'out-of-stock' : ''} ${hasDiscount ? 'discount' : ''} ${hasLiquidacion ? 'liquidacion' : ''}`}
                                     style={{
-                                        transform: `translateX(-${trackOffset}px)`,
-                                        transition: isTransitioning
-                                            ? 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                                            : 'none',
+                                        width: cardWidth > 0 ? `${cardWidth}px` : undefined,
+                                        flexShrink: 0,
+                                        position: 'relative',
                                     }}
                                 >
-                                    {clonedProducts.map((relatedProduct, idx) => {
-                                        const isAlimentosRelated = relatedProduct.category === 'alimentos';
-                                        const isIndumentariaRelated = relatedProduct.category === 'indumentaria';
+                                    {/* Badges */}
+                                    {isOutOfStock && (
+                                        <div className="stock-badge-related">
+                                            ❌ Sin stock
+                                        </div>
+                                    )}
+                                    
+                                    {hasDiscount && !isOutOfStock && (
+                                        <div className="discount-badge-related">
+                                            🏷️ Oferta
+                                        </div>
+                                    )}
 
-                                        return (
-                                            <Link
-                                                key={`${relatedProduct._id}-${idx}`}
-                                                to={`/item/${relatedProduct._id}`}
-                                                state={{ from: backPath }}
-                                                onClick={handleRelatedProductClick}
-                                                className="related-product-card-link"
-                                                style={{
-                                                    width: cardWidth > 0 ? `${cardWidth}px` : undefined,
-                                                    flexShrink: 0,
-                                                }}
-                                            >
-                                                <div className="related-product-card">
-                                                    <div className="related-image-wrapper">
-                                                        <img
-                                                            src={relatedProduct.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
-                                                            alt={relatedProduct.name}
-                                                            loading="lazy"
-                                                        />
-                                                    </div>
-                                                    
-                                                    <div className="featured-divider">
-                                                    </div>
+                                    {hasLiquidacion && !isOutOfStock && (
+                                        <div className="liquidacion-badge-related">
+                                            🔥 Liquidación
+                                        </div>
+                                    )}
 
-                                                    <div className="related-content">
-                                                        <h3 className="related-name" title={relatedProduct.name}>
-                                                            {relatedProduct.name}
-                                                        </h3>
+                                    <div className="related-product-card">
+                                        <div className="related-image-wrapper">
+                                            <img
+                                                src={relatedProduct.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
+                                                alt={relatedProduct.name}
+                                                loading="lazy"
+                                            />
+                                        </div>
+                                        
+                                        <div className="featured-divider">
+                                        </div>
 
-                                                        {isAlimentosRelated && relatedProduct.kg && (
-                                                            <p className="product-kg">Kilos: {relatedProduct.kg} kg</p>
-                                                        )}
+                                        <div className="related-content">
+                                            <h3 className="related-name" title={relatedProduct.name}>
+                                                {relatedProduct.name}
+                                            </h3>
 
-                                                        {isIndumentariaRelated && relatedProduct.kg && (
-                                                            <p className="product-kg">Talle: {relatedProduct.kg}</p>
-                                                        )}
+                                            {isAlimentosRelated && relatedProduct.kg && (
+                                                <p className="product-kg">Kilos: {relatedProduct.kg} kg</p>
+                                            )}
 
-                                                        <div className="related-footer">
-                                                            <div className="price-section">
-                                                                <span className="currency">$</span>
-                                                                <span className="price-amount">{formatPrice(relatedProduct.price)}</span>
-                                                            </div>
-                                                            <div className="related-view-btn">
-                                                                <Eye size={16} strokeWidth={2.5} />
-                                                                <span>Ver</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                            {isIndumentariaRelated && relatedProduct.kg && (
+                                                <p className="product-kg">Talle: {relatedProduct.kg}</p>
+                                            )}
+
+                                            <div className="related-footer">
+                                                <div className="price-section">
+                                                    <span className="currency">$</span>
+                                                    <span className="price-amount">{formatPrice(relatedProduct.price)}</span>
                                                 </div>
-                                            </Link>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-
-                            {relatedProducts.length > itemsPerView && (
-                                <button
-                                    onClick={nextSlide}
-                                    className="related-nav related-nav-right"
-                                    aria-label="Siguiente"
-                                >
-                                    <ChevronRight />
-                                </button>
-                            )}
-                        </div>
-                    )}
-
-                    {relatedProducts.length > itemsPerView && (
-                        <div className="related-dots">
-                            {Array.from({ length: Math.min(relatedProducts.length, 6) }).map((_, index) => (
-                                <button
-                                    key={index}
-                                    className={`related-dot ${(currentIndex % relatedProducts.length) === index ? 'active' : ''}`}
-                                    onClick={() => {
-                                        setIsTransitioning(true);
-                                        setCurrentIndex(index);
-                                    }}
-                                    aria-label={`Ir a slide ${index + 1}`}
-                                />
-                            ))}
-                        </div>
-                    )}
+                                                <div className="related-view-btn">
+                                                    <Eye size={16} strokeWidth={2.5} />
+                                                    <span>Ver</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
                 </div>
-            )}
 
+                {relatedProducts.length > itemsPerView && (
+                    <button
+                        onClick={nextSlide}
+                        className="related-nav related-nav-right"
+                        aria-label="Siguiente"
+                    >
+                        <ChevronRight />
+                    </button>
+                )}
+            </div>
+        )}
+
+        {relatedProducts.length > itemsPerView && (
+            <div className="related-dots">
+                {Array.from({ length: Math.min(relatedProducts.length, 6) }).map((_, index) => (
+                    <button
+                        key={index}
+                        className={`related-dot ${(currentIndex % relatedProducts.length) === index ? 'active' : ''}`}
+                        onClick={() => {
+                            setIsTransitioning(true);
+                            setCurrentIndex(index);
+                        }}
+                        aria-label={`Ir a slide ${index + 1}`}
+                    />
+                ))}
+            </div>
+        )}
+    </div>
+)}
             {/* Modal de zoom */}
             {isZoomModalOpen && (
                 <div className="zoom-modal" onClick={() => setIsZoomModalOpen(false)}>
