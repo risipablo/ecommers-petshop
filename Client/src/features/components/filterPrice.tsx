@@ -12,8 +12,8 @@ interface SortControlsProps {
 
 type SortType = 'none' | 'price-asc' | 'price-desc' | 'name-asc' | 'name-desc';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const SortControls = ({ products, onSortChange, isLoading = false }: SortControlsProps) => {
+
+export const SortControls = ({ products, onSortChange}: SortControlsProps) => {
     const [sortType, setSortType] = useState<SortType>('none');
     const [isSorting, setIsSorting] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
