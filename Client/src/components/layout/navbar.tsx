@@ -37,7 +37,8 @@ const Navbar = () => {
             submenu: [
                 { path: '/alimentos?pet=perro', label: 'Perro', petType: 'perro' },
                 { path: '/alimentos?pet=gato', label: 'Gato', petType: 'gato' },
-                // { path: '/alimentos?pet=ambos', label: ' Ambos', petType: 'ambos' }
+            
+                
             ]
         },
         { 
@@ -47,7 +48,7 @@ const Navbar = () => {
             submenu: [
                 { path: '/accesorios?pet=perro', label: 'Perro', petType: 'perro' },
                 { path: '/accesorios?pet=gato', label: 'Gato', petType: 'gato' },
-                { path: '/accesorios?pet=ambos', label: 'Ambos', petType: 'ambos' }
+            
             ]
         },
         { 
@@ -57,7 +58,7 @@ const Navbar = () => {
             submenu: [
                 { path: '/higiene?pet=perro', label: 'Perro', petType: 'perro' },
                 { path: '/higiene?pet=gato', label: 'Gato', petType: 'gato' },
-                { path: '/higiene?pet=ambos', label: 'Ambos', petType: 'ambos' }
+            
             ]
         },
         { 
@@ -67,7 +68,17 @@ const Navbar = () => {
             submenu: [
                 { path: '/indumentaria?pet=perro', label: 'Perro', petType: 'perro' },
                 { path: '/indumentaria?pet=gato', label: 'Gato', petType: 'gato' },
-                { path: '/indumentaria?pet=ambos', label: 'Ambos', petType: 'ambos' }
+            
+            ]
+        },
+        { 
+            path: '/colchonetas', 
+            label: 'Colchonetas',
+            hasSubmenu: true,
+            submenu: [
+                { path: '/colchonetas?pet=perro', label: 'Perro', petType: 'perro' },
+                { path: '/colchonetas?pet=gato', label: 'Gato', petType: 'gato' },
+            
             ]
         },
         { 

@@ -301,6 +301,77 @@
     color: var(--text-secondary);
 }
 
+
+/* ==========================================
+   DESCRIPTION SECTION
+   ========================================== */
+
+.description-section {
+    margin: 1.5rem auto;
+}
+
+.section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #9b9b9b;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 1.25rem 0;
+}
+
+.description-content {
+    font-size: 0.95rem;
+    color: #6b6b6b;
+    line-height: 1.85;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    max-height: 2000px;
+}
+
+.description-collapsed {
+    max-height: 80px;
+    -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+}
+
+.description-content p {
+    margin: 0 0 0.75rem 0;
+}
+
+.description-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* ---- Toggle Button ---- */
+
+.description-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+    background: none;
+    border: none;
+    color: var(--roman-purple);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    transition: opacity 0.2s ease;
+}
+
+.description-toggle-btn:hover {
+    opacity: 0.7;
+}
+
+.toggle-icon {
+    font-size: 0.65rem;
+    transition: transform 0.3s ease;
+}
+
+.description-toggle-btn.expanded .toggle-icon {
+    transform: rotate(180deg);
+}
+
 .category-tag {
     background: var(--roman-purple-bg);
     color: var(--roman-purple);
@@ -458,25 +529,6 @@
 }
 
 
-/* ==========================================
-   DESCRIPTION SECTION
-   ========================================== */
-
-.description-section{
-    margin: 1rem auto;
-}
-
-.section-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--roman-purple);
-    margin: 0 0 1rem 0;
-}
-
-.description-content {
-    color: var(--text-secondary);
-    line-height: 1.7;
-}
 
 /* ==========================================
    RELATED PRODUCTS CAROUSEL
@@ -619,12 +671,16 @@
 .related-footer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin: -1rem 0 -.9rem;
+    justify-content: center;
+    margin: -.3rem 0 -.9rem;
+     gap: 2rem;
 }
 
 .price-section {
-    display: flex;
+        display: flex;
+    align-items: baseline;
+    gap: 2px;
+    flex-shrink: 0;
 
 }
 
@@ -1121,13 +1177,13 @@
     }
     
     .related-footer .price-section {
-        margin: -1rem auto;
+        margin: -1rem auto -.5rem;
         justify-content: center;
     }
     
     .related-view-btn {
-        margin: 1rem auto;
-        width: 80%;
+        margin: 1rem 0;
+        width: 100%;
         justify-content: center;
     }
 

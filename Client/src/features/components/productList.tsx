@@ -1,4 +1,5 @@
-// features/components/ProductList.tsx
+// features/components/ProductList.tsx - Versión completa con loader para búsqueda
+
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
@@ -11,6 +12,7 @@ import { useAuth } from '../../context/authProvider';
 import { Filters } from './filters';
 import type { Product } from '../types/product.type';
 import { SEO } from '../../components/common/SEO';
+import { SortControls } from './filterPrice';
 
 export const ProductList = () => {
     const { filteredProducts: contextFilteredProducts, searchTerms, searchQuery, isLoading, deleteProduct } = useProducts();
@@ -23,16 +25,43 @@ export const ProductList = () => {
     const petFilter = searchParams.get('pet');
 
     const [localProducts, setLocalProducts] = useState<Product[]>([]);
-    const [filteredProductsState, setFilteredProductsState] = useState<Product[]>([]);
+    const [filterProductsState, setFilteredProductsState] = useState<Product[]>([]);
     const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null);
     
+    // Estados para loaders
+    const [sortedProducts, setSortedProducts] = useState<Product[]>([])
+    const [isSorting, setIsSorting] = useState(false)
+    const [isFilterLoading, setIsFilterLoading] = useState(false)
+    const [isSearchLoading, setIsSearchLoading] = useState(false) // 🔥 Loader para búsqueda
+
     // Paginación
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(9);
+    const [itemsPerPage] = useState(12);
     const [totalPages, setTotalPages] = useState(1);
     const [paginatedProducts, setPaginatedProducts] = useState<Product[]>([]);
+
+    // Función de orden
+    const handleSort = (sorted: Product[]) => {
+        setIsSorting(true)
+        setSortedProducts(sorted)
+        setCurrentPage(1)
+        setTimeout(() => {
+            setIsSorting(false)
+        }, 300)
+    }
+
+    // Función de filtros con loader
+    const handleFilterChange = useCallback((filtered: Product[]) => {
+        setIsFilterLoading(true)
+        setFilteredProductsState(filtered)
+        setSortedProducts([])
+        setCurrentPage(1)
+        setTimeout(() => {
+            setIsFilterLoading(false)
+        }, 300)
+    }, []);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' });
@@ -41,6 +70,11 @@ export const ProductList = () => {
     // Filtrar productos por categoría y mascota
     useEffect(() => {
         if (!isLoading) {
+            // Mostrar loader cuando hay búsqueda activa
+            if (searchQuery) {
+                setIsSearchLoading(true);
+            }
+            
             let products = [...contextFilteredProducts];
 
             if (
@@ -65,27 +99,28 @@ export const ProductList = () => {
             setLocalProducts(products);
             setFilteredProductsState(products);
             setCurrentPage(1);
+            
+            // Ocultar loader después de procesar
+            setTimeout(() => {
+                setIsSearchLoading(false);
+            }, 300);
         }
-    }, [contextFilteredProducts, isLoading, categoryPath, petFilter]);
+    }, [contextFilteredProducts, isLoading, categoryPath, petFilter, searchQuery]);
 
     // Actualizar productos paginados
     useEffect(() => {
+        const productsToPaginate = sortedProducts.length > 0 ? sortedProducts : filterProductsState;
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
-        const newTotalPages = Math.ceil(filteredProductsState.length / itemsPerPage);
+        const newTotalPages = Math.ceil(productsToPaginate.length / itemsPerPage);
         setTotalPages(newTotalPages);
         
         if (currentPage > newTotalPages && newTotalPages > 0) {
             setCurrentPage(1);
         } else {
-            setPaginatedProducts(filteredProductsState.slice(startIndex, endIndex));
+            setPaginatedProducts(productsToPaginate.slice(startIndex, endIndex));
         }
-    }, [filteredProductsState, currentPage, itemsPerPage]);
-
-    const handleFilterChange = useCallback((filtered: Product[]) => {
-        setFilteredProductsState(filtered);
-        setCurrentPage(1);
-    }, []);
+    }, [filterProductsState, sortedProducts, currentPage, itemsPerPage]);
 
     const getTitle = () => {
         if (searchTerms && searchQuery.trim() !== '' && currentPath === '/search') {
@@ -207,7 +242,6 @@ export const ProductList = () => {
         return pageNumbers;
     };
 
-
     const getSEOTitle = () => {
         if (categoryPath === 'alimentos') return 'Alimentos para Mascotas'
         if (categoryPath === 'accesorios') return 'Accesorios para Mascotas'
@@ -222,8 +256,10 @@ export const ProductList = () => {
         return 'Productos de calidad para el bienestar de tu mascota. Envíos a todo el país.'
     }
 
+    // Mostrar loader cuando está cargando inicialmente, aplicando filtros, ordenando o buscando
+    const showLoader = isLoading || isFilterLoading || isSorting || isSearchLoading;
 
-    if (isLoading && localProducts.length === 0) {
+    if (showLoader && localProducts.length === 0) {
         return (
             <div className="products-layout">
                 <div className="products-header">
@@ -234,7 +270,42 @@ export const ProductList = () => {
         );
     }
 
-    if (searchTerms && filteredProductsState.length === 0 && currentPath === '/search') {
+    // Loader overlay para cuando se aplican filtros, ordenamiento o búsqueda
+    if (isFilterLoading || isSorting || isSearchLoading) {
+        return (
+            <div className="products-layout">
+                <SEO 
+                    title={getSEOTitle()}
+                    description={getSEODescription()}
+                    url={`https://ecommers-petshop.vercel.app/${categoryPath}`}
+                />
+                <div className="products-header">
+                    <div className="products-header-top">
+                        <h1 className="product-list-title">{getTitle()}</h1>
+                        <SortControls
+                            products={filterProductsState}
+                            onSortChange={handleSort}
+                            isLoading={isSorting}
+                        />
+                    </div>
+                    <p className="products-count">{filterProductsState.length} productos encontrados</p>
+                </div>
+                <div className="products-grid-filters">
+                    <aside className="filters-sidebar">
+                        <Filters products={localProducts} onFilterChange={handleFilterChange} />
+                    </aside>
+                    <main className="products-main-content">
+                        <div className="loader-overlay">
+                            <div className="loader-spinner"></div>
+                            <p>{isSearchLoading ? 'Buscando productos...' : 'Aplicando cambios...'}</p>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        );
+    }
+
+    if (searchTerms && filterProductsState.length === 0 && currentPath === '/search') {
         return (
             <div className="no-results">
                 <SearchOffIcon sx={{ fontSize: 80, color: '#d4a574' }} />
@@ -252,7 +323,7 @@ export const ProductList = () => {
         );
     }
 
-    if (filteredProductsState.length === 0 && !isLoading) {
+    if (filterProductsState.length === 0 && !isLoading) {
         return (
             <div className="products-layout">
                 <div className="products-header">
@@ -277,8 +348,15 @@ export const ProductList = () => {
                 url={`https://ecommers-petshop.vercel.app/${categoryPath}`}
             />
             <div className="products-header">
-                <h1 className="product-list-title">{getTitle()}</h1>
-                <p className="products-count">{filteredProductsState.length} productos encontrados</p>
+                <div className="products-header-top">
+                    <h1 className="product-list-title">{getTitle()}</h1>
+                    <SortControls
+                        products={filterProductsState}
+                        onSortChange={handleSort}
+                        isLoading={isSorting}
+                    />
+                </div>
+                <p className="products-count">{filterProductsState.length} productos encontrados</p>
             </div>
 
             <div className="products-grid-filters">
@@ -292,6 +370,9 @@ export const ProductList = () => {
                             const isOutOfStock = product.stock === 'Agotado';
                             const hasDiscount = product.descuento === 'si';
                             const hasLiquidacion = product.descuento === 'liquidacion';
+                            // Determinar la categoría activa (para búsqueda usar la categoría del producto)
+                            const isSearchRoute = currentPath === '/search';
+                            const activeCategory = isSearchRoute ? product.category : categoryPath;
                             
                             return (
                                 <div
@@ -311,16 +392,16 @@ export const ProductList = () => {
                                         </div>
                                     )}
                                     
-                                    {/* Badge de "Oferta" - solo si tiene descuento y NO está agotado */}
+                                    {/* Badge de "Oferta" */}
                                     {hasDiscount && !isOutOfStock && (
                                         <div className="discount-badge">
                                             🏷️ Oferta
                                         </div>
                                     )}
 
-                                    {/* Badge de "Liquidación" - solo si tiene liquidación y NO está agotado */}
+                                    {/* Badge de "Liquidación" */}
                                     {hasLiquidacion && !isOutOfStock && (
-                                        <div className="discount-badge">
+                                        <div className="liquidacion-badge">
                                             🔥 Liquidación
                                         </div>
                                     )}
@@ -354,26 +435,30 @@ export const ProductList = () => {
                                             loading="lazy"
                                         />
                                     </div>
+
                                     <div className="featured-divider">
-                                        </div>
+                                    </div>
 
                                     <div className="product-content">
                                         <h3 className="product-name" title={product.name}>
-                                            {product.name}
+                                            {(product.name).toUpperCase()}
                                         </h3>
 
-                                        {/* Mostrar kg solo en alimentos */}
-                                        {categoryPath === 'alimentos' && product.kg && (
+                                        {/* Mostrar información específica según categoría - AHORA FUNCIONA EN BÚSQUEDA */}
+                                        {activeCategory === 'alimentos' && product.kg && (
                                             <p className="products-kg">Kilos: {product.kg} kg</p>
                                         )}
-
-                                        {/* Mostrar talle solo en indumentaria */}
-                                        {categoryPath === 'indumentaria' && product.kg && (
+                                        
+                                        {activeCategory === 'indumentaria' && product.kg && (
                                             <p className="products-kg">Talle: {product.kg}</p>
                                         )}
 
-                                         {categoryPath === 'higiene' && product.kg && (
+                                        {activeCategory === 'colchonetas' && product.kg && (
                                             <p className="products-kg">{product.kg}</p>
+                                        )} 
+
+                                        {activeCategory === 'accesorios' && product.brand && (
+                                            <p className="products-kg">{product.brand}</p>
                                         )}
 
                                         <div className="price-action-row">

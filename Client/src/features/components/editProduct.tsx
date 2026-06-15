@@ -308,7 +308,7 @@ export const EditProduct = () => {
                             <option value="mini adulto">🐾 Mini Adulto</option>
                             <option value="adulto">🐕 Adulto</option>
                             <option value="senior">👴 Senior</option>
-                            <option value="otro">Otro</option>
+                            <option value="todos">Todos</option>
                         </select>
                     </div>
 
@@ -325,7 +325,11 @@ export const EditProduct = () => {
                             <option value="Urinary">Urinary</option>
                             <option value="Castrado">Castrado</option>
                             <option value="Light">Light</option>
-                            <option value=" ">Ninguno</option>
+                            <option value="Pouch">Pouch</option>
+                            <option value="Lata">Lata</option>
+                            <option value="Medicado">Medicado</option>
+                            <option value="Snacks">Snacks</option>
+                            <option value="Ninguno">Ninguno</option>
                         </select>
                     </div>
 
@@ -358,6 +362,7 @@ export const EditProduct = () => {
                             <option value="">Seleccionar stock</option>
                             <option value="Disponible">Disponible</option>
                             <option value="Agotado">Agotado</option>
+                            <option value="Ultimos en stock">Últimos en stock</option>
                         </select>
                     </div>
 

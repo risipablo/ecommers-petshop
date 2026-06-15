@@ -33,6 +33,7 @@ export function ProductDetail() {
     const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isTransitioning, setIsTransitioning] = useState(true);
+    const [expanded, setExpanded] = useState(false);
 
     const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -245,6 +246,8 @@ export function ProductDetail() {
     const isAlimentos = categoryPath === 'alimentos' || product?.category === 'alimentos';
     const isIndumentaria = categoryPath === 'indumentaria' || product?.category === 'indumentaria';
     const isHigiene = categoryPath === 'higiene' || product?.category === 'higiene';
+    const isColchoneta = categoryPath === 'colchonetas' || product?.category === 'colchonetas'
+    const isAccesorios = categoryPath === 'accesorios' || product?.category === 'accesorios'
 
     const trackOffset = cardWidth > 0 ? trackIndex * (cardWidth + GAP) : 0;
 
@@ -343,15 +346,27 @@ export function ProductDetail() {
                         </div>
                     )}
 
-                    {isHigiene && product.kg && (
+                    {isHigiene && product.brand && (
                         <div className="kg-section-front">
-                            <span className="brand-label">{product.kg}</span>
+                            <span className="brand-label">{product.brand}</span>
                         </div>
                     )}
 
                     {isIndumentaria && product.kg && (
                         <div className="kg-section-front">
                             <span className="brand-label">Talle {product.kg}</span>
+                        </div>
+                    )}
+
+                    {isColchoneta && product.kg && (
+                             <div className="kg-section-front">
+                            <span className="brand-label">{product.kg}</span>
+                        </div>
+                    )}
+
+                    {isAccesorios && product.brand && (
+                             <div className="kg-section-front">
+                            <span className="brand-label">{product.brand}</span>
                         </div>
                     )}
 
@@ -396,14 +411,25 @@ export function ProductDetail() {
                         </div>
                     )}
 
-                    {product.description && (
-                        <div className="description-section">
-                            <h2 className="section-title">Descripción del producto</h2>
-                            <div className="description-content">
-                                <p>{product.description}</p>
+                        {product.description && (
+                            <div className="description-section">
+                                <h2 className="section-title">Descripción del producto</h2>
+                                <div className={`description-content ${!expanded && product.description.length > 1000 ? 'description-collapsed' : ''}`}>
+                                    {product.description.split(' - ').map((item, index) => (
+                                        <p key={index}>{item}</p>
+                                    ))}
+                                </div>
+                                {product.description.length > 1000 && (
+                                    <button
+                                        className={`description-toggle-btn ${expanded ? 'expanded' : ''}`}
+                                        onClick={() => setExpanded(!expanded)}
+                                    >
+                                        {expanded ? 'Ver menos' : 'Ver más'}
+                                        <span className="toggle-icon">{expanded ? '▲' : '▼'}</span>
+                                    </button>
+                                )}
                             </div>
-                        </div>
-                    )}
+                        )}
 
                     {product.category && (
                         <div className="category-section">
@@ -419,37 +445,37 @@ export function ProductDetail() {
 
             </div>
 
-                    <div className="footer-detail">
-                {/* Stock */}
-                {product.stock && (
-                    <div className={`stock-section ${product.stock === 'Disponible' ? 'in-stock' : 'Agotado'}`}>
-                        <span className="stock-label">
-                            {product.stock === 'Disponible' ? <Check /> : <XCircle />}
-                        </span>
-                        <span className="stock-value">
-                            {product.stock === 'Disponible'
-                                ? 'Este producto tiene stock disponible'
-                                : 'Este producto no tiene stock por el momento'}
-                        </span>
-                    </div>
-                )}
-
-                {/* Descuento */}
-                {product.descuento && (
-                    <div className={`discount-section ${product.descuento === 'si' ? 'no' : product.descuento === 'liquidacion' ? 'liquidacion' : ''}`}>
-                        <span>
-                            {product.descuento === 'si'
-                                ? 'Este producto tiene descuento, consultar por mensaje'
-                                : product.descuento === 'liquidacion'
-                                ? 'Este producto está en liquidación'
-                                : product.descuento === ' '
-                                ? ' '
-                                : 'Este producto no tiene descuento actualmente'}
-                        </span>
-                    </div>
-                )}
-
+            <div className="footer-detail">
+            {/* Stock */}
+            {product.stock && (
+                <div className={`stock-section ${product.stock === 'Disponible' ? 'in-stock' : 'Agotado'}`}>
+                    <span className="stock-label">
+                        {product.stock === 'Disponible' ? <Check /> : <XCircle />}
+                    </span>
+                    <span className="stock-value">
+                        {product.stock === 'Disponible'
+                            ? 'Este producto tiene stock disponible'
+                            : 'Este producto no tiene stock por el momento'}
+                    </span>
                 </div>
+            )}
+
+            {/* Descuento */}
+            {product.descuento && (
+                <div className={`discount-section ${product.descuento === 'si' ? 'no' : product.descuento === 'liquidacion' ? 'liquidacion' : ''}`}>
+                    <span>
+                        {product.descuento === 'si'
+                            ? 'Este producto tiene descuento, consultar por mensaje'
+                            : product.descuento === 'liquidacion'
+                            ? 'Este producto está en liquidación'
+                            : product.descuento === ' '
+                            ? ' '
+                            : 'Este producto no tiene descuento actualmente'}
+                    </span>
+                </div>
+            )}
+
+            </div>
 
  {relatedProducts.length > 0 && (
     <div className="related-products-section">
@@ -531,7 +557,7 @@ export function ProductDetail() {
 
                                         <div className="related-content">
                                             <h3 className="related-name" title={relatedProduct.name}>
-                                                {relatedProduct.name}
+                                                {(relatedProduct.name).toUpperCase()}
                                             </h3>
 
                                             {isAlimentosRelated && relatedProduct.kg && (
@@ -542,13 +568,17 @@ export function ProductDetail() {
                                                 <p className="product-kg">Talle: {relatedProduct.kg}</p>
                                             )}
 
-                                            <div className="related-footer">
+                                            {isColchoneta && relatedProduct.kg && (
+                                                <p className="product-kg">{relatedProduct.kg}</p>
+                                            )}
+
+                                            <div className="price-action-row">
                                                 <div className="price-section">
                                                     <span className="currency">$</span>
                                                     <span className="price-amount">{formatPrice(relatedProduct.price)}</span>
                                                 </div>
-                                                <div className="related-view-btn">
-                                                    <Eye size={16} strokeWidth={2.5} />
+                                                <div className="view-btn">
+                                                    <Eye size={16} />
                                                     <span>Ver</span>
                                                 </div>
                                             </div>

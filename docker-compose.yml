@@ -1,0 +1,42 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # Backend
+  backend:
+    build: ./Server
+    container_name: bambina-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - JWT_SECRET=efSY2B3nohGRh06Cg1CVJACXguuR7bZZrbLxxUk2mB0
+      - JWT_EXPIRES_IN=7d
+      - ADMIN_EMAIL=pablorisi22@gmail.com
+      - FRONTEND_URL=http://localhost:5173
+    volumes:
+      - ./Server:/app
+      - /app/node_modules
+    networks:
+      - bambina-net
+
+  # Frontend
+  frontend:
+    build: ./Client
+    container_name: bambina-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3001/api
+    volumes:
+      - ./Client:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - bambina-net
+
+networks:
+  bambina-net:
+    driver: bridge

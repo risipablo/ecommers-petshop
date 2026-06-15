@@ -241,20 +241,20 @@ export const Destacados = () => {
                       )}
 
                       {/* Fila precio + botón */}
-                      <div className="related-footer">
+                      <div className="price-action-row">
                         <div className="price-section">
                           <span className="currency">$</span>
                           <span className="price-amount">{formatPrice(product.price)}</span>
                         </div>
 
                         <button
-                          className="related-view-btn"
+                          className="view-btn"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleProductClick(product._id);
                           }}
                         >
-                          <Eye size={13} />
+                          <Eye size={16} />
                           <span>Ver</span>
                         </button>
                       </div>

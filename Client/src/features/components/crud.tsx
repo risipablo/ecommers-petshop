@@ -202,7 +202,7 @@ export const Crud = () => {
                             <option value="Mini adulto">🐾 Mini Adulto</option>
                             <option value="Adulto">🐕 Adulto</option>
                             <option value="Senior">👴 Senior</option>
-                            <option value="Otro">Otro</option>
+                            <option value="Todos">Todos</option>
                         </select>
                     </div>
                     
@@ -244,6 +244,10 @@ export const Crud = () => {
                             <option value="Urinary">Urinary</option>
                             <option value="Castrado">Castrado</option>
                             <option value="Light">Light</option>
+                            <option value="Pouch">Pouch</option>
+                            <option value="Lata">Lata</option>
+                            <option value="Medicado">Medicado</option>
+                            <option value="Snacks">Snacks</option>
                             <option value=" ">Ninguno</option>
                         </select>
                     </div>
@@ -258,6 +262,7 @@ export const Crud = () => {
                             <option value="">Seleccionar stock</option>
                             <option value="Disponible">Disponible</option>
                             <option value="Agotado">Agotado</option>
+                            <option value="Ultimos en stock">Últimos en stock</option>
                         </select>
                     </div>
 

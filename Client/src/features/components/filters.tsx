@@ -30,12 +30,14 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
         discount: true
     });
 
-    // Obtener opciones únicas de los productos
-    const petOptions = Array.from(new Set(products.map(p => p.pet).filter((pet): pet is string => Boolean(pet))));
-    const brandOptions = Array.from(new Set(products.map(p => p.brand).filter((brand): brand is string => Boolean(brand))));
-    const ageOptions = Array.from(new Set(products.map(p => p.age).filter((age): age is string => Boolean(age))));
-    const weightOptions = Array.from(new Set(products.map(p => p.kg).filter((kg): kg is string => Boolean(kg))));
-    const discountOptions = ['Con descuento', 'Sin descuento'];
+    // Obtener opciones únicas de los productos (ordenadas alfabéticamente)
+    const petOptions = Array.from(new Set(products.map(p => p.pet).filter((pet): pet is string => Boolean(pet)))).sort((a, b) => a.localeCompare(b, 'es'));
+    const brandOptions = Array.from(new Set(products.map(p => p.brand).filter((brand): brand is string => Boolean(brand)))).sort((a, b) => a.localeCompare(b, 'es'));
+    const ageOptions = Array.from(new Set(products.map(p => p.age).filter((age): age is string => Boolean(age)))).sort((a, b) => a.localeCompare(b, 'es'));
+    const weightOptions = Array.from(new Set(products.map(p => p.kg).filter((kg): kg is string => Boolean(kg)))).sort((a, b) => a.localeCompare(b, 'es'));
+    
+    // 🔥 Opciones de descuento actualizadas
+    const discountOptions = ['Con descuento', 'En liquidación', 'Sin descuento'];
 
     // Calcular precio mínimo y máximo
     useEffect(() => {
@@ -53,44 +55,47 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
     useEffect(() => {
         let filtered = [...products];
 
-        // Filtrar por mascota
         if (selectedPets.length > 0) {
             filtered = filtered.filter(p => selectedPets.includes(p.pet));
         }
 
-        // Filtrar por marca
         if (selectedBrands.length > 0) {
             filtered = filtered.filter(p => selectedBrands.includes(p.brand));
         }
 
-        // Filtrar por edad
         if (selectedAges.length > 0) {
             filtered = filtered.filter(p => selectedAges.includes(p.age));
         }
 
-        // Filtrar por peso
         if (selectedWeights.length > 0) {
             filtered = filtered.filter(p => selectedWeights.includes(p.kg || ''));
         }
 
-        // 🔥 Filtrar por descuento
+        // 🔥 Filtrar por descuento (incluyendo liquidación)
         if (selectedDiscount.length > 0) {
             filtered = filtered.filter(p => {
                 const hasDiscount = p.descuento === 'si';
-                if (selectedDiscount.includes('Con descuento') && selectedDiscount.includes('Sin descuento')) {
+                const hasLiquidacion = p.descuento === 'liquidacion';
+                
+                if (selectedDiscount.includes('Con descuento') && selectedDiscount.includes('En liquidación') && selectedDiscount.includes('Sin descuento')) {
                     return true;
+                }
+                if (selectedDiscount.includes('Con descuento') && selectedDiscount.includes('En liquidación')) {
+                    return hasDiscount || hasLiquidacion;
                 }
                 if (selectedDiscount.includes('Con descuento')) {
                     return hasDiscount;
                 }
+                if (selectedDiscount.includes('En liquidación')) {
+                    return hasLiquidacion;
+                }
                 if (selectedDiscount.includes('Sin descuento')) {
-                    return !hasDiscount;
+                    return !hasDiscount && !hasLiquidacion;
                 }
                 return true;
             });
         }
 
-        // Filtrar por rango de precio
         filtered = filtered.filter(p => {
             const price = typeof p.price === 'number' ? p.price : parseFloat(String(p.price));
             return price >= tempPriceRange.min && price <= tempPriceRange.max;
@@ -140,6 +145,7 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
         setSelectedWeights([]);
         setSelectedDiscount([]);
         setTempPriceRange({ min: priceRange.min, max: priceRange.max });
+        setIsMobileMenuOpen(false)
     };
 
     const hasActiveFilters = selectedPets.length > 0 || selectedBrands.length > 0 || 
@@ -212,104 +218,106 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
                     )}
                 </div>
 
-                <FilterSection
-                    title="Mascota"
-                    section="pet"
-                    options={petOptions}
-                    selectedValues={selectedPets}
-                    onChange={handlePetChange}
-                />
+                <div className="filters-content">
+                    <FilterSection
+                        title="Mascota"
+                        section="pet"
+                        options={petOptions}
+                        selectedValues={selectedPets}
+                        onChange={handlePetChange}
+                    />
 
-                <FilterSection
-                    title="Marcas"
-                    section="brand"
-                    options={brandOptions}
-                    selectedValues={selectedBrands}
-                    onChange={handleBrandChange}
-                />
+                    <FilterSection
+                        title="Marcas"
+                        section="brand"
+                        options={brandOptions}
+                        selectedValues={selectedBrands}
+                        onChange={handleBrandChange}
+                    />
 
-                <FilterSection
-                    title="Edad"
-                    section="age"
-                    options={ageOptions}
-                    selectedValues={selectedAges}
-                    onChange={handleAgeChange}
-                />
+                    <FilterSection
+                        title="Edad"
+                        section="age"
+                        options={ageOptions}
+                        selectedValues={selectedAges}
+                        onChange={handleAgeChange}
+                    />
 
-                <FilterSection
-                    title="Peso (kg)"
-                    section="weight"
-                    options={weightOptions}
-                    selectedValues={selectedWeights}
-                    onChange={handleWeightChange}
-                />
+                    <FilterSection
+                        title="Peso (kg)"
+                        section="weight"
+                        options={weightOptions}
+                        selectedValues={selectedWeights}
+                        onChange={handleWeightChange}
+                    />
 
-                {/* 🔥 Sección de Descuentos */}
-                <FilterSection
-                    title="Descuentos"
-                    section="discount"
-                    options={discountOptions}
-                    selectedValues={selectedDiscount}
-                    onChange={handleDiscountChange}
-                />
+                    {/* 🔥 Sección de Descuentos actualizada */}
+                    <FilterSection
+                        title="Descuentos"
+                        section="discount"
+                        options={discountOptions}
+                        selectedValues={selectedDiscount}
+                        onChange={handleDiscountChange}
+                    />
 
-                <div className="filter-section">
-                    <button 
-                        className="filter-section-header"
-                        onClick={() => toggleSection('price')}
-                    >
-                        <span>Rango de precio</span>
-                        {openSections.price ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                    </button>
-                    {openSections.price && (
-                        <div className="filter-section-content price-range">
-                            <div className="price-inputs">
-                                <div className="price-input">
-                                    <label>Mínimo</label>
+                    <div className="filter-section">
+                        <button 
+                            className="filter-section-header"
+                            onClick={() => toggleSection('price')}
+                        >
+                            <span>Rango de precio</span>
+                            {openSections.price ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                        </button>
+                        {openSections.price && (
+                            <div className="filter-section-content price-range">
+                                <div className="price-inputs">
+                                    <div className="price-input">
+                                        <label>Mínimo</label>
+                                        <input
+                                            type="number"
+                                            value={tempPriceRange.min}
+                                            onChange={(e) => setTempPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))}
+                                            min={priceRange.min}
+                                            max={tempPriceRange.max}
+                                        />
+                                    </div>
+                                    <span>-</span>
+                                    <div className="price-input">
+                                        <label>Máximo</label>
+                                        <input
+                                            type="number"
+                                            value={tempPriceRange.max}
+                                            onChange={(e) => setTempPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))}
+                                            min={tempPriceRange.min}
+                                            max={priceRange.max}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="price-slider">
                                     <input
-                                        type="number"
+                                        type="range"
+                                        min={priceRange.min}
+                                        max={priceRange.max}
                                         value={tempPriceRange.min}
                                         onChange={(e) => setTempPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))}
-                                        min={priceRange.min}
-                                        max={tempPriceRange.max}
+                                        className="slider-min"
                                     />
-                                </div>
-                                <span>-</span>
-                                <div className="price-input">
-                                    <label>Máximo</label>
                                     <input
-                                        type="number"
+                                        type="range"
+                                        min={priceRange.min}
+                                        max={priceRange.max}
                                         value={tempPriceRange.max}
                                         onChange={(e) => setTempPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))}
-                                        min={tempPriceRange.min}
-                                        max={priceRange.max}
+                                        className="slider-max"
                                     />
                                 </div>
+                                <div className="price-values">
+                                    <span>${tempPriceRange.min.toLocaleString()}</span>
+                                    <span>${tempPriceRange.max.toLocaleString()}</span>
+                                </div>
                             </div>
-                            <div className="price-slider">
-                                <input
-                                    type="range"
-                                    min={priceRange.min}
-                                    max={priceRange.max}
-                                    value={tempPriceRange.min}
-                                    onChange={(e) => setTempPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))}
-                                    className="slider-min"
-                                />
-                                <input
-                                    type="range"
-                                    min={priceRange.min}
-                                    max={priceRange.max}
-                                    value={tempPriceRange.max}
-                                    onChange={(e) => setTempPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))}
-                                    className="slider-max"
-                                />
-                            </div>
-                            <div className="price-values">
-                                <span>${tempPriceRange.min.toLocaleString()}</span>
-                                <span>${tempPriceRange.max.toLocaleString()}</span>
-                            </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
             </div>
 
