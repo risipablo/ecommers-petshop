@@ -16,6 +16,7 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
     const [selectedPets, setSelectedPets] = useState<string[]>([]);
     const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const [selectedAges, setSelectedAges] = useState<string[]>([]);
+    const [selectedCondition, setSelectedCondition] = useState<string[]>([]);
     const [selectedWeights, setSelectedWeights] = useState<string[]>([]);
     const [selectedDiscount, setSelectedDiscount] = useState<string[]>([]);
     const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({ min: 0, max: 100000 });
@@ -26,6 +27,7 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
         brand: true,
         age: true,
         weight: true,
+        condition: true,
         price: true,
         discount: true
     });
@@ -35,6 +37,7 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
     const brandOptions = Array.from(new Set(products.map(p => p.brand).filter((brand): brand is string => Boolean(brand)))).sort((a, b) => a.localeCompare(b, 'es'));
     const ageOptions = Array.from(new Set(products.map(p => p.age).filter((age): age is string => Boolean(age)))).sort((a, b) => a.localeCompare(b, 'es'));
     const weightOptions = Array.from(new Set(products.map(p => p.kg).filter((kg): kg is string => Boolean(kg)))).sort((a, b) => a.localeCompare(b, 'es'));
+    const conditionOptions = Array.from(new Set(products.map(p => p.condition).filter((condition): condition is string => Boolean(condition)))).sort((a, b) => a.localeCompare(b, 'es'));
     
     // 🔥 Opciones de descuento actualizadas
     const discountOptions = ['Con descuento', 'En liquidación', 'Sin descuento'];
@@ -71,6 +74,10 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
             filtered = filtered.filter(p => selectedWeights.includes(p.kg || ''));
         }
 
+        if (selectedCondition.length > 0) {
+            filtered = filtered.filter(p => selectedCondition.includes(p.condition || ''));
+        }
+
         // 🔥 Filtrar por descuento (incluyendo liquidación)
         if (selectedDiscount.length > 0) {
             filtered = filtered.filter(p => {
@@ -102,7 +109,7 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
         });
 
         onFilterChange(filtered);
-    }, [selectedPets, selectedBrands, selectedAges, selectedWeights, selectedDiscount, tempPriceRange, products, onFilterChange]);
+    }, [selectedPets, selectedBrands, selectedAges, selectedWeights, selectedDiscount, selectedCondition, tempPriceRange, products, onFilterChange]);
 
     const toggleSection = (section: SectionKey) => {
         setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
@@ -126,6 +133,12 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
         );
     };
 
+    const handleConditionChange = (condition: string) => {
+        setSelectedCondition(prev =>
+            prev.includes(condition) ? prev.filter(c => c !== condition) : [...prev, condition]
+        );
+    }
+
     const handleWeightChange = (weight: string) => {
         setSelectedWeights(prev =>
             prev.includes(weight) ? prev.filter(w => w !== weight) : [...prev, weight]
@@ -143,6 +156,7 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
         setSelectedBrands([]);
         setSelectedAges([]);
         setSelectedWeights([]);
+        setSelectedCondition([]);
         setSelectedDiscount([]);
         setTempPriceRange({ min: priceRange.min, max: priceRange.max });
         setIsMobileMenuOpen(false)
@@ -150,7 +164,7 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
 
     const hasActiveFilters = selectedPets.length > 0 || selectedBrands.length > 0 || 
                             selectedAges.length > 0 || selectedWeights.length > 0 || 
-                            selectedDiscount.length > 0 ||
+                            selectedDiscount.length > 0 || selectedCondition.length > 0 ||
                             tempPriceRange.min !== priceRange.min || tempPriceRange.max !== priceRange.max;
 
     const FilterSection = ({ 
@@ -244,12 +258,21 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
                     />
 
                     <FilterSection
+                        title="Medicados"  
+                        options={conditionOptions}
+                        selectedValues={selectedCondition}
+                        onChange={handleConditionChange} section={'pet'}
+                    />
+
+                    <FilterSection
                         title="Peso (kg)"
                         section="weight"
                         options={weightOptions}
                         selectedValues={selectedWeights}
                         onChange={handleWeightChange}
                     />
+
+                    
 
                     {/* 🔥 Sección de Descuentos actualizada */}
                     <FilterSection
@@ -259,6 +282,7 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
                         selectedValues={selectedDiscount}
                         onChange={handleDiscountChange}
                     />
+
 
                     <div className="filter-section">
                         <button 

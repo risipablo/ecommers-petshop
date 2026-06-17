@@ -61,7 +61,7 @@
 .products-grid-filters {
     display: flex;
     gap: 2rem;
-    margin: 3rem auto;
+    
 }
 
 .filters-sidebar {
@@ -160,7 +160,7 @@
     letter-spacing: 1px;
     color: #7d7c7f;
     text-align: center;
-    margin: 0.2rem auto -0.5rem;
+    margin: 0.5rem auto 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;

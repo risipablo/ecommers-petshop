@@ -34,7 +34,7 @@ export const ProductList = () => {
     const [sortedProducts, setSortedProducts] = useState<Product[]>([])
     const [isSorting, setIsSorting] = useState(false)
     const [isFilterLoading, setIsFilterLoading] = useState(false)
-    const [isSearchLoading, setIsSearchLoading] = useState(false) // 🔥 Loader para búsqueda
+    const [isSearchLoading, setIsSearchLoading] = useState(false) 
 
     // Paginación
     const [currentPage, setCurrentPage] = useState(1);
@@ -96,8 +96,13 @@ export const ProductList = () => {
                 );
             }
 
-            setLocalProducts(products);
-            setFilteredProductsState(products);
+            const inStock = products.filter(p => p.stock === 'Disponible');
+            const outOfStock = products.filter(p => p.stock === 'Agotado');
+
+            const sortedProducts = [...inStock,...outOfStock];
+
+            setLocalProducts(sortedProducts);
+            setFilteredProductsState(sortedProducts);
             setCurrentPage(1);
             
             // Ocultar loader después de procesar
@@ -350,13 +355,20 @@ export const ProductList = () => {
             <div className="products-header">
                 <div className="products-header-top">
                     <h1 className="product-list-title">{getTitle()}</h1>
-                    <SortControls
-                        products={filterProductsState}
-                        onSortChange={handleSort}
-                        isLoading={isSorting}
-                    />
                 </div>
-                <p className="products-count">{filterProductsState.length} productos encontrados</p>
+
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <SortControls
+                    products={filterProductsState}
+                    onSortChange={handleSort}
+                    isLoading={isSorting}
+                />
+                <p style={{ margin: '0 0 0 auto', whiteSpace: 'nowrap' }}>
+                    {filterProductsState.length} productos encontrados
+                </p>
+            </div>
+                                
+                
             </div>
 
             <div className="products-grid-filters">

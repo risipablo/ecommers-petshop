@@ -670,9 +670,10 @@
 /* assets/styles/sortControls.css */
 
 .sort-controls-wrapper {
-    display: flex;
-    justify-content: flex-end;
-    margin: 1rem auto 0;
+    display: flex;       
+    justify-content: flex-start;
+    align-items: center;
+    margin: 1rem 0 0;    
 }
 
 .sort-controls {
@@ -716,13 +717,13 @@
 .sort-menu {
     position: absolute;
     top: 110%;
-    right: 0;
-    min-width: 220px;
+    /* right: 0; */
+    min-width: 180px;
     background: white;
     border: 1px solid var(--border-color);
     border-radius: 0.75rem;
     box-shadow: var(--shadow-md);
-    z-index: 100;
+      z-index: 1000;  
     overflow: hidden;
 }
 
@@ -764,22 +765,31 @@
 /* Mobile */
 @media (max-width: 768px) {
     .sort-controls-wrapper {
-        justify-content: center;
-        margin: 1.5rem auto;
-        
+        flex-direction: column;  
+        align-items: flex-start;
+        gap: 1rem;
+        margin: 1.5rem 0;
     }
 
-    .sort-controls{
+    
+    .sort-controls-wrapper p {
+        order: -1;            
+        margin: 0;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    .sort-controls {
         width: 100%;
     }
-    
+
     .sort-trigger {
         padding: 0.5rem 0.875rem;
         font-size: 0.8125rem;
         width: 100%;
         justify-content: space-between;
     }
-    
+
     .sort-menu {
         position: fixed;
         top: auto;
@@ -788,22 +798,25 @@
         right: 0;
         width: 100%;
         border-radius: 1rem 1rem 0 0;
+        z-index: 9999;            /* ← fixed necesita z-index alto */
         animation: slideUp 0.3s ease;
     }
-    
+
     .sort-option {
         padding: 0.875rem 1rem;
         font-size: 0.9375rem;
         justify-content: center;
     }
-    
+
     @keyframes slideUp {
-        from {
-            transform: translateY(100%);
-        }
-        to {
-            transform: translateY(0);
-        }
+        from { transform: translateY(100%); }
+        to   { transform: translateY(0); }
+    }
+}
+
+@media (max-width: 480px) {
+    .sort-controls-wrapper {
+        width: 100%;
     }
 }
 

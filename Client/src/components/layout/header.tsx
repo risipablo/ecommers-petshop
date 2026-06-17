@@ -58,7 +58,7 @@ export const Header = () => {
                 aria-label="Abrir ayuda"
               >
                 <HelpCircle size={24} />
-                <span className="help-text">Ayuda</span>
+  
               </div>
             </Box>
 

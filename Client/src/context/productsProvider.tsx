@@ -84,7 +84,9 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
                 product.description || '',
                 String(product.price) || '',
                 product.kg || '',
-                product.special || ''
+                product.special || '',
+                product.destacado || '',
+                product.descuento || ''
             ].join(' ').toLowerCase();
             
             // Para búsqueda de múltiples palabras, todas deben estar presentes (AND)

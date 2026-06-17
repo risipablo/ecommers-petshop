@@ -1,4 +1,5 @@
-// features/hooks/useRelatedProducts.ts 
+
+// features/hooks/useRelatedProducts.ts
 
 import { useState, useEffect } from 'react';
 import { useProducts } from './useProducts';
@@ -25,20 +26,21 @@ export const useRelatedProducts = (
             return;
         }
 
-        // Excluir producto actual y filtrar por misma categoría
+        
         const sameCategory = products.filter(p => 
             p._id !== currentProductId && 
-            p.category === currentCategory
+            p.category === currentCategory &&
+            p.stock === 'Disponible' 
         );
         
-        // Mezclar aleatoriamente
+        // productos de manera aleatoria
         const shuffled = [...sameCategory];
         for (let i = shuffled.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
         
-        // Tomar primeros 6 productos
+        // primeros 6 productos
         const topRelated = shuffled.slice(0, 6);
         
         setRelatedProducts(topRelated);
