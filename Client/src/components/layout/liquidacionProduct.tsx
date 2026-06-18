@@ -151,16 +151,20 @@ export const LiquidacionProduct = () => {
         <div className="featured-carousel-wrapper">
           <div className="featured-carousel">
             <div className="featured-track">
-              {[1, 2, 3, 4].map((item) => (
-                <div key={item} className="featured-card">
-                  <div className="featured-card-inner">
-                    <div className="featured-image skeleton-loading" />
-                    <div className="featured-content">
-                      <p className="featured-name skeleton-loading" />
+                {[1, 2, 3, 4].map((item) => (
+                  <div key={item} className="skeleton-card">
+                    <div className="skeleton-image" />
+                    <div className="skeleton-divider" />
+                    <div className="skeleton-content">
+                      <div className="skeleton-line skeleton-title" />
+                      <div className="skeleton-line skeleton-subtitle" />
+                      <div className="skeleton-price-row">
+                        <div className="skeleton-line skeleton-price" />
+                        <div className="skeleton-line skeleton-button" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>

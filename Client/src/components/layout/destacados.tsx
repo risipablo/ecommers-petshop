@@ -1,4 +1,5 @@
 // features/components/Destacados.tsx
+
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -135,23 +136,29 @@ export const Destacados = () => {
 
   const activeDot = ((currentIndex % products.length) + products.length) % products.length;
 
+  // SKELETON MEJORADO - con duración de 1 segundo por producto
   if (loading || products.length === 0) {
     return (
       <section className="featured-section">
-        <h1>Productos Destacados</h1>
+        <h1>Destacados</h1>
         <div className="featured-carousel-wrapper">
           <div className="featured-carousel">
             <div className="featured-track">
-              {[1, 2, 3, 4].map((item) => (
-                <div key={item} className="featured-card">
-                  <div className="featured-card-inner">
-                    <div className="featured-image skeleton-loading" />
-                    <div className="featured-content">
-                      <p className="featured-name skeleton-loading" />
+              {/* Skeleton mejorado */}
+                {[1, 2, 3, 4].map((item) => (
+                  <div key={item} className="skeleton-card">
+                    <div className="skeleton-image" />
+                    <div className="skeleton-divider" />
+                    <div className="skeleton-content">
+                      <div className="skeleton-line skeleton-title" />
+                      <div className="skeleton-line skeleton-subtitle" />
+                      <div className="skeleton-price-row">
+                        <div className="skeleton-line skeleton-price" />
+                        <div className="skeleton-line skeleton-button" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>
@@ -161,7 +168,7 @@ export const Destacados = () => {
 
   return (
     <section className="featured-section">
-      <h1>Productos Destacados</h1>
+      <h1>Destacados</h1>
 
       <div className="featured-carousel-wrapper">
         <button onClick={prev} className="featured-nav" aria-label="Anterior">
@@ -212,7 +219,7 @@ export const Destacados = () => {
                   )}
 
                   <div className="related-product-card">
-                    {/* Imagen */}
+                    {/* Imagen con aspect ratio consistente */}
                     <div className="related-image-wrapper">
                       <img
                         src={product.imageUrl || product.images?.[0]?.url || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
@@ -225,7 +232,7 @@ export const Destacados = () => {
                     {/* Línea divisoria */}
                     <div className="featured-divider" />
 
-                    {/* Contenido */}
+                    {/* Contenido con altura mínima fija */}
                     <div className="related-content">
                       <h3 className="related-name" title={product.name}>
                         {product.name}
@@ -251,7 +258,6 @@ export const Destacados = () => {
                       {product.category === 'higiene' && product.brand && (
                         <p className="product-kg">{product.kg}</p>
                       )}
-
 
                       {/* Fila precio + botón */}
                       <div className="price-action-row">

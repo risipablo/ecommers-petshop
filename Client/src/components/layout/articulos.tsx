@@ -1,5 +1,8 @@
+// components/layout/articulosHome.tsx
+
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ChevronRight, Sparkles } from 'lucide-react';
 import "../../assets/styles/articulosHome.css";
 
 export const ArticulosHome = () => {
@@ -7,44 +10,56 @@ export const ArticulosHome = () => {
     const bgRef = useRef<HTMLDivElement>(null);
     const sectionRef = useRef<HTMLElement>(null);
 
-useEffect(() => {
-    const handleScroll = () => {
-       
-        if (window.innerWidth < 768 || !bgRef.current || !sectionRef.current) return;
-        
-        const rect = sectionRef.current.getBoundingClientRect();
-        const offset = rect.top * 0.35;
-        bgRef.current.style.transform = `translateY(${-offset}px)`;
-    };
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.innerWidth < 768 || !bgRef.current || !sectionRef.current) return;
+            
+            const rect = sectionRef.current.getBoundingClientRect();
+            const offset = rect.top * 0.35;
+            bgRef.current.style.transform = `translateY(${-offset}px)`;
+        };
 
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-}, []);
+        handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     return (
         <section className="consulta-parallax" ref={sectionRef}>
             <div className="consulta-parallax-bg" ref={bgRef} />
             <div className="consulta-parallax-overlay" />
+            
             <div className="consulta-parallax-content">
                 <div className="consulta-text">
-                    
+                    {/* Tag decorativo */}
+                    <div className="consulta-tag">
+                        <Sparkles size={14} />
+                        Blog de Bambina Petshop
+                    </div>
+
+                    {/* Título principal */}
                     <h2 className="consulta-title">
-                        Todo lo que necesitás saber sobre tu mascota
+                        Todo lo que necesitás saber <br />
+                        sobre tu mascota
                     </h2>
+
+                    {/* Subtítulo */}
                     <p className="consulta-subtitle">
-                        Guías, consejos y artículos escritos por especialistas para que cuides mejor a tu compañero.
+                        Guías, consejos y artículos escritos por especialistas 
+                        para que cuides mejor a tu compañero.
                     </p>
+
+
+                    {/* Botón CTA */}
                     <button
                         className="consulta-btn"
                         onClick={() => navigate('/articulos')}
                     >
                         Leer artículos
-                        <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-                        </svg>
+                        <ChevronRight size={18} />
                     </button>
                 </div>
+
             </div>
         </section>
     );

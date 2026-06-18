@@ -11,11 +11,11 @@
 }
 
 .container-marcas h1 {
-    color: #722b8f;;
+      color: var(--featured-purple);
     font-size: 2.5rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin: 2.5rem auto;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0 0 1.5rem 0;
     text-align: center;
 }
 
@@ -126,7 +126,7 @@
 
 @media (max-width: 480px) {
     .container-marcas{
-        margin: 5em auto;
+        margin: 7rem auto;
     }
     .container-marcas h1 {
         font-size: 1.8rem;

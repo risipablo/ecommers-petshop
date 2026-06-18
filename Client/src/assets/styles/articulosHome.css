@@ -1,24 +1,24 @@
 /* ==========================================
-   CONSULTA HOME — PARALLAX
+   CONSULTA HOME — PARALLAX MEJORADO
    ========================================== */
 
 .consulta-parallax {
     position: relative;
-    height: 480px;
-    overflow: hidden;        /* recorta el bg que sobresale */
+    min-height: 520px;
+    overflow: hidden;
     margin: 5rem auto;
 }
 
-/* FONDO — más alto que la sección para que tenga recorrido */
+/* FONDO */
 .consulta-parallax-bg {
     position: absolute;
     top: -80px;
     left: 0;
     right: 0;
     bottom: -80px;
-    background-image: url('../images/yuna.png');
+    background-image: url('../images/yuna1.png');
     background-size: cover;
-    background-position: center top;
+    background-position: center 30%;
     will-change: transform;
     z-index: 0;
 }
@@ -28,203 +28,306 @@
     inset: 0;
     background: linear-gradient(
         135deg,
-        rgba(10, 3, 20, 0.38) 0%,
-        rgba(45, 10, 62, 0.28) 60%,
-        rgba(10, 3, 20, 0.38) 100%
+        rgba(10, 3, 20, 0.7) 0%,
+        rgba(45, 10, 62, 0.5) 60%,
+        rgba(10, 3, 20, 0.7) 100%
     );
-
     z-index: 1;
 }
 
-
+/* CONTENIDO */
 .consulta-parallax-content {
     position: relative;
     z-index: 2;
-    height: 100%;
+    min-height: 520px;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 4rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 3rem;
+    justify-content: flex-start; /* Alineado a la izquierda */
 }
 
+/* TEXTO */
+.consulta-text {
+    flex: 1;
+    max-width: 580px;
+}
 
+/* TAG */
 .consulta-tag {
-    display: inline-block;
-    background: rgba(249, 115, 22, 0.18);
-    border: 1px solid rgba(249, 115, 22, 0.45);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(249, 115, 22, 0.15);
+    border: 1px solid rgba(249, 115, 22, 0.3);
     color: #fb923c;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: 0.3rem 0.875rem;
+    padding: 0.4rem 1rem;
     border-radius: 2rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(4px);
 }
 
 /* TÍTULO */
 .consulta-title {
-    font-size: 2.25rem;
+    font-size: 2.8rem;
     font-weight: 800;
     color: #ffffff;
-    line-height: 1.2;
-    margin: 0 0 1.125rem;
+    line-height: 1.1;
+    margin: 0 0 1.25rem;
     letter-spacing: -0.025em;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
 }
 
-.consulta-title span {
-    color: #fb923c;
+.consulta-title br {
+    display: block;
 }
 
 /* SUBTÍTULO */
 .consulta-subtitle {
-    font-size: 1.05rem;
-    color: rgba(255, 255, 255, 0.72);
-    line-height: 1.65;
-    margin: 0 0 2rem;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+    margin: 0 0 2.5rem;
     max-width: 480px;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* BOTÓN */
+/* BOTÓN - Mejorado */
 .consulta-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
     background: #f97316;
     color: white;
     border: none;
-    padding: 0.875rem 2rem;
+    padding: 0.9rem 2.5rem;
     border-radius: 3rem;
     font-size: 0.95rem;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 20px rgba(249, 115, 22, 0.35);
     transition: all 0.3s ease;
+    box-shadow: 0 4px 25px rgba(249, 115, 22, 0.35);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto de brillo en el botón */
+.consulta-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    transition: left 0.6s ease;
+}
+
+.consulta-btn:hover::before {
+    left: 100%;
 }
 
 .consulta-btn:hover {
     background: #ea580c;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 28px rgba(249, 115, 22, 0.45);
-}
-
-.consulta-btn:hover svg {
-    transform: translateX(4px);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 35px rgba(249, 115, 22, 0.5);
 }
 
 .consulta-btn svg {
     transition: transform 0.3s ease;
 }
 
-/* IMAGEN */
-.consulta-image-wrap {
-    flex-shrink: 0;
+.consulta-btn:hover svg {
+    transform: translateX(5px);
 }
 
-.consulta-image {
-    width: 320px;
-    height: auto;
-    object-fit: contain;
-    animation: consultaFloat 3s ease-in-out infinite;
-    filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.4));
+/* LÍNEA DECORATIVA - para llenar espacio */
+.consulta-text::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #f97316, rgba(249, 115, 22, 0.2));
+    border-radius: 2px;
+    margin-top: 2rem;
 }
 
-@keyframes consultaFloat {
-    0%, 100% { transform: translateY(0px); }
-    50%       { transform: translateY(-16px); }
+/* ELEMENTOS DECORATIVOS - puntos flotantes sutiles */
+.consulta-parallax-content::before {
+    content: '';
+    position: absolute;
+    top: 15%;
+    right: 10%;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.08), transparent 70%);
+    pointer-events: none;
 }
 
-/* ==========================================
-   PARALLAX — JavaScript hook
-   ========================================== */
-
-/* La clase .consulta-parallax-bg recibe transform via JS */
+.consulta-parallax-content::after {
+    content: '';
+    position: absolute;
+    bottom: 20%;
+    right: 5%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(130, 17, 159, 0.1), transparent 70%);
+    pointer-events: none;
+}
 
 /* ==========================================
    RESPONSIVE
    ========================================== */
 
-@media (max-width: 1024px) {
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .consulta-parallax {
+        min-height: 460px;
+        margin: 4rem auto;
+    }
+    
     .consulta-parallax-content {
         padding: 0 2.5rem;
-        gap: 2rem;
+        min-height: 460px;
     }
-    .consulta-title { font-size: 1.9rem; }
-    .consulta-image { width: 260px; }
-}
-
-
-
-@media (max-width: 768px) {
-    .consulta-parallax-content {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 0 1rem; /* Margen lateral para que el texto no toque los bordes */
-    }
-
-    .consulta-text {
-        text-align: center; /* Centra el texto y el botón */
-        width: 100%;
-    }
-
-    .consulta-title {
-        font-size: 1.5rem; /* Ajuste de tamaño para evitar saltos de línea extraños */
-        line-height: 1.2;
-    }
-
-    .consulta-subtitle {
-        margin: 1rem auto; /* Centra el párrafo */
-        max-width: 90%; /* Evita que el texto sea demasiado ancho en móviles */
-    }
-
-    .consulta-btn {
-        margin: 0 auto; /* Centra el botón */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-}
-@media (max-width: 480px) {
-    .consulta-parallax { 
-        min-height: 360px; 
-        display: flex;        /* Activamos flex para alinear el contenido */
-        align-items: center;  /* Centrado vertical */
-        justify-content: center; /* Centrado horizontal */
-    }
-
-    .consulta-text {
-        text-align: center;   /* Centra el texto y el botón */
-        padding: 0 1rem;      /* Espacio lateral para que el texto no toque los bordes */
-        width: 100%;
-    }
-
+    
     .consulta-title { 
-        font-size: 1.35rem;
-        margin-bottom: 0.5rem; /* Ajuste para separar mejor el título del párrafo */
+        font-size: 2.2rem; 
     }
+    
+    .consulta-subtitle {
+        font-size: 1rem;
+        max-width: 400px;
+    }
+    
+    .consulta-text {
+        max-width: 500px;
+    }
+    
+    .consulta-parallax-content::before {
+        width: 80px;
+        height: 80px;
+        top: 20%;
+    }
+    
+    .consulta-parallax-content::after {
+        width: 60px;
+        height: 60px;
+        bottom: 25%;
+    }
+}
 
-    .consulta-subtitle { 
-        font-size: 0.9rem;
-        margin: 0 auto 1.5rem auto; 
-        max-width: 90%;            
+/* Móvil */
+@media (max-width: 768px) {
+    .consulta-parallax {
+        min-height: auto;
+        padding: 3.5rem 0;
+        border-radius: 0;
+        margin: 3rem auto;
     }
     
-    .consulta-image-wrap {
-        max-height: 130px;
-    }
-    
-    .consulta-image { width: 120px; }            
-    
-    .consulta-btn { 
-        font-size: 0.875rem; 
-        padding: 0.75rem 1.5rem;
-        margin: 0 auto;      
-        display: flex;       
+    .consulta-parallax-content {
+        flex-direction: column;
+        padding: 0 1.5rem;
+        min-height: auto;
+        justify-content: center;
         align-items: center;
-        gap: 0.5rem;
+        text-align: center;
+    }
+    
+    .consulta-text {
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .consulta-text::after {
+        display: none;
+    }
+    
+    .consulta-title {
+        font-size: 1.8rem;
+    }
+    
+    .consulta-title br {
+        display: none;
+    }
+    
+    .consulta-subtitle {
+        max-width: 100%;
+        margin: 0 auto 2rem;
+        font-size: 0.95rem;
+    }
+    
+    .consulta-tag {
+        margin: 0 auto 1.25rem;
+    }
+    
+    .consulta-btn {
+        padding: 0.8rem 2rem;
+        font-size: 0.9rem;
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+    
+    .consulta-parallax-content::before,
+    .consulta-parallax-content::after {
+        display: none;
+    }
+}
+
+/* Móvil pequeño */
+@media (max-width: 480px) {
+    .consulta-parallax {
+        margin: 2rem auto;
+        padding: 2.5rem 0;
+    }
+    
+    .consulta-title {
+        font-size: 1.5rem;
+    }
+    
+    .consulta-subtitle {
+        font-size: 0.85rem;
+    }
+    
+    .consulta-tag {
+        font-size: 0.6rem;
+        padding: 0.3rem 0.75rem;
+    }
+    
+    .consulta-btn {
+        font-size: 0.85rem;
+        padding: 0.7rem 1.5rem;
+        max-width: 100%;
+    }
+}
+
+/* ==========================================
+   ACCESIBILIDAD
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .consulta-parallax-bg {
+        will-change: auto;
+    }
+    
+    .consulta-btn {
+        transition: none;
+    }
+    
+    .consulta-btn::before {
+        display: none;
     }
 }
