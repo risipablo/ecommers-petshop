@@ -1,12 +1,12 @@
-
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const DB = require('./config/database');
 const productRoutes = require('./routes/routerProducts');
 const authRoutes = require('./routes/authRoutes');
+const healthRoutes = require('./routes/healtRoutes');
 require('dotenv').config();
 
-// Importar middlewares de seguridad
+
 const {
     securityHeaders,
     generalLimiter,
@@ -21,26 +21,29 @@ const {
 
 const corsOptions = require('./config/cors');
 
+
+const { keepSupabaseAlive } = require('./script/keepSupabaseAlive');
+
 const app = express();
 
-// Conectar a DB
+
 DB();
 
-// 1. Compresión (primero)
+
 app.use(enableCompression);
 
-// 2. Security Headers
+
 app.use(securityHeaders);
 
-// 3. CORS
+
 app.use(corsOptions);
 
-// 4. Parsers ANTES de los sanitizers
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
-// 5. Sanitización y seguridad (DESPUÉS de los parsers)
+
 app.use(sanitizeInput);
 app.use(preventXSS);
 app.use(preventHPP);
@@ -62,7 +65,7 @@ if (process.env.NODE_ENV === 'development') {
 // 8. Rutas
 app.use('/api', productRoutes);
 app.use('/api/auth', authRoutes);
-
+app.use('/api', healthRoutes);
 
 // 9. Ruta de health check
 app.get('/api/health', (req, res) => {
@@ -83,7 +86,7 @@ app.use((req, res) => {
 
 // 11. Manejo de errores global
 app.use((err, req, res, next) => {
-    console.error('❌ Error:', err.stack);
+    console.error(' Error:', err.stack);
     
     const errorMessage = process.env.NODE_ENV === 'production' 
         ? 'Error interno del servidor' 
@@ -96,7 +99,37 @@ app.use((err, req, res, next) => {
 });
 
 const port = process.env.PORT || 3001;
-app.listen(port, '0.0.0.0', () => {
-    console.log(`🚀 Servidor corriendo en el puerto ${port}`);
-    console.log(`🔒 Modo: ${process.env.NODE_ENV || 'development'}`);
+
+// Iniciar servidor
+const server = app.listen(port, '0.0.0.0', () => {
+    console.log(`Servidor corriendo en el puerto ${port}`);
+    console.log(`Modo: ${process.env.NODE_ENV || 'development'}`);
+    
+    // Iniciar mantenimiento de Supabase automáticamente
+    console.log('🔄 Iniciando mantenimiento de Supabase...');
+    
+    // Ejecutar inmediatamente
+    keepSupabaseAlive();
+    
+    // Programar cada 12 horas 
+    const INTERVAL_MS = 12 * 60 * 60 * 1000;
+    setInterval(keepSupabaseAlive, INTERVAL_MS);
+    console.log(` Mantenimiento de Supabase programado cada 12 horas`);
+});
+
+// Manejar cierre graceful
+process.on('SIGTERM', () => {
+    console.log(' Recibido SIGTERM, cerrando servidor...');
+    server.close(() => {
+        console.log('Servidor cerrado');
+        process.exit(0);
+    });
+});
+
+process.on('SIGINT', () => {
+    console.log(' Recibido SIGINT, cerrando servidor...');
+    server.close(() => {
+        console.log('Servidor cerrado');
+        process.exit(0);
+    });
 });
