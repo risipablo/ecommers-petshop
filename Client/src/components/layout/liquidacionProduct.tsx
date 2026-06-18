@@ -3,9 +3,9 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import '../../assets/styles/destacosHome.css';
-import { UseDestacados } from '../../features/hooks/useDestacados';
+import { UseLiquidacion } from '../../features/hooks/useLiquidacion';
 
-export const Destacados = () => {
+export const LiquidacionProduct = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(true);
@@ -13,7 +13,7 @@ export const Destacados = () => {
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  const { products, fetch, loading } = UseDestacados();
+  const { products, fetch, loading } = UseLiquidacion();
   const navigate = useNavigate();
 
   const GAP_PX = 16;
@@ -31,7 +31,14 @@ export const Destacados = () => {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [fetch]);
+
+  // Reiniciar índice cuando cambian los productos
+  useEffect(() => {
+    if (products.length > 0) {
+      setCurrentIndex(0);
+    }
+  }, [products.length]);
 
   const calculateCardWidth = useCallback(() => {
     if (!carouselRef.current) return;
@@ -133,12 +140,14 @@ export const Destacados = () => {
     return numPrice.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
   };
 
-  const activeDot = ((currentIndex % products.length) + products.length) % products.length;
+  const activeDot = products.length > 0 
+    ? ((currentIndex % products.length) + products.length) % products.length 
+    : 0;
 
   if (loading || products.length === 0) {
     return (
       <section className="featured-section">
-        <h1>Productos Destacados</h1>
+        <h1>Ofertas</h1>
         <div className="featured-carousel-wrapper">
           <div className="featured-carousel">
             <div className="featured-track">
@@ -161,7 +170,7 @@ export const Destacados = () => {
 
   return (
     <section className="featured-section">
-      <h1>Productos Destacados</h1>
+      <h1>Ofertas</h1>
 
       <div className="featured-carousel-wrapper">
         <button onClick={prev} className="featured-nav" aria-label="Anterior">
@@ -180,6 +189,7 @@ export const Destacados = () => {
               const isOutOfStock = product.stock === 'Agotado';
               const hasDiscount = product.descuento === 'si';
               const hasLiquidacion = product.descuento === 'liquidacion';
+              const isUltimosStock = product.stock === 'Ultimos en stock';
 
               return (
                 <div
@@ -208,6 +218,12 @@ export const Destacados = () => {
                   {hasLiquidacion && !isOutOfStock && (
                     <div className="liquidacion-badge-destacado">
                       🔥 Liquidación
+                    </div>
+                  )}
+
+                  {isUltimosStock && !isOutOfStock && (
+                    <div className="ultimos-stock-badge">
+                      ⚡ Últimos en stock
                     </div>
                   )}
 
@@ -241,17 +257,12 @@ export const Destacados = () => {
                       )}
 
                       {product.category === 'colchonetas' && product.kg && (
-                        <p className="product-kg">{product.kg}</p>
-                      )}
+                          <p className="products-kg">{product.kg}</p>
+                      )} 
 
                       {product.category === 'accesorios' && product.brand && (
-                        <p className="product-kg">{product.brand}</p>
+                          <p className="products-kg">{product.brand}</p>
                       )}
-
-                      {product.category === 'higiene' && product.brand && (
-                        <p className="product-kg">{product.kg}</p>
-                      )}
-
 
                       {/* Fila precio + botón */}
                       <div className="price-action-row">

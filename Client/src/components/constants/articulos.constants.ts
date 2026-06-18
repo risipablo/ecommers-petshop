@@ -8,7 +8,7 @@ export const categoryColor: Record<string, string> = {
     Juguetes: '#e07b39',
     Higiene: '#2a9d8f',
     Indumentaria: '#c77dff',
-    Actividad: '#ef233c',
+    Cuidados: '#ef233c',
 };
 
 export const categories = ['Todos', ...Array.from(new Set(articles.map(a => a.category)))];

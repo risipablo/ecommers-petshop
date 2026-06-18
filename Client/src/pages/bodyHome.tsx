@@ -14,6 +14,7 @@ import { ArticulosHome } from "../components/layout/articulos";
 import { WelcomeModal } from "../components/layout/welcome";
 import { useWelcomeModal } from "../features/hooks/useWelcome";
 import { SEO } from "../components/common/SEO";
+import { LiquidacionProduct } from "../components/layout/liquidacionProduct";
 
 export function BodyHome() {
 
@@ -38,31 +39,31 @@ export function BodyHome() {
         <div className="body-container">
 
                   <SEO 
-        title="Bambina Petshop"
-        description="Tienda online de productos para mascotas. Alimentos premium, accesorios, juguetes y más para perros y gatos. ¡Enviamos a todo el país!"
-        url="https://ecommers-petshop.vercel.app"
-      />
+                    title="Bambina Petshop"
+                    description="Tienda online de productos para mascotas. Alimentos premium, accesorios, juguetes y más para perros y gatos. ¡Enviamos a todo el país!"
+                    url="https://ecommers-petshop.vercel.app"
+                />
             
             <div data-aos="fade-down" data-aos-duration="800">
                 <Carousel />
             </div>
-
             
             <div data-aos="fade-up" data-aos-delay="100">
                 <GridCategory />
             </div>
-
-            
-            <div data-aos="fade-up" data-aos-delay="50">
-                <EnviosHome />
-            </div>
-
             
             <div data-aos="zoom-in" data-aos-duration="600">
                 <Destacados />
             </div>
 
-            
+            <div data-aos="zoom-in" data-aos-duration="600">
+                <LiquidacionProduct />
+            </div>
+
+            <div data-aos="fade-up" data-aos-delay="50">
+                <EnviosHome />
+            </div>
+
             <div data-aos="fade-up" data-aos-delay="50">
                 <ArticulosHome />
             </div>
@@ -72,8 +73,6 @@ export function BodyHome() {
                 <SliderMarcas />
             </div>
 
-            
-            
             <ContactoBanner />
             
             <WelcomeModal 

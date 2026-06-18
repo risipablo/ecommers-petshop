@@ -15,6 +15,16 @@ import ali1b from "../../assets/images/articulos/alimento1b.png"
 import ali2b from "../../assets/images/articulos/alimento2b.png"
 import ali3b from "../../assets/images/articulos/alimento3b.png"
 
+import act1b from "../../assets/images/articulos/2/1.png"
+import act2b from "../../assets/images/articulos/2/2.png"
+import act3b from "../../assets/images/articulos/2/3.png"
+
+import act11b from "../../assets/images/articulos/1/1.png"
+import act22b from "../../assets/images/articulos/1/2.png"
+import act33b from "../../assets/images/articulos/1/3.png"
+import act44b from "../../assets/images/articulos/1/4.png"
+import act55b from "../../assets/images/articulos/1/5.png"
+
 export const articles: Article[] = [
     {
         id: 1,
@@ -33,10 +43,10 @@ export const articles: Article[] = [
         ],
     },
     {
-        id: 2,
+        id: 4,
         title: '¿Tu mascota siente frio?',
         excerpt: 'Algunas razas son más sensibles al frío que otras. Conocé cómo proteger a tu perro o gato durante el invierno con ropa adecuada y cuidados especiales.',
-        category: 'Indumentaria',
+        category: 'Cuidados',
         readTime: '5 min',
         color: '#c77dff',
         images: [
@@ -46,32 +56,35 @@ export const articles: Article[] = [
             { url: art4, caption: '' },
         ],
     },
-    {
-        id: 3,
-        title: 'Guía completa de higiene dental canina',
-        excerpt: 'El 80 % de los perros mayores de 3 años tienen problemas bucales. Aprendé a cepillarle los dientes sin estrés y con los productos correctos.',
-        category: 'Higiene',
-        readTime: '6 min',
-        color: '#2a9d8f',
-        images: [
-            { url: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=900&q=80', caption: 'Cepillo dental canino' },
-            { url: 'https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=900&q=80', caption: 'Veterinario revisando dientes' },
-            { url: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?w=900&q=80', caption: 'Productos de higiene bucal' },
-        ],
-    },
-    {
-        id: 4,
+        {
+        id: 2,
         title: 'Ropa y accesorios para mascotas en invierno',
-        excerpt: 'No todas las razas toleran el frío igual. Conocé las prendas más cómodas para que tu perro o gato pase el invierno abrigado y con estilo.',
+        excerpt: 'No sabes que talle es tu perro. Chequea este articulo para sacarte la duda',
         category: 'Indumentaria',
         readTime: '3 min',
         color: '#c77dff',
         images: [
-            { url: 'https://images.unsplash.com/photo-1477884213360-7e9d7dcc1e48?w=900&q=80', caption: 'Perro con abrigo de invierno' },
-            { url: 'https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=900&q=80', caption: 'Campera impermeable' },
-            { url: 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?w=900&q=80', caption: 'Accesorios de temporada' },
+            { url: act11b, caption: 'Perro con abrigo de invierno' },
+            {  url: act22b, caption: 'Perro con abrigo de invierno'},
+            {  url: act33b, caption: 'Perro con abrigo de invierno'},
+            { url: act44b, caption: 'Perro con abrigo de invierno'},
+            { url: act55b, caption: 'Perro con abrigo de invierno'}
         ],
     },
+    {
+        id: 3,
+        title: '¿Como ayudar a tu mascota en este invierno?',
+        excerpt: 'El invierno trae desafíos para nuestros compañeros. Descubrí cómo adaptar sus paseos, alimentación y espacios de descanso para asegurar que tu mascota se mantenga cálida, saludable y feliz durante los días de frío intenso.',
+        category: 'Cuidados',
+        readTime: '6 min',
+        color: '#2a9d8f',
+        images: [
+            { url: act1b, caption: '' },
+            { url: act2b, caption: '' },
+            { url: act3b, caption: '' },
+        ],
+    },
+
   {
         id: 5,
         title: 'La Transición Nutricional: ¿Cuándo cambiar su alimento?',
@@ -89,7 +102,7 @@ export const articles: Article[] = [
         id: 6,
         title: 'Ejercicio y actividad física para razas grandes',
         excerpt: 'Los perros de razas grandes necesitan rutinas específicas para cuidar sus articulaciones. Planes de ejercicio adaptados por edad y peso.',
-        category: 'Actividad',
+        category: 'Higiene',
         readTime: '7 min',
         color: '#ef233c',
         images: [

@@ -821,3 +821,129 @@
     50% { transform: scale(1.05); }
     100% { transform: scale(1); }
 }
+
+.ultimos-stock-badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    background: linear-gradient(135deg, #840bf5, #6506d9);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.3rem 0.7rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    box-shadow: 0 2px 8px rgba(245, 11, 54, 0.3);
+    z-index: 10;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    animation: pulseUltimos 2s ease-in-out infinite;
+}
+
+@keyframes pulseUltimos {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(245, 11, 15, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(245, 11, 11, 0.5);
+    }
+}
+
+.product-card.discount {
+    border: 2px solid #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+}
+
+
+.product-card.ultimos-stock:hover {
+    border-color: #d97706;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25), var(--shadow-md);
+}
+
+
+.product-card.ultimos-stock {
+    border: 2px solid #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2), var(--shadow-sm);
+}
+
+.product-card.discount.ultimos-stock .discount-badge {
+    right: 0.75rem;
+    top: 3.5rem; 
+}
+
+.product-card.discount.ultimos-stock .ultimos-stock-badge {
+    right: 0.75rem;
+    top: 0.75rem;
+}
+
+
+.product-card.liquidacion.ultimos-stock {
+    border: 2px solid #dc2626;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15), var(--shadow-sm);
+}
+
+.product-card.liquidacion.ultimos-stock .liquidacion-badge {
+    right: 0.75rem;
+    top: 3.5rem;
+}
+
+.product-card.liquidacion.ultimos-stock .ultimos-stock-badge {
+    right: 0.75rem;
+    top: 0.75rem;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+
+.product-card.out-of-stock.ultimos-stock {
+    border: 2px solid #9ca3af;
+}
+
+.product-card.out-of-stock.ultimos-stock .ultimos-stock-badge {
+    background: #6b7280;
+}
+
+
+/* Agregar a productList.css y producDetail.css */
+
+.image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeletonLoading 1.5s infinite;
+}
+
+@keyframes skeletonLoading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.optimized-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.optimized-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.optimized-image.loaded {
+    opacity: 1;
+}
+
+.lazy-image-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}

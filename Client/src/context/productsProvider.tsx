@@ -63,7 +63,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [location.pathname, products, searchQuery]);
 
-    // context/productsProvider.tsx (versión óptima)
+    
     const applySearchFilter = useCallback((query: string) => {
         const lowerQuery = query.toLowerCase().trim();
         

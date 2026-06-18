@@ -173,7 +173,7 @@ export const Crud = () => {
                             <option value="Accesorios">🎀 Accesorios</option>
                             <option value="Higiene">🧼 Higiene</option>
                             <option value="Indumentaria">👕 Indumentaria</option>
-                            <option value="Colchonetas">🛏️ Colchonetas</option>
+                            <option value="colchonetas">🛏️ Colchonetas</option>
                         </select>
                     </div>
  

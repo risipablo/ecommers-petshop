@@ -1,4 +1,4 @@
-// features/components/ProductList.tsx - Versión completa con loader para búsqueda
+// features/components/ProductList.tsx  
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
@@ -13,6 +13,7 @@ import { Filters } from './filters';
 import type { Product } from '../types/product.type';
 import { SEO } from '../../components/common/SEO';
 import { SortControls } from './filterPrice';
+import { LazyImage } from './lazyImage';
 
 export const ProductList = () => {
     const { filteredProducts: contextFilteredProducts, searchTerms, searchQuery, isLoading, deleteProduct } = useProducts();
@@ -382,7 +383,8 @@ export const ProductList = () => {
                             const isOutOfStock = product.stock === 'Agotado';
                             const hasDiscount = product.descuento === 'si';
                             const hasLiquidacion = product.descuento === 'liquidacion';
-                            // Determinar la categoría activa (para búsqueda usar la categoría del producto)
+                            const isUltimosStock = product.stock === 'Ultimos en stock';
+
                             const isSearchRoute = currentPath === '/search';
                             const activeCategory = isSearchRoute ? product.category : categoryPath;
                             
@@ -393,6 +395,7 @@ export const ProductList = () => {
                                         ${isOutOfStock ? 'out-of-stock' : ''} 
                                         ${hasDiscount ? 'discount' : ''}
                                         ${hasLiquidacion ? 'liquidacion' : ''}
+                                        ${isUltimosStock ? 'ultimos-stock' : ''}
                                     `}
                                     style={{ animationDelay: `${index * 0.05}s` }}
                                     onClick={() => handleProductClick(product._id)}
@@ -418,6 +421,12 @@ export const ProductList = () => {
                                         </div>
                                     )}
 
+                                    {isUltimosStock && (
+                                        <div className="ultimos-stock-badge">
+                                            ⚡ Últimos en stock
+                                        </div>
+                                    )}
+
                                     {/* Admin Actions */}
                                     {isAdmin && (
                                         <div className="admin-actions-overlay">
@@ -440,13 +449,17 @@ export const ProductList = () => {
                                     )}
 
                                     <div className="product-image-container">
-                                        <img
-                                            src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
-                                            alt={product.name}
-                                            className="product-image"
-                                            loading="lazy"
-                                        />
-                                    </div>
+                                        <LazyImage
+                                                src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
+                                                alt={product.name}
+                                                className="product-image"
+                                                fallback="https://via.placeholder.com/300x300?text=Sin+Imagen"
+                                            />
+                                </div>
+
+            
+    
+
 
                                     <div className="featured-divider">
                                     </div>
@@ -470,6 +483,9 @@ export const ProductList = () => {
                                         )} 
 
                                         {activeCategory === 'accesorios' && product.brand && (
+                                            <p className="products-kg">{product.brand}</p>
+                                        )}
+                                        {activeCategory === 'higiene' && product.brand && (
                                             <p className="products-kg">{product.brand}</p>
                                         )}
 

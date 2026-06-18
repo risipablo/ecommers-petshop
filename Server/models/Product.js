@@ -24,7 +24,7 @@ const productSchema = new mongoose.Schema({
   age: { 
     type: String,
     required: true, 
-    enum: ['Cachorro', 'Mini adulto', 'Adulto', 'Senior', 'Otro',, 'cachorro', 'mini adulto', 'adulto', 'senior', 'otro']
+    enum: ['Cachorro', 'Mini adulto', 'Adulto', 'Senior', 'Otro','Todos', 'cachorro', 'mini adulto', 'adulto', 'senior', 'otro','todos']
   },
   price: { type: Number, required: true },
   kg: { type: String, required: false },

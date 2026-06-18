@@ -72,7 +72,7 @@ const Navbar = () => {
             ]
         },
         { 
-            path: '/colchonetas', 
+            path: '/Colchonetas', 
             label: 'Colchonetas',
             hasSubmenu: true,
             submenu: [

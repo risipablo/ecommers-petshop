@@ -10,6 +10,7 @@ import axios from 'axios';
 import type { Product } from '../types/product.type';
 import { config } from '../../config/index';
 import { SEO } from '../../components/common/SEO';
+import { OptimizedImage } from '../../components/common/optimazeImage';
 
 const API_URL = config.Api;
 
@@ -61,6 +62,10 @@ export function ProductDetail() {
         const totalGap = GAP * (itemsPerView - 1);
         setCardWidth((containerWidth - totalGap) / itemsPerView);
     }, [itemsPerView]);
+
+        useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }, [location.pathname]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' });
@@ -289,7 +294,7 @@ export function ProductDetail() {
                         className={`main-image-wrapper 
                             ${product.stock === 'Agotado' ? 'image-out-of-stock' : ''} 
                             ${product.descuento === 'si' || product.descuento === 'liquidacion' ? 'image-on-sale' : ''}
-                            ${product.descuento === 'liquidacion' ? 'liquidacion-badge' : ''}
+                            
                         `}
                         data-discount-label={
                             product.descuento === 'liquidacion' ? '🔥 Liquidación' : 
@@ -298,11 +303,15 @@ export function ProductDetail() {
                         }
                     >
 
-                          <img
+                            <OptimizedImage
                                 src={images[selectedImageIndex]?.url || product.imageUrl || 'https://via.placeholder.com/500x500?text=Sin+Imagen'}
                                 alt={product.name}
                                 className="main-image"
-                                loading="lazy"
+                                width={500}
+                                height={500}
+                                quality={85}
+                                loading="eager"
+                                fallback="https://via.placeholder.com/500x500?text=Sin+Imagen"
                             />
 
                         <button
@@ -455,6 +464,8 @@ export function ProductDetail() {
                     <span className="stock-value">
                         {product.stock === 'Disponible'
                             ? 'Este producto tiene stock disponible'
+                            : product.stock === 'Ultimos en stock'
+                            ? 'Este producto tiene stock limitado, consultar por mensaje'
                             : 'Este producto no tiene stock por el momento'}
                     </span>
                 </div>
