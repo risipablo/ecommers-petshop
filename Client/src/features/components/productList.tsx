@@ -114,16 +114,16 @@ export const ProductList = () => {
             setPaginatedProducts(paginated)
             setTotalPages(Math.ceil(sortedStock.length / itemsPerPage))
             
-            // Ocultar loader después de procesar
+    
             setTimeout(() => {
                 setIsSearchLoading(false);
             }, 300);
         }
     }, [contextFilteredProducts, isLoading, categoryPath, petFilter, searchQuery,itemsPerPage]);
 
-    // Actualizar productos paginados
+    
     useEffect(() => {
-    // 🔥 Usar filterProductsState para la paginación (NO sortedProducts)
+    
     const productsToPaginate = filterProductsState.length > 0 ? filterProductsState : [];
     
     if (productsToPaginate.length === 0) {
@@ -304,25 +304,26 @@ export const ProductList = () => {
                 />
 
                 <div className="products-header">
-                    <div className="products-header-top">
-                        <h1 className="product-list-title">{getTitle()}</h1>
-                        <div className="sort-controls-desktop">
+                        <div className="products-header-top">
+                            <h1 className="product-list-title">{getTitle()}</h1>
+                            <div className="sort-controls-desktop">
+                                <SortControls
+                                    products={filterProductsState}
+                                    onSortChange={handleSort}
+                                    isLoading={isSorting}
+                                />
+                            </div>
+                        </div>
+                        {/* <p className="products-count">{filterProductsState.length} productos encontrados</p> */}
+                        <div className="sort-controls-mobile">
                             <SortControls
                                 products={filterProductsState}
                                 onSortChange={handleSort}
                                 isLoading={isSorting}
                             />
+                            <p >{filterProductsState.length} productos encontrados</p>
                         </div>
                     </div>
-                    <p className="products-count">{filterProductsState.length} productos encontrados</p>
-                    <div className="sort-controls-mobile">
-                        <SortControls
-                            products={filterProductsState}
-                            onSortChange={handleSort}
-                            isLoading={isSorting}
-                        />
-                    </div>
-                </div>
                 <div className="products-grid-filters">
                     <aside className="filters-sidebar">
                         <Filters products={localProducts} onFilterChange={handleFilterChange} />

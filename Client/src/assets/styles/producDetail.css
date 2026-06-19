@@ -16,7 +16,7 @@
 }
 
 /* ==========================================
-   MAIN CONTAINER
+   MAIN CONTAINER & HEADER
    ========================================== */
 
 .product-detail-container {
@@ -24,10 +24,6 @@
     margin: 15rem auto 4rem;
     padding: 0 2rem;
 }
-
-/* ==========================================
-   HEADER SECTION
-   ========================================== */
 
 .detail-header {
     display: flex;
@@ -113,7 +109,6 @@
 
 .main-image-wrapper {
     position: relative;
-    /* background: #f9fafb; */
     border: 1px solid var(--border-light);
     border-radius: 0.75rem;
     padding: 2rem;
@@ -123,14 +118,15 @@
     justify-content: center;
 }
 
-.liquidacion-badge{
-    background-color: none;
+.main-image {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
 }
 
-/* AGOTADO - imagen gris con candado */
+/* ---- Estados de imagen ---- */
 .main-image-wrapper.image-out-of-stock .main-image {
     filter: grayscale(100%) opacity(0.5);
-    transition: filter 0.3s ease;
 }
 
 .main-image-wrapper.image-out-of-stock::after {
@@ -146,22 +142,16 @@
     padding: 0.6rem 1.4rem;
     border-radius: 2rem;
     letter-spacing: 0.5px;
-    pointer-events: none; 
+    pointer-events: none;
     white-space: nowrap;
     z-index: 1;
 }
 
-/* Zoom btn y thumbnails por encima del overlay */
 .main-image-wrapper .zoom-btn {
     z-index: 2;
 }
 
-.main-image {
-    max-width: 80%;
-    max-height: 80%;
-    object-fit: contain;
-}
-
+/* ---- Zoom Button ---- */
 .zoom-btn {
     position: absolute;
     bottom: 1rem;
@@ -177,42 +167,12 @@
     cursor: pointer;
     color: white;
     transition: all 0.3s;
+    z-index: 2;
 }
 
 .zoom-btn:hover {
     background: var(--roman-purple);
     transform: scale(1.05);
-}
-
-.zoom-thumbnails {
-    position: absolute;
-    bottom: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 0.5rem;
-}
-
-.zoom-thumbnail {
-    width: 48px;
-    height: 48px;
-    border-radius: 0.375rem;
-    overflow: hidden;
-    cursor: pointer;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    opacity: 0.6;
-    transition: all 0.2s;
-}
-
-.zoom-thumbnail.active {
-    border-color: white;
-    opacity: 1;
-}
-
-.zoom-thumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
 }
 
 .image-counter {
@@ -224,9 +184,10 @@
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
     font-size: 0.75rem;
+    z-index: 2;
 }
 
-/* Thumbnails */
+/* ---- Thumbnails ---- */
 .thumbnails-wrapper {
     display: flex;
     gap: 0.75rem;
@@ -241,6 +202,7 @@
     overflow: hidden;
     cursor: pointer;
     border: 2px solid transparent;
+    transition: all var(--transition);
 }
 
 .thumbnail.active {
@@ -288,7 +250,8 @@
 
 .brand-section,
 .pet-section,
-.age-section {
+.age-section,
+.category-section {
     display: flex;
     gap: 0.75rem;
     font-size: 0.95rem;
@@ -301,13 +264,28 @@
     color: var(--text-secondary);
 }
 
+.category-tag {
+    background: var(--roman-purple-bg);
+    color: var(--roman-purple);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: inline-block;
+}
+
+.kg-section-front .brand-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
 
 /* ==========================================
    DESCRIPTION SECTION
    ========================================== */
 
 .description-section {
-    margin: 1.5rem auto;
+    margin: 1.5rem 0;
 }
 
 .section-title {
@@ -342,8 +320,6 @@
     margin-bottom: 0;
 }
 
-/* ---- Toggle Button ---- */
-
 .description-toggle-btn {
     display: flex;
     align-items: center;
@@ -372,19 +348,98 @@
     transform: rotate(180deg);
 }
 
-.category-tag {
-    background: var(--roman-purple-bg);
-    color: var(--roman-purple);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    font-size: 0.875rem;
-    display: inline-block;
-}
-
 
 /* ==========================================
-   STOCK SECTION
+   PRODUCT DETAIL BADGES
+   ========================================== */
+
+.product-detail-status-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.product-detail-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.product-detail-badge svg {
+    flex-shrink: 0;
+}
+
+/* Disponible */
+
+.product-detail-in-stock {
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    color: #047857;
+    border-color: #6ee7b7;
+}
+
+.product-detail-in-stock:hover {
+    transform: translateY(-2px);
+}
+
+/* Últimos */
+
+.product-detail-low-stock {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #b45309;
+    border-color: #f59e0b;
+}
+
+.product-detail-low-stock:hover {
+    transform: translateY(-2px);
+}
+
+/* Agotado */
+
+.product-detail-out-stock {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #b91c1c;
+    border-color: #ef4444;
+}
+
+/* Oferta */
+
+.product-detail-offer {
+    background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+    color: #6d28d9;
+    border-color: #a78bfa;
+}
+
+.product-detail-offer:hover {
+    transform: translateY(-2px);
+}
+
+/* Liquidación */
+
+.product-detail-clearance {
+    background: linear-gradient(135deg, #fff1f2, #fecdd3);
+    color: #be123c;
+    border-color: #fb7185;
+    animation: clearancePulse 2s infinite;
+}
+
+@keyframes clearancePulse {
+    0%,100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.03);
+    }
+}
+
+/* ==========================================
+   STOCK & DISCOUNT SECTIONS (FOOTER)
    ========================================== */
 
 .footer-detail {
@@ -393,9 +448,9 @@
     flex-direction: column;
     gap: 2rem;
     width: 45%;
-    
 }
 
+/* ---- Stock ---- */
 .stock-section {
     display: flex;
     align-items: center;
@@ -450,10 +505,7 @@
     line-height: 1.3;
 }
 
-/* ==========================================
-   DISCOUNT SECTION
-   ========================================== */
-
+/* ---- Discount ---- */
 .discount-section {
     display: flex;
     align-items: center;
@@ -465,21 +517,18 @@
     border: 1.5px solid transparent;
 }
 
-/* descuento === 'si' → clase "no" (hay descuento) */
 .discount-section.no {
     background: #fffbeb;
     border-color: #fcd34d;
     color: #b45309;
 }
 
-/* descuento === 'liquidacion' */
 .discount-section.liquidacion {
     background: #fff1f2;
     border-color: #fb7185;
     color: #be123c;
 }
 
-/* cualquier otro valor (sin descuento) */
 .discount-section:not(.no):not(.liquidacion) {
     background: #f8fafc;
     border-color: #cbd5e1;
@@ -522,14 +571,6 @@
     line-height: 1.3;
 }
 
-@media (max-width: 550px){
-    .footer-detail {
-        width: 100%;
-    }
-}
-
-
-
 /* ==========================================
    RELATED PRODUCTS CAROUSEL
    ========================================== */
@@ -559,7 +600,6 @@
     border-radius: 3px;
 }
 
-/* Carousel Wrapper */
 .related-carousel-wrapper {
     position: relative;
     display: flex;
@@ -567,25 +607,21 @@
     gap: 1rem;
 }
 
-/* Carousel Container */
 .related-carousel {
     overflow: hidden;
     flex: 1;
     min-width: 0;
-
 }
 
-/* Carousel Track */
 .related-track {
     display: flex;
     will-change: transform;
     gap: 20px;
 }
 
-/* Related Product Card */
+/* ---- Related Card ---- */
 .related-product-card-link {
     padding: 2rem;
-    
     text-decoration: none;
     flex-shrink: 0;
     min-width: 0;
@@ -599,7 +635,6 @@
     transition: all var(--transition);
     box-shadow: var(--shadow-sm);
     height: 100%;
-    
 }
 
 .related-product-card:hover {
@@ -608,7 +643,7 @@
     box-shadow: var(--shadow-md);
 }
 
-/* Related Image */
+/* ---- Related Image ---- */
 .related-image-wrapper {
     position: relative;
     width: 100%;
@@ -633,18 +668,18 @@
     transform: scale(1.05);
 }
 
-/* Related Content */
+/* ---- Related Content ---- */
 .related-content {
-    margin: .3rem auto;
-     padding: .3rem 1.5rem;
+    margin: 0.3rem auto;
+    padding: 0.3rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
 .related-name {
-  font-size: 1.03rem;
-    margin: 0 auto -.5rem;
+    font-size: 1.03rem;
+    margin: 0 auto -0.5rem;
     font-weight: 500;
     color: #7d7c7f;
     display: -webkit-box;
@@ -659,29 +694,27 @@
     color: var(--roman-purple);
 }
 
-/* Product Meta */
 .product-kg,
 .product-size {
-    margin: .7rem auto;
-    font-size: .9rem;
+    margin: 0.7rem auto;
+    font-size: 0.9rem;
     color: #7d7c7f;
 }
 
-/* Related Footer */
+/* ---- Related Price & Button ---- */
 .related-footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: -.3rem 0 -.9rem;
-     gap: 2rem;
+    margin: -0.3rem 0 -0.9rem;
+    gap: 2rem;
 }
 
 .price-section {
-        display: flex;
+    display: flex;
     align-items: baseline;
     gap: 2px;
     flex-shrink: 0;
-
 }
 
 .related-footer .currency {
@@ -702,12 +735,11 @@
     line-height: 1;
 }
 
-/* Related View Button */
 .related-view-btn {
-        background: var(--roman-purple);
+    background: var(--roman-purple);
     min-width: 90px;
     color: white;
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     border-radius: 1rem;
     font-weight: 600;
     font-size: 0.8rem;
@@ -729,7 +761,7 @@
     transform: translateY(-2px);
 }
 
-/* Navigation Buttons */
+/* ---- Navigation ---- */
 .related-nav {
     background: white;
     border: 1px solid var(--border-light);
@@ -757,7 +789,7 @@
     height: 20px;
 }
 
-/* Navigation Dots */
+/* ---- Dots ---- */
 .related-dots {
     display: flex;
     justify-content: center;
@@ -803,10 +835,10 @@
     justify-content: center;
     animation: zoomOverlayIn 0.25s ease forwards;
 }
- 
+
 @keyframes zoomOverlayIn {
     from { opacity: 0; }
-    to   { opacity: 1; }
+    to { opacity: 1; }
 }
 
 .zoom-modal-content {
@@ -815,10 +847,10 @@
     height: 90vh;
     animation: zoomContentIn 0.3s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
 }
- 
+
 @keyframes zoomContentIn {
     from { opacity: 0; transform: scale(0.92); }
-    to   { opacity: 1; transform: scale(1); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 .zoom-close-btn {
@@ -860,11 +892,11 @@
     justify-content: center;
     transition: background 0.2s ease;
 }
- 
+
 .zoom-nav:hover {
     background: var(--roman-purple);
 }
- 
+
 .zoom-prev {
     left: 1rem;
 }
@@ -887,7 +919,139 @@
     max-height: 90%;
     object-fit: contain;
     transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    pointer-events: auto;
+}
+
+/* ==========================================
+   BADGES PARA PRODUCTOS RELACIONADOS
+   ========================================== */
+
+.stock-badge-related,
+.discount-badge-related,
+.liquidacion-badge-related,
+.ultimos-stock-badge-related {
+    position: absolute;
+    z-index: 10;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Posiciones */
+.stock-badge-related {
+    top: 0.5rem;
+    left: 0.5rem;
+    background: #dc2626;
+    color: white;
+}
+
+.ultimos-stock-badge-related {
+    top: 2.5rem;
+    left: 0.5rem;
+    background: linear-gradient(135deg, #840bf5, #6506d9);
+    color: white;
+    animation: pulseUltimosRelated 2s ease-in-out infinite;
+}
+
+.discount-badge-related {
+    top: 0.5rem;
+    right: 0.5rem;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    color: white;
+    animation: pulseRelated 1.5s infinite;
+}
+
+.liquidacion-badge-related {
+    top: 2.5rem;
+    right: 0.5rem;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: white;
+    animation: pulseRelated 1.5s infinite;
+}
+
+/* Animaciones */
+@keyframes pulseRelated {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes pulseUltimosRelated {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(132, 11, 245, 0.3);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(132, 11, 245, 0.5);
+    }
+}
+
+/* Combinaciones */
+.related-product-card-link.out-of-stock .ultimos-stock-badge-related,
+.related-product-card-link.discount.liquidacion .liquidacion-badge-related {
+    display: none;
+}
+
+.related-product-card-link.ultimos-stock.discount .ultimos-stock-badge-related,
+.related-product-card-link.ultimos-stock.liquidacion .ultimos-stock-badge-related {
+    top: 0.5rem;
+    left: 0.5rem;
+}
+
+.related-product-card-link.ultimos-stock.discount .discount-badge-related,
+.related-product-card-link.ultimos-stock.liquidacion .liquidacion-badge-related {
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+/* Estados de tarjeta */
+.related-product-card-link.out-of-stock .related-product-card {
+    opacity: 0.7;
+    background: #f9fafb;
+}
+
+.related-product-card-link.out-of-stock .related-image-wrapper img {
+    filter: grayscale(0.3);
+}
+
+.related-product-card-link.discount .related-product-card {
+    border: 2px solid #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+}
+
+.related-product-card-link.liquidacion .related-product-card {
+    border: 2px solid #dc2626;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15);
+}
+
+.related-product-card-link.ultimos-stock .related-product-card {
+    border: 2px solid #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+.related-product-card-link.ultimos-stock:hover .related-product-card {
+    border-color: #d97706;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+}
+
+.related-product-card-link.liquidacion.ultimos-stock .related-product-card {
+    border: 2px solid #dc2626;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15);
+}
+
+.related-product-card-link.out-of-stock.ultimos-stock .related-product-card {
+    border: 2px solid #9ca3af;
+}
+
+.related-product-card-link.out-of-stock.ultimos-stock .ultimos-stock-badge-related {
+    background: #6b7280;
 }
 
 /* ==========================================
@@ -914,9 +1078,7 @@
 }
 
 @keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+    to { transform: rotate(360deg); }
 }
 
 /* ==========================================
@@ -932,13 +1094,9 @@
     .product-image-section {
         position: static;
     }
-    
-    .related-product-card-link {
-        width: calc(33.333% - 14px);
-    }
 }
 
-/* Mobile Landscape (Tablet pequeña) */
+/* Mobile Landscape */
 @media (max-width: 768px) {
     .product-detail-container {
         margin: 15rem auto 2rem;
@@ -952,7 +1110,6 @@
     
     .product-title {
         font-size: 1.5rem;
-        
     }
     
     .current-price {
@@ -962,11 +1119,6 @@
     .thumbnail {
         width: 60px;
         height: 60px;
-    }
-    
-    /* Related - 2 cards */
-    .related-product-card-link {
-        width: calc(50% - 10px);
     }
     
     .related-image-wrapper {
@@ -979,19 +1131,6 @@
         min-height: 2.2rem;
     }
     
-    .related-footer .currency {
-        font-size: 0.9rem;
-    }
-    
-    .related-footer .price-amount {
-        font-size: 1.1rem;
-    }
-    
-    .related-view-btn {
-        padding: 0.4rem 0.7rem;
-        font-size: 0.7rem;
-    }
-    
     .related-nav {
         width: 32px;
         height: 32px;
@@ -1001,9 +1140,23 @@
         width: 16px;
         height: 16px;
     }
+    
+    .stock-badge-related,
+    .discount-badge-related,
+    .liquidacion-badge-related,
+    .ultimos-stock-badge-related {
+        font-size: 0.5rem;
+        padding: 0.15rem 0.4rem;
+        border-radius: 0.35rem;
+    }
+    
+    .stock-badge-related { top: 0.35rem; left: 0.35rem; }
+    .ultimos-stock-badge-related { top: 2rem; left: 0.35rem; }
+    .discount-badge-related { top: 0.35rem; right: 0.35rem; }
+    .liquidacion-badge-related { top: 2rem; right: 0.35rem; }
 }
 
-/* Mobile Portrait - 1 card por slide */
+/* Mobile Portrait */
 @media (max-width: 550px) {
     .product-detail-container {
         margin: 15rem auto 1.5rem;
@@ -1012,24 +1165,18 @@
     
     .product-title {
         font-size: 1.25rem;
-        
     }
     
     .current-price {
         font-size: 1.5rem;
     }
-
-    .description-section{
+    
+    .description-section {
         margin: 1.5rem 0;
     }
     
-    /* Related - 1 card por slide */
-    .related-product-card-link {
-        width: calc(100% - 0px);
-    }
-    
-    .related-track {
-        gap: 16px;
+    .footer-detail {
+        width: 100%;
     }
     
     .related-carousel-wrapper {
@@ -1041,36 +1188,10 @@
         padding: 1rem;
     }
     
-    .related-name {
-        font-size: 0.9rem;
-        min-height: 2.4rem;
+    .related-track {
+        gap: 16px;
     }
     
-    .product-kg,
-    .product-size {
-        text-align: left;
-        font-size: 0.75rem;
-    }
-    
-    .related-footer .currency {
-        font-size: 1.2rem;
-    }
-    
-    .related-footer .price-amount {
-        font-size: 1.2rem;
-    }
-    
-    .related-view-btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.7rem;
-    }
-    
-    .related-view-btn svg {
-        width: 14px;
-        height: 14px;
-    }
-    
-    /* Navigation buttons más pequeños */
     .related-nav {
         width: 28px;
         height: 28px;
@@ -1081,7 +1202,6 @@
         height: 14px;
     }
     
-    /* Dots más pequeños */
     .related-dots {
         gap: 0.4rem;
         margin-top: 1.5rem;
@@ -1096,20 +1216,18 @@
         width: 20px;
     }
     
-    /* Zoom buttons */
     .zoom-nav,
     .zoom-close-btn {
         width: 36px;
         height: 36px;
     }
- 
+    
     .zoom-nav svg,
     .zoom-close-btn svg {
         width: 18px;
         height: 18px;
     }
     
-    /* Admin buttons */
     .admin-detail-btn span {
         display: none;
     }
@@ -1119,25 +1237,21 @@
     }
 }
 
-
-
-
+/* Mobile Small */
 @media (max-width: 420px) {
     .product-detail-container {
         margin: 15rem auto 1rem;
-        padding: 0rem 1rem;
+        padding: 0 1rem;
     }
     
     .product-title {
         font-size: 1.1rem;
     }
-
-
-    .product-kg{
+    
+    .product-kg {
         display: flex;
         font-size: 1rem;
     }
-
     
     .current-price {
         font-size: 1.3rem;
@@ -1152,10 +1266,9 @@
     
     .description-content {
         font-size: 0.85rem;
-        margin:1.5rem auto;
+        margin: 1.5rem auto;
     }
     
-    /* Related card más compacta */
     .related-image-wrapper {
         height: 170px;
         padding: 0.75rem;
@@ -1167,17 +1280,17 @@
     }
     
     .related-name {
-        font-size: .9rem;
+        font-size: 0.9rem;
         min-height: 2rem;
     }
     
     .related-footer {
         flex-wrap: wrap;
-        margin: -.3rem auto -.9rem;
+        margin: -0.3rem auto -0.9rem;
     }
     
     .related-footer .price-section {
-        margin: -1rem auto -.5rem;
+        margin: -1rem auto -0.5rem;
         justify-content: center;
     }
     
@@ -1186,18 +1299,32 @@
         width: 100%;
         justify-content: center;
     }
-
-        .zoom-nav,
+    
+    .zoom-nav,
     .zoom-close-btn {
         width: 30px;
         height: 30px;
     }
- 
+    
     .zoom-nav svg,
     .zoom-close-btn svg {
         width: 15px;
         height: 15px;
     }
+    
+    .stock-badge-related,
+    .discount-badge-related,
+    .liquidacion-badge-related,
+    .ultimos-stock-badge-related {
+        font-size: 0.45rem;
+        padding: 0.1rem 0.35rem;
+        border-radius: 0.3rem;
+    }
+    
+    .stock-badge-related { top: 0.25rem; left: 0.25rem; }
+    .ultimos-stock-badge-related { top: 1.75rem; left: 0.25rem; }
+    .discount-badge-related { top: 0.25rem; right: 0.25rem; }
+    .liquidacion-badge-related { top: 1.75rem; right: 0.25rem; }
 }
 
 /* ==========================================
@@ -1212,21 +1339,3 @@
         display: none;
     }
 }
-
-
-.stock-badge-related,
-.discount-badge-related,
-.liquidacion-badge-related {
-    position: absolute;
-    z-index: 15;
-    pointer-events: none;
-    font-size: 0.6rem;
-    font-weight: 600;
-    padding: 0.2rem 0.5rem;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-

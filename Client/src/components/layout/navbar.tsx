@@ -63,22 +63,22 @@ const Navbar = () => {
         { 
             path: '/indumentaria', 
             label: 'Indumentaria',
-            hasSubmenu: true,
-            submenu: [
-                { path: '/indumentaria?pet=perro', label: 'Perro', petType: 'perro' },
-                { path: '/indumentaria?pet=gato', label: 'Gato', petType: 'gato' },
+            // hasSubmenu: true,
+            // submenu: [
+            //     { path: '/indumentaria?pet=perro', label: 'Perro', petType: 'perro' },
+            //     { path: '/indumentaria?pet=gato', label: 'Gato', petType: 'gato' },
             
-            ]
+            // ]
         },
         { 
             path: '/colchonetas', 
             label: 'Colchonetas',
-            hasSubmenu: true,
-            submenu: [
-                { path: '/colchonetas?pet=perro', label: 'Perro', petType: 'perro' },
-                { path: '/colchonetas?pet=gato', label: 'Gato', petType: 'gato' },
+            // hasSubmenu: true,
+            // submenu: [
+            //     { path: '/colchonetas?pet=perro', label: 'Perro', petType: 'perro' },
+            //     { path: '/colchonetas?pet=gato', label: 'Gato', petType: 'gato' },
             
-            ]
+            // ]
         },
         { 
             path: '/articulos', 

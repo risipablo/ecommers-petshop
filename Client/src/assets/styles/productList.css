@@ -513,35 +513,42 @@
    POSICIONES INDIVIDUALES
    ========================================== */
 
-/* 1. Sin stock - ESQUINA SUPERIOR IZQUIERDA */
+
 .stock-badge {
-    top: 0.75rem;
+    position: absolute;
+    z-index: 15;
+    padding: 0.25rem 0.9rem;
+    right: .1rem;
     left: 0.75rem;
     background: #dc2626;
     color: white;
 }
 
-/* 2. Últimos en stock - ESQUINA SUPERIOR IZQUIERDA (debajo de Sin stock) */
+
 .ultimos-stock-badge {
-    top: 3.25rem;
-    left: 0.75rem;
+        position: absolute;
+    z-index: 15;
+    
+    left: .3rem;
     background: linear-gradient(135deg, #840bf5, #6506d9);
     color: white;
     animation: pulseUltimos 2s ease-in-out infinite;
 }
 
-/* 3. Oferta - ESQUINA SUPERIOR DERECHA */
+
 .discount-badge {
-    top: 0.75rem;
-    right: 0.75rem;
+    position: absolute;
+    z-index: 15;
+    padding: 0.25rem 0.9rem;
+    right: .1rem;
     background: linear-gradient(135deg, #f59e0b, #f97316);
     color: white;
     animation: pulse 1.5s infinite;
 }
 
-/* 4. Liquidación - ESQUINA SUPERIOR DERECHA (debajo de Oferta) */
+
 .liquidacion-badge {
-    top: 3.25rem;
+    top: 0.75rem;
     right: 0.75rem;
     background: linear-gradient(135deg, #dc2626, #b91c1c);
     color: white;
@@ -573,17 +580,17 @@
    COMBINACIONES ESPECIALES DE BADGES
    ========================================== */
 
-/* Caso: Sin stock + Últimos en stock (NO debería pasar, pero por si acaso) */
+
 .product-card.out-of-stock .ultimos-stock-badge {
     display: none;
 }
 
-/* Caso: Oferta + Liquidación (NO debería pasar, pero por si acaso) */
+
 .product-card.discount.liquidacion .liquidacion-badge {
     display: none;
 }
 
-/* Caso: Últimos en stock + Oferta */
+
 .product-card.ultimos-stock.discount .ultimos-stock-badge {
     top: 0.75rem;
     left: 0.75rem;
@@ -594,7 +601,7 @@
     right: 0.75rem;
 }
 
-/* Caso: Últimos en stock + Liquidación */
+
 .product-card.ultimos-stock.liquidacion .ultimos-stock-badge {
     top: 0.75rem;
     left: 0.75rem;
@@ -605,7 +612,7 @@
     right: 0.75rem;
 }
 
-/* Caso: Sin stock + Oferta */
+
 .product-card.out-of-stock.discount .stock-badge {
     top: 0.75rem;
     left: 0.75rem;
@@ -616,7 +623,7 @@
     right: 0.75rem;
 }
 
-/* Caso: Sin stock + Liquidación */
+
 .product-card.out-of-stock.liquidacion .stock-badge {
     top: 0.75rem;
     left: 0.75rem;

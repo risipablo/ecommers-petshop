@@ -1,6 +1,6 @@
 // features/components/productDetail.tsx
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, ChevronLeft, ChevronRight, ZoomIn, X, Edit, Trash2, Check, XCircle } from 'lucide-react';
+import { ArrowLeft, Eye, ChevronLeft, ChevronRight, ZoomIn, X, Edit, Trash2, Check, XCircle, AlertCircle, Flame, Tag } from 'lucide-react';
 import '../../assets/styles/producDetail.css';
 import { useProduct } from '../hooks/useProducts';
 import { useRelatedProducts } from '../hooks/useRelatedProducts';
@@ -385,6 +385,55 @@ export function ProductDetail() {
                         <span className="current-price">${formatPrice(product.price)}</span>
                     </div>
 
+                    {/* Stock y Descuento - Badges de estado */}
+                    <div className="product-detail-status-wrapper">
+
+                        {/* Stock */}
+                        {product.stock && (
+                            <div
+                                className={`product-detail-badge product-detail-stock-badge ${
+                                    product.stock === 'Disponible'
+                                        ? 'product-detail-in-stock'
+                                        : product.stock === 'Ultimos en stock'
+                                        ? 'product-detail-low-stock'
+                                        : 'product-detail-out-stock'
+                                }`}
+                            >
+                                {product.stock === 'Disponible' && <Check size={16} strokeWidth={2} />}
+                                {product.stock === 'Ultimos en stock' && <AlertCircle size={16} strokeWidth={2} />}
+                                {product.stock === 'Agotado' && <XCircle size={16} strokeWidth={2} />}
+
+                                <span>
+                                    {product.stock === 'Disponible' && 'Stock disponible'}
+                                    {product.stock === 'Ultimos en stock' && 'Últimas unidades'}
+                                    {product.stock === 'Agotado' && 'Sin stock'}
+                                </span>
+                            </div>
+                        )}
+
+                        {/* Descuento */}
+                        {product.descuento && (
+                            <div
+                                className={`product-detail-badge product-detail-offer-badge ${
+                                    product.descuento === 'si'
+                                        ? 'product-detail-offer'
+                                        : product.descuento === 'liquidacion'
+                                        ? 'product-detail-clearance'
+                                        : ''
+                                }`}
+                            >
+                                {product.descuento === 'si' && <Tag size={16} strokeWidth={2} />}
+                                {product.descuento === 'liquidacion' && <Flame size={16} strokeWidth={2} />}
+
+                                <span>
+                                    {product.descuento === 'si' && 'Descuento'}
+                                    {product.descuento === 'liquidacion' && 'Liquidación'}
+                                </span>
+                            </div>
+                        )}
+
+                    </div>
+
                     {product.brand && (
                         <div className="brand-section">
                             <span className="brand-label">Marca:</span>
@@ -521,6 +570,7 @@ export function ProductDetail() {
                             const isOutOfStock = relatedProduct.stock === 'Agotado';
                             const hasDiscount = relatedProduct.descuento === 'si';
                             const hasLiquidacion = relatedProduct.descuento === 'liquidacion';
+                            const isUltimosStock = relatedProduct.stock === 'Ultimos en stock';
 
                             return (
                                 <Link
@@ -528,26 +578,35 @@ export function ProductDetail() {
                                     to={`/item/${relatedProduct._id}`}
                                     state={{ from: backPath }}
                                     onClick={handleRelatedProductClick}
-                                    className={`related-product-card-link ${isOutOfStock ? 'out-of-stock' : ''} ${hasDiscount ? 'discount' : ''} ${hasLiquidacion ? 'liquidacion' : ''}`}
+                                    className={`related-product-card-link ${isOutOfStock ? 'out-of-stock' : ''} ${hasDiscount ? 'discount' : ''} ${hasLiquidacion ? 'liquidacion' : ''} ${isUltimosStock ? 'ultimos-stock' : ''}`}
                                     style={{
                                         width: cardWidth > 0 ? `${cardWidth}px` : undefined,
                                         flexShrink: 0,
                                         position: 'relative',
                                     }}
                                 >
-                                    {/* Badges */}
+                                    {/* Badges - SIN STOCK (izquierda arriba) */}
                                     {isOutOfStock && (
                                         <div className="stock-badge-related">
                                             ❌ Sin stock
                                         </div>
                                     )}
                                     
+                                    {/* Badges - ÚLTIMOS EN STOCK (izquierda abajo, debajo de Sin stock) */}
+                                    {isUltimosStock && !isOutOfStock && (
+                                        <div className="ultimos-stock-badge-related">
+                                            ⚡ Últimos en stock
+                                        </div>
+                                    )}
+                                    
+                                    {/* Badges - OFERTA (derecha arriba) */}
                                     {hasDiscount && !isOutOfStock && (
                                         <div className="discount-badge-related">
                                             🏷️ Oferta
                                         </div>
                                     )}
 
+                                    {/* Badges - LIQUIDACIÓN (derecha abajo, debajo de Oferta) */}
                                     {hasLiquidacion && !isOutOfStock && (
                                         <div className="liquidacion-badge-related">
                                             🔥 Liquidación

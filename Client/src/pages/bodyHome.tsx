@@ -15,6 +15,7 @@ import { WelcomeModal } from "../components/layout/welcome";
 import { useWelcomeModal } from "../features/hooks/useWelcome";
 import { SEO } from "../components/common/SEO";
 import { LiquidacionProduct } from "../components/layout/liquidacionProduct";
+import { PromoBanner } from "../components/layout/banner";
 
 export function BodyHome() {
 
@@ -46,6 +47,10 @@ export function BodyHome() {
             
             <div data-aos="fade-down" data-aos-duration="800">
                 <Carousel />
+            </div>
+
+            <div data-aos="zomm-in" data-aos-duration="900">
+                <PromoBanner />
             </div>
             
             <div data-aos="fade-up" data-aos-delay="100">

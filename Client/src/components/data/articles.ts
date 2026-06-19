@@ -25,6 +25,13 @@ import act33b from "../../assets/images/articulos/1/3.png"
 import act44b from "../../assets/images/articulos/1/4.png"
 import act55b from "../../assets/images/articulos/1/5.png"
 
+import act1c from "../../assets/images/articulos/4/1.png"
+import act2c from "../../assets/images/articulos/4/2.png"
+import act3c from "../../assets/images/articulos/4/3.png"
+import act4c from "../../assets/images/articulos/4/4.png"
+import act5c from "../../assets/images/articulos/4/5.png"
+import act6c from "../../assets/images/articulos/4/6.png"
+
 export const articles: Article[] = [
     {
         id: 1,
@@ -54,6 +61,7 @@ export const articles: Article[] = [
             { url: art2, caption: '' },
             { url: art3, caption: '' },
             { url: art4, caption: '' },
+              
         ],
     },
         {
@@ -99,16 +107,19 @@ export const articles: Article[] = [
         ],
     },
     {
-        id: 6,
-        title: 'Ejercicio y actividad física para razas grandes',
-        excerpt: 'Los perros de razas grandes necesitan rutinas específicas para cuidar sus articulaciones. Planes de ejercicio adaptados por edad y peso.',
+       id: 6,
+        title: 'Mantén a tu Gato Siempre Limpio y Saludable',
+        excerpt: 'Aunque los gatos son conocidos por ser expertos en su propio aseo personal, necesitan un poco de ayuda humana para mantenerse en óptimas condiciones.',
         category: 'Higiene',
-        readTime: '7 min',
-        color: '#ef233c',
+        readTime: '5 min',
+        color: '#e64545',
         images: [
-            { url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=900&q=80', caption: 'Golden Retriever corriendo' },
-            { url: 'https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=900&q=80', caption: 'Entrenamiento en el parque' },
-            { url: 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=900&q=80', caption: 'Nado terapéutico' },
+            { url: act1c, caption: '' },
+            { url: act2c, caption: ''},
+            { url: act3c, caption: '' },
+            { url: act4c, caption: ''},
+            { url: act5c, caption: '' },
+            { url: act6c, caption: '' },
         ],
     },
 ];

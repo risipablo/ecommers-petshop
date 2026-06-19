@@ -17,7 +17,6 @@ export const UseLiquidacion = () => {
 
     useEffect(() => {
         if (products.length > 0 && isFirstLoad.current) {
-            // Filtrar productos que cumplan con alguna de las 3 condiciones
             const productosFiltrados = products.filter(product => 
                 product.descuento === 'liquidacion' || 
                 product.descuento === 'si' || 

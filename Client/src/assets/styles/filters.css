@@ -9,7 +9,7 @@
     --roman-purple-bg: rgba(109, 75, 163, 0.08);
     --text-primary: #2b2238;
     --text-secondary: #6c6480;
-    --border-color: #e7def7;
+    --border-color: #563584;
     --shadow-sm: 0 2px 8px rgba(109, 75, 163, 0.06);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -27,23 +27,27 @@
     height: fit-content;
     max-height: calc(100vh - 4rem);
     overflow-y: auto;
+    scroll-behavior: smooth; 
     scrollbar-width: thin;
-    scrollbar-color: var(--border-color) transparent;
+       scrollbar-color: var(--roman-purple-light) var(--roman-purple-bg);
 }
 
-/* Scrollbar personalizado para filtros */
+
 .filters-panel::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
+    height: 4px;
 }
 
 .filters-panel::-webkit-scrollbar-track {
-    background: var(--border-color);
-    border-radius: 3px;
+        background: var(--roman-purple-bg);
+    border-radius: 4px;
+    margin: 4px 0;
 }
 
 .filters-panel::-webkit-scrollbar-thumb {
     background: var(--roman-purple-light);
-    border-radius: 3px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
 }
 
 .filters-panel::-webkit-scrollbar-thumb:hover {
@@ -90,8 +94,25 @@
 
 /* Filter Sections */
 .filter-section {
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
+    padding: 0.5rem 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    animation: slideDown 0.3s ease forwards;
+    overflow: hidden;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 500px;
+    }
 }
 
 .filter-section:last-child {
@@ -123,6 +144,8 @@
     flex-direction: column;
     gap: 0.5rem;
 }
+
+
 
 /* Checkbox Styles */
 .filter-checkbox {
@@ -669,13 +692,13 @@
 }
 
 
-/* assets/styles/sortControls.css */
+/* css de filtros de orden */
 
 .sort-controls-wrapper {
-    display: flex;       
+       display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin: 1rem 0 0;    
+    margin: 0;
 }
 
 .sort-controls {
@@ -767,10 +790,8 @@
 /* Mobile */
 @media (max-width: 768px) {
     .sort-controls-wrapper {
-        flex-direction: column;  
-        align-items: flex-start;
-        gap: 1rem;
-        margin: 1.5rem 0;
+        justify-content: center;
+        width: 100%;
     }
 
     
@@ -783,13 +804,14 @@
 
     .sort-controls {
         width: 100%;
+        max-width: 300px;
     }
 
     .sort-trigger {
+              width: 100%;
+        justify-content: center;
         padding: 0.5rem 0.875rem;
         font-size: 0.8125rem;
-        width: 100%;
-        justify-content: space-between;
     }
 
     .sort-menu {

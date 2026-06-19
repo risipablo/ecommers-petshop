@@ -13,6 +13,11 @@ interface FiltersProps {
 type SectionKey = 'pet' | 'brand' | 'age' | 'weight' | 'price' | 'discount';
 
 export const Filters = ({ products, onFilterChange }: FiltersProps) => {
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }, [location.pathname]);
+
     const [selectedPets, setSelectedPets] = useState<string[]>([]);
     const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const [selectedAges, setSelectedAges] = useState<string[]>([]);
@@ -23,13 +28,13 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
     const [tempPriceRange, setTempPriceRange] = useState<{ min: number; max: number }>({ min: 0, max: 100000 });
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [openSections, setOpenSections] = useState({
-        pet: true,
-        brand: true,
-        age: true,
-        weight: true,
-        condition: true,
+        pet: false,
+        brand: false,
+        age: false,
+        weight: false,
+        condition: false,
         price: true,
-        discount: true
+        discount: false
     });
 
     // Obtener opciones únicas de los productos (ordenadas alfabéticamente)
@@ -39,8 +44,8 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
     const weightOptions = Array.from(new Set(products.map(p => p.kg).filter((kg): kg is string => Boolean(kg)))).sort((a, b) => a.localeCompare(b, 'es'));
     const conditionOptions = Array.from(new Set(products.map(p => p.condition).filter((condition): condition is string => Boolean(condition)))).sort((a, b) => a.localeCompare(b, 'es'));
     
-    // 🔥 Opciones de descuento actualizadas
-    const discountOptions = ['Con descuento', 'En liquidación', 'Sin descuento'];
+    
+    const discountOptions = ['Con descuento', 'En liquidación', 'Últimos en stock', 'Sin descuento'];
 
     // Calcular precio mínimo y máximo
     useEffect(() => {
@@ -78,28 +83,59 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
             filtered = filtered.filter(p => selectedCondition.includes(p.condition || ''));
         }
 
-        // 🔥 Filtrar por descuento (incluyendo liquidación)
+        
+ 
+
         if (selectedDiscount.length > 0) {
-            filtered = filtered.filter(p => {
-                const hasDiscount = p.descuento === 'si';
-                const hasLiquidacion = p.descuento === 'liquidacion';
-                
-                if (selectedDiscount.includes('Con descuento') && selectedDiscount.includes('En liquidación') && selectedDiscount.includes('Sin descuento')) {
-                    return true;
-                }
-                if (selectedDiscount.includes('Con descuento') && selectedDiscount.includes('En liquidación')) {
-                    return hasDiscount || hasLiquidacion;
-                }
-                if (selectedDiscount.includes('Con descuento')) {
-                    return hasDiscount;
-                }
-                if (selectedDiscount.includes('En liquidación')) {
-                    return hasLiquidacion;
-                }
-                if (selectedDiscount.includes('Sin descuento')) {
-                    return !hasDiscount && !hasLiquidacion;
-                }
-                return true;
+             filtered = filtered.filter(p => {
+        const hasDiscount = p.descuento === 'si';
+        const hasLiquidacion = p.descuento === 'liquidacion';
+        const isUltimosStock = p.stock === 'Ultimos en stock';
+        
+        
+        const selected = selectedDiscount;
+        
+        
+        if (selected.includes('Con descuento') && !selected.includes('En liquidación') && !selected.includes('Sin descuento') && !selected.includes('Últimos en stock')) {
+            return hasDiscount;
+        }
+        
+        
+        if (selected.includes('En liquidación') && !selected.includes('Con descuento') && !selected.includes('Sin descuento') && !selected.includes('Últimos en stock')) {
+            return hasLiquidacion;
+        }
+        
+        
+        if (selected.includes('Últimos en stock') && !selected.includes('Con descuento') && !selected.includes('En liquidación') && !selected.includes('Sin descuento')) {
+            return isUltimosStock;
+        }
+        
+        
+        if (selected.includes('Con descuento') && selected.includes('En liquidación') && !selected.includes('Sin descuento') && !selected.includes('Últimos en stock')) {
+            return hasDiscount || hasLiquidacion;
+        }
+        
+        
+        if (selected.includes('Con descuento') && selected.includes('Últimos en stock') && !selected.includes('En liquidación') && !selected.includes('Sin descuento')) {
+            return hasDiscount || isUltimosStock;
+        }
+        
+ 
+        if (selected.includes('En liquidación') && selected.includes('Últimos en stock') && !selected.includes('Con descuento') && !selected.includes('Sin descuento')) {
+            return hasLiquidacion || isUltimosStock;
+        }
+        
+ 
+        if (selected.includes('Con descuento') && selected.includes('En liquidación') && selected.includes('Últimos en stock') && !selected.includes('Sin descuento')) {
+            return hasDiscount || hasLiquidacion || isUltimosStock;
+        }
+        
+ 
+        if (selected.includes('Sin descuento')) {
+            return !hasDiscount && !hasLiquidacion && !isUltimosStock;
+        }
+        
+        return true;
             });
         }
 

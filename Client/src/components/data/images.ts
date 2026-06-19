@@ -13,8 +13,8 @@ export const imageGrid = [
     {
         id: 2,
         image: image2,
-        title: "Juguetes",
-        alt: "Juguetes para mascotas",
+        title: "Accesorios",
+        alt: "Accesorios para mascotas",
         path: "accesorios",
     },
     {
