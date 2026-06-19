@@ -280,7 +280,7 @@ export const EditProduct = () => {
                             <option value="accesorios">🎀 Accesorios</option>
                             <option value="higiene">🧼 Higiene</option>
                             <option value="indumentaria">👕 Indumentaria</option>
-                            <option value="colchonetas">🛏️ Colchonetas</option>
+                            <option value="colchonetas">Colchonetas</option>
                         </select>
                     </div>
 

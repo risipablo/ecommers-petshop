@@ -72,7 +72,7 @@ exports.createProduct = async (req, res) => {
       price: priceNumber,
       description,
       condition,
-      stock: stock || null,
+      stock: stock || 'Disponible', 
       descuento: descuento || null,
       kg: kg || null,
       destacado: destacado || 'false',
@@ -131,7 +131,7 @@ exports.updateProduct = async (req, res) => {
     if (description) product.description = description;
     if (condition) product.condition = condition;
     if (kg !== undefined) product.kg = kg || null;
-    if (stock !== undefined) product.stock = stock || null;
+    if (stock !== undefined) product.stock = stock || 'Disponible';
     if (descuento !== undefined) product.descuento = descuento || null;
     if (destacado !== undefined) product.destacado = destacado;
     

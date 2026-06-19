@@ -32,14 +32,14 @@ export const ProductList = () => {
     const [productToDelete, setProductToDelete] = useState<{ id: string; name: string } | null>(null);
     
     // Estados para loaders
-    const [sortedProducts, setSortedProducts] = useState<Product[]>([])
+    const [, setSortedProducts] = useState<Product[]>([])
     const [isSorting, setIsSorting] = useState(false)
     const [isFilterLoading, setIsFilterLoading] = useState(false)
     const [isSearchLoading, setIsSearchLoading] = useState(false) 
 
     // Paginación
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(12);
+    const [itemsPerPage] = useState(18);
     const [totalPages, setTotalPages] = useState(1);
     const [paginatedProducts, setPaginatedProducts] = useState<Product[]>([]);
 
@@ -78,16 +78,18 @@ export const ProductList = () => {
             
             let products = [...contextFilteredProducts];
 
-            if (
-                categoryPath &&
-                categoryPath !== 'todos' &&
-                categoryPath !== 'search' &&
-                !categoryPath.includes('edit-product') &&
-                !categoryPath.includes('admin')
-            ) {
-                products = products.filter(
-                    (p) => p.category?.toLowerCase() === categoryPath.toLowerCase()
-                );
+                if (
+                    categoryPath &&
+                    categoryPath !== 'todos' &&
+                    categoryPath !== 'search' &&
+                    !categoryPath.includes('edit-product') &&
+                    !categoryPath.includes('admin')
+                ) {
+                    products = products.filter(
+                        (p) => p.category?.toLowerCase() === categoryPath.toLowerCase()
+                    );
+
+            
             }
 
             // Filtrar por mascota (desde query param ?pet=)
@@ -97,36 +99,51 @@ export const ProductList = () => {
                 );
             }
 
-            const inStock = products.filter(p => p.stock === 'Disponible');
+            const inStock = products.filter(p => p.stock === 'Disponible' || p.stock === 'Ultimos en stock');
             const outOfStock = products.filter(p => p.stock === 'Agotado');
+            const noStock = products.filter(p => !p.stock || p.stock === '' || p.stock === null);
 
-            const sortedProducts = [...inStock,...outOfStock];
+            const sortedStock = [...inStock, ...noStock, ...outOfStock];
 
-            setLocalProducts(sortedProducts);
-            setFilteredProductsState(sortedProducts);
+            setLocalProducts(sortedStock);
+            setFilteredProductsState(sortedStock);
+            setSortedProducts([])
             setCurrentPage(1);
+
+            const paginated = sortedStock.slice(0, itemsPerPage)
+            setPaginatedProducts(paginated)
+            setTotalPages(Math.ceil(sortedStock.length / itemsPerPage))
             
             // Ocultar loader después de procesar
             setTimeout(() => {
                 setIsSearchLoading(false);
             }, 300);
         }
-    }, [contextFilteredProducts, isLoading, categoryPath, petFilter, searchQuery]);
+    }, [contextFilteredProducts, isLoading, categoryPath, petFilter, searchQuery,itemsPerPage]);
 
     // Actualizar productos paginados
     useEffect(() => {
-        const productsToPaginate = sortedProducts.length > 0 ? sortedProducts : filterProductsState;
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const newTotalPages = Math.ceil(productsToPaginate.length / itemsPerPage);
-        setTotalPages(newTotalPages);
-        
-        if (currentPage > newTotalPages && newTotalPages > 0) {
-            setCurrentPage(1);
-        } else {
-            setPaginatedProducts(productsToPaginate.slice(startIndex, endIndex));
-        }
-    }, [filterProductsState, sortedProducts, currentPage, itemsPerPage]);
+    // 🔥 Usar filterProductsState para la paginación (NO sortedProducts)
+    const productsToPaginate = filterProductsState.length > 0 ? filterProductsState : [];
+    
+    if (productsToPaginate.length === 0) {
+        setPaginatedProducts([]);
+        setTotalPages(0);
+        return;
+    }
+    
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const newTotalPages = Math.ceil(productsToPaginate.length / itemsPerPage);
+    setTotalPages(newTotalPages);
+    
+    if (currentPage > newTotalPages && newTotalPages > 0) {
+        setCurrentPage(1);
+    } else {
+        const paginated = productsToPaginate.slice(startIndex, endIndex);
+        setPaginatedProducts(paginated);
+    }
+}, [filterProductsState, currentPage, itemsPerPage]);
 
     const getTitle = () => {
         if (searchTerms && searchQuery.trim() !== '' && currentPath === '/search') {
@@ -285,16 +302,26 @@ export const ProductList = () => {
                     description={getSEODescription()}
                     url={`https://ecommers-petshop.vercel.app/${categoryPath}`}
                 />
+
                 <div className="products-header">
                     <div className="products-header-top">
                         <h1 className="product-list-title">{getTitle()}</h1>
+                        <div className="sort-controls-desktop">
+                            <SortControls
+                                products={filterProductsState}
+                                onSortChange={handleSort}
+                                isLoading={isSorting}
+                            />
+                        </div>
+                    </div>
+                    <p className="products-count">{filterProductsState.length} productos encontrados</p>
+                    <div className="sort-controls-mobile">
                         <SortControls
                             products={filterProductsState}
                             onSortChange={handleSort}
                             isLoading={isSorting}
                         />
                     </div>
-                    <p className="products-count">{filterProductsState.length} productos encontrados</p>
                 </div>
                 <div className="products-grid-filters">
                     <aside className="filters-sidebar">

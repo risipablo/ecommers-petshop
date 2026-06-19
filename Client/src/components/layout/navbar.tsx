@@ -29,6 +29,7 @@ const Navbar = () => {
         setOpenSubmenu(null);
     }, [location.pathname]);
 
+
     const categories = [
         { 
             path: '/alimentos', 
@@ -37,8 +38,6 @@ const Navbar = () => {
             submenu: [
                 { path: '/alimentos?pet=perro', label: 'Perro', petType: 'perro' },
                 { path: '/alimentos?pet=gato', label: 'Gato', petType: 'gato' },
-            
-                
             ]
         },
         { 
@@ -72,7 +71,7 @@ const Navbar = () => {
             ]
         },
         { 
-            path: '/Colchonetas', 
+            path: '/colchonetas', 
             label: 'Colchonetas',
             hasSubmenu: true,
             submenu: [

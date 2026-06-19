@@ -1,0 +1,382 @@
+/* ==========================================
+   UNDER CONSTRUCTION - COMPONENTE
+   ========================================== */
+
+.under-construction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    padding: 2rem;
+    background: linear-gradient(135deg, #faf8ff 0%, #f0ebf8 100%);
+    border-radius: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    margin: 15rem 0;
+}
+
+/* Efecto de fondo decorativo */
+.under-construction::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(109, 75, 163, 0.05) 0%, transparent 70%);
+    animation: floatBg 20s ease-in-out infinite;
+}
+
+.under-construction::after {
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    left: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.05) 0%, transparent 70%);
+    animation: floatBg 25s ease-in-out infinite reverse;
+}
+
+@keyframes floatBg {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(30px, -30px) rotate(5deg); }
+}
+
+/* ==========================================
+   CONTENEDOR PRINCIPAL
+   ========================================== */
+
+.construction-container {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================
+   ICONO PRINCIPAL
+   ========================================== */
+
+.construction-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f5ff 100%);
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 8px 32px rgba(109, 75, 163, 0.12);
+    border: 2px solid rgba(109, 75, 163, 0.08);
+    position: relative;
+}
+
+.construction-icon-wrapper svg {
+    color: var(--roman-purple);
+}
+
+/* ==========================================
+   HERRAMIENTAS DECORATIVAS
+   ========================================== */
+
+.construction-tools {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.tool {
+    background: white;
+    padding: 0.75rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tool svg {
+    color: var(--roman-purple-light);
+    transition: color 0.3s ease;
+}
+
+.tool:hover svg {
+    color: var(--roman-purple);
+}
+
+/* ==========================================
+   TEXTO
+   ========================================== */
+
+.construction-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.construction-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--roman-purple) 0%, var(--roman-purple-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.construction-message {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0;
+    max-width: 500px;
+}
+
+/* ==========================================
+   BARRA DE PROGRESO
+   ========================================== */
+
+.construction-progress {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--border-color);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--roman-purple), var(--roman-purple-light));
+    border-radius: 3px;
+    position: relative;
+    transition: width 1.5s ease;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 20px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+
+.progress-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* ==========================================
+   BOTÓN
+   ========================================== */
+
+.construction-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--roman-purple);
+    color: white;
+    border: none;
+    padding: 0.85rem 2rem;
+    border-radius: 3rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(109, 75, 163, 0.25);
+    text-decoration: none;
+}
+
+.construction-btn:hover {
+    background: var(--roman-purple-dark);
+    box-shadow: 0 8px 24px rgba(109, 75, 163, 0.35);
+}
+
+.construction-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.construction-btn:hover svg:last-child {
+    transform: translateX(4px);
+}
+
+/* ==========================================
+   TEXTO SUBTITLE
+   ========================================== */
+
+.construction-subtext {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.construction-subtext svg {
+    color: var(--roman-purple-light);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 768px) {
+    .under-construction {
+        min-height: 50vh;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .construction-icon-wrapper {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .construction-icon-wrapper svg {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .construction-title {
+        font-size: 1.6rem;
+    }
+    
+    .construction-message {
+        font-size: 0.95rem;
+    }
+    
+    .construction-tools {
+        gap: 1rem;
+    }
+    
+    .tool {
+        padding: 0.5rem;
+    }
+    
+    .tool svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .construction-btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.85rem;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .under-construction {
+        min-height: 40vh;
+        padding: 1rem;
+    }
+    
+    .construction-icon-wrapper {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 1rem;
+    }
+    
+    .construction-icon-wrapper svg {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .construction-title {
+        font-size: 1.3rem;
+    }
+    
+    .construction-message {
+        font-size: 0.85rem;
+    }
+    
+    .construction-tools {
+        gap: 0.75rem;
+    }
+    
+    .tool {
+        padding: 0.4rem;
+        border-radius: 0.75rem;
+    }
+    
+    .tool svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .construction-progress {
+        max-width: 100%;
+    }
+    
+    .progress-label {
+        font-size: 0.65rem;
+    }
+    
+    .construction-btn {
+        font-size: 0.8rem;
+        padding: 0.6rem 1.2rem;
+    }
+    
+    .construction-subtext {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+/* ==========================================
+   ACCESIBILIDAD - REDUCIR MOVIMIENTO
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .under-construction::before,
+    .under-construction::after {
+        animation: none;
+    }
+    
+    .construction-icon-wrapper,
+    .tool,
+    .progress-fill,
+    .construction-btn {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    .progress-fill::after {
+        animation: none;
+        display: none;
+    }
+}

@@ -11,6 +11,9 @@ import {
   ArrowBigRight
 } from 'lucide-react';
 import '../../assets/styles/enviosHome.css';
+import { useNavigate } from 'react-router-dom';
+
+
 
 export const EnviosHome = () => {
   // Variants para animaciones - CORREGIDO
@@ -86,6 +89,8 @@ export const EnviosHome = () => {
       }
     }
   };
+
+  const navigate = useNavigate();
 
   return (
     <motion.section 
@@ -220,6 +225,7 @@ export const EnviosHome = () => {
 
         {/* Botón CTA */}
         <motion.button 
+          onClick={(e) => { e.stopPropagation(); navigate('/pedidos'); }}
           className="shipping-button"
           variants={buttonVariants}
           whileHover="hover"
@@ -230,6 +236,7 @@ export const EnviosHome = () => {
         >
           <ArrowBigRight size={20} strokeWidth={2} />
           Armar Pedido
+          
         </motion.button>
 
         {/* Footer con info del local */}

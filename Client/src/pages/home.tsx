@@ -20,6 +20,7 @@ import { LoginPage } from "./loginPage";
 import { RegisterPage } from "./registerPage";
 import { ForgotPasswordPage } from "./forgotPassword";
 import ArticulosList from "../features/components/articulosList";
+import { UnderConstruction } from "../components/common/construccion";
 
 export function Home() {
     return (
@@ -32,6 +33,7 @@ export function Home() {
                 <Route path="/:category" element={<ProductList />} />
                 <Route path="/item/:id" element={<ProductDetail />} />
                 <Route path="/contacto" element={<Contacto />} />
+                <Route path="/pedidos" element={<UnderConstruction />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/articulos" element={<ArticulosList />} />
                 
