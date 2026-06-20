@@ -279,6 +279,17 @@ export const ProductList = () => {
         return 'Productos de calidad para el bienestar de tu mascota. Envíos a todo el país.'
     }
 
+    const truncateText = (text: string, maxLength: number = 28) => {
+        if (!text) return '';
+        
+        // Detectar si es móvil (ventana pequeña)
+        const isMobile = window.innerWidth <= 768;
+        const actualMaxLength = isMobile ? 18 : maxLength;
+        
+        if (text.length <= actualMaxLength) return text;
+        return text.slice(0, actualMaxLength) + '...';
+    };
+
     // Mostrar loader cuando está cargando inicialmente, aplicando filtros, ordenando o buscando
     const showLoader = isLoading || isFilterLoading || isSorting || isSearchLoading;
 
@@ -494,7 +505,7 @@ export const ProductList = () => {
 
                                     <div className="product-content">
                                         <h3 className="product-name" title={product.name}>
-                                            {(product.name).toUpperCase()}
+                                            {truncateText(product.name).toUpperCase()}
                                         </h3>
 
                                         {/* Mostrar información específica según categoría - AHORA FUNCIONA EN BÚSQUEDA */}

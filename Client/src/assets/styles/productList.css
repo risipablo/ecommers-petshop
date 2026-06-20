@@ -528,7 +528,6 @@
 .ultimos-stock-badge {
         position: absolute;
     z-index: 15;
-    
     left: .3rem;
     background: linear-gradient(135deg, #840bf5, #6506d9);
     color: white;
@@ -548,6 +547,8 @@
 
 
 .liquidacion-badge {
+        position: absolute;
+    z-index: 15;
     top: 0.75rem;
     right: 0.75rem;
     background: linear-gradient(135deg, #dc2626, #b91c1c);
@@ -592,13 +593,29 @@
 
 
 .product-card.ultimos-stock.discount .ultimos-stock-badge {
-    top: 0.75rem;
-    left: 0.75rem;
+    
+    top: .1rem;
+    left: .3rem;
 }
 
 .product-card.ultimos-stock.discount .discount-badge {
-    top: 0.75rem;
-    right: 0.75rem;
+    
+    top: .1rem;
+    right: .3rem;
+}
+
+@media (max-width: 799px){
+    .product-card.ultimos-stock.discount .discount-badge {
+        top: 1.8rem;
+        right: 6.6rem;
+    }
+
+    .product-card.ultimos-stock .ultimos-stock-badge {
+        /* display: none; */
+        top: .1rem;
+        left: .3rem;
+    }
+
 }
 
 
@@ -642,11 +659,11 @@
 /* Producto agotado */
 .product-card.out-of-stock {
     opacity: 0.7;
-    background: #f9fafb;
+    background: #f4f4f5;
 }
 
 .product-card.out-of-stock .product-image {
-    filter: grayscale(0.3);
+    filter: grayscale(0.9);
 }
 
 .product-card.out-of-stock:hover {
@@ -668,18 +685,18 @@
 
 /* Producto con últimos en stock */
 .product-card.ultimos-stock {
-    border: 2px solid #f59e0b;
+    border: 1px solid #f59e0b;
     box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2), var(--shadow-sm);
 }
 
 .product-card.ultimos-stock:hover {
-    border-color: #d97706;
+    border-color:1px solid #d97706;
     box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25), var(--shadow-md);
 }
 
 /* Combinaciones especiales de bordes */
 .product-card.liquidacion.ultimos-stock {
-    border: 2px solid #dc2626;
+    border: 1px solid #dc2626;
     box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15), var(--shadow-sm);
 }
 

@@ -329,7 +329,7 @@ export const EditProduct = () => {
                             <option value="Lata">Lata</option>
                             <option value="Medicado">Medicado</option>
                             <option value="Snacks">Snacks</option>
-                            <option value="Ninguno">Ninguno</option>
+                            <option value=" ">Ninguno</option>
                         </select>
                     </div>
 

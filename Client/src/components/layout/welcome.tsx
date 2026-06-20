@@ -1,5 +1,5 @@
 // components/common/WelcomeModal.tsx
-import { X, MapPin, ShoppingBag, BookOpen, MessageCircle, } from "lucide-react"
+import { X, MapPin, ShoppingBag, BookOpen, MessageCircle } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import "../../assets/styles/welcomeModal.css"
@@ -7,7 +7,7 @@ import "../../assets/styles/welcomeModal.css"
 interface WelcomeModalProps {
   isOpen: boolean
   onClose: () => void
-  onDontShowAgain?: () => void
+  onDontShowAgain: () => void
 }
 
 export const WelcomeModal = ({ isOpen, onClose, onDontShowAgain }: WelcomeModalProps) => {
@@ -22,10 +22,11 @@ export const WelcomeModal = ({ isOpen, onClose, onDontShowAgain }: WelcomeModalP
   }
 
   const handleClose = () => {
-    if (dontShowChecked && onDontShowAgain) {
+    if (dontShowChecked) {
       onDontShowAgain()
+    } else {
+      onClose()
     }
-    onClose()
   }
 
   return (
@@ -39,7 +40,7 @@ export const WelcomeModal = ({ isOpen, onClose, onDontShowAgain }: WelcomeModalP
 
         {/* Header del modal */}
         <div className="welcome-header">
-          <div className="welcome-paw">🐾</div>
+          {/* <div className="welcome-paw">🐾</div> */}
           <h2 className="welcome-title">¡Hola! Te damos la bienvenida a <span>Bambina Petshop</span></h2>
         </div>
 
@@ -52,8 +53,7 @@ export const WelcomeModal = ({ isOpen, onClose, onDontShowAgain }: WelcomeModalP
               <MapPin size={18} />
             </div>
             <p>
-              Estamos ubicados en <strong>Cipolletti, Río Negro</strong>, y somos tu punto de encuentro
-              favorito para el bienestar de tus compañeros. En nuestro sitio encontrarás alimentos,
+              Estamos ubicados en <strong>Cipolletti, Río Negro</strong>. En nuestro sitio encontrarás alimentos,
               accesorios, juguetes e indumentaria, además de nuestras promociones destacadas.
             </p>
           </div>
@@ -99,8 +99,7 @@ export const WelcomeModal = ({ isOpen, onClose, onDontShowAgain }: WelcomeModalP
               <MessageCircle size={18} />
             </div>
             <p>
-              ¡<strong>Muchas gracias</strong> por visitarnos! Esperamos que disfrutes tu recorrido
-              por nuestra web. 🐶🐱
+              Tené en cuenta que la disponibilidad de stock y los precios pueden variar para algunos productos. ¡Muchas gracias por visitarnos! Esperamos que disfrutes tu recorrido por nuestra web. 🐶🐱
             </p>
           </div>
 
@@ -113,7 +112,9 @@ export const WelcomeModal = ({ isOpen, onClose, onDontShowAgain }: WelcomeModalP
                 onChange={(e) => setDontShowChecked(e.target.checked)}
                 className="welcome-checkbox"
               />
-              <span className="welcome-checkbox-text">No volver a mostrar este mensaje</span>
+              <span className="welcome-checkbox-text">
+                No volver a mostrar este mensaje
+              </span>
             </label>
           </div>
 

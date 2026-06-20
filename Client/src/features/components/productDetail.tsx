@@ -347,7 +347,7 @@ export function ProductDetail() {
                 </div>
 
                 <div className="product-info-section">
-                    <h1 className="product-title">{product.name}</h1>
+                    <h1 className="product-title">{(product.name).toUpperCase()}</h1>
 
                     {isAlimentos && product.kg && (
                         <div className="kg-section-front">
