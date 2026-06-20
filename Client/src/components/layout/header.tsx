@@ -72,8 +72,9 @@ export const Header = () => {
       {/* Modal de bienvenida / ayuda */}
       <WelcomeModal
         isOpen={isHelpOpen}
-        onClose={() => setIsHelpOpen(false)}
-      />
+        onClose={() => setIsHelpOpen(false)} onDontShowAgain={function (): void {
+          throw new Error("Function not implemented.")
+        } }      />
     </Box>
   )
 }
