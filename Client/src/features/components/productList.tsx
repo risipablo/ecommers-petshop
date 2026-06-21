@@ -46,7 +46,8 @@ export const ProductList = () => {
     // Función de orden
     const handleSort = (sorted: Product[]) => {
         setIsSorting(true)
-        setSortedProducts(sorted)
+        setFilteredProductsState(sorted)
+        setSortedProducts([])
         setCurrentPage(1)
         setTimeout(() => {
             setIsSorting(false)
@@ -88,8 +89,6 @@ export const ProductList = () => {
                     products = products.filter(
                         (p) => p.category?.toLowerCase() === categoryPath.toLowerCase()
                     );
-
-            
             }
 
             // Filtrar por mascota (desde query param ?pet=)
@@ -282,7 +281,6 @@ export const ProductList = () => {
     const truncateText = (text: string, maxLength: number = 28) => {
         if (!text) return '';
         
-        // Detectar si es móvil (ventana pequeña)
         const isMobile = window.innerWidth <= 768;
         const actualMaxLength = isMobile ? 18 : maxLength;
         
@@ -317,23 +315,9 @@ export const ProductList = () => {
                 <div className="products-header">
                         <div className="products-header-top">
                             <h1 className="product-list-title">{getTitle()}</h1>
-                            <div className="sort-controls-desktop">
-                                <SortControls
-                                    products={filterProductsState}
-                                    onSortChange={handleSort}
-                                    isLoading={isSorting}
-                                />
-                            </div>
                         </div>
-                        {/* <p className="products-count">{filterProductsState.length} productos encontrados</p> */}
-                        <div className="sort-controls-mobile">
-                            <SortControls
-                                products={filterProductsState}
-                                onSortChange={handleSort}
-                                isLoading={isSorting}
-                            />
-                            <p >{filterProductsState.length} productos encontrados</p>
-                        </div>
+                        
+                        
                     </div>
                 <div className="products-grid-filters">
                     <aside className="filters-sidebar">
@@ -397,18 +381,15 @@ export const ProductList = () => {
                     <h1 className="product-list-title">{getTitle()}</h1>
                 </div>
 
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                <SortControls
-                    products={filterProductsState}
-                    onSortChange={handleSort}
-                    isLoading={isSorting}
-                />
-                <p style={{ margin: '0 0 0 auto', whiteSpace: 'nowrap' }}>
-                    {filterProductsState.length} productos encontrados
-                </p>
-            </div>
-                                
-                
+            
+                <div className="sort-controls-desktop">
+                    <p className="products-count">{filterProductsState.length} productos encontrados</p>
+                    <SortControls
+                        products={localProducts}
+                        onSortChange={handleSort}
+                        isLoading={isSorting}
+                    />
+                </div>    
             </div>
 
             <div className="products-grid-filters">
@@ -496,10 +477,6 @@ export const ProductList = () => {
                                             />
                                 </div>
 
-            
-    
-
-
                                     <div className="featured-divider">
                                     </div>
 
@@ -509,8 +486,16 @@ export const ProductList = () => {
                                         </h3>
 
                                         {/* Mostrar información específica según categoría - AHORA FUNCIONA EN BÚSQUEDA */}
-                                        {activeCategory === 'alimentos' && product.kg && (
-                                            <p className="products-kg">Kilos: {product.kg} kg</p>
+                                        {activeCategory === 'alimentos' && product.kg && product.condition?.toLowerCase() !== 'pouch' && (
+                                            <p className="products-kg">{product.kg} kg</p>
+                                        )}
+
+                                        {activeCategory === 'alimentos' && product.condition?.toLowerCase() === 'pouch' && product.kg && (
+                                            <p className="products-kg">{product.kg} gr</p>
+                                        )}
+
+                                        {activeCategory === 'alimentos' && product.condition?.toLowerCase() === 'lata' && product.kg && (
+                                            <p className="products-kg">{product.kg} gr</p>
                                         )}
                                         
                                         {activeCategory === 'indumentaria' && product.kg && (

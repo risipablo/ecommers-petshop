@@ -4,12 +4,12 @@ import '../../assets/styles/slider.css';
 
 // Imports para Desktop (versiones grandes)
 import desk1 from "../../assets/images/pic1d.png";
-import desk2 from "../../assets/images/slider2.webp";
+import desk2 from "../../assets/images/pic3d.png";
 import desk3 from "../../assets/images/picd3.png";
 
 // Imports para Mobile (versiones pequeñas)
 import mobile1 from "../../assets/images/pic2.png";
-import mobile2 from "../../assets/images/slider2dest.png"
+import mobile2 from "../../assets/images/pic1.png"
 import mobile3 from "../../assets/images/pic3.png";
 
 export default function Carousel() {

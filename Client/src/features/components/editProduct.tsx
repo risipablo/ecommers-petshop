@@ -499,7 +499,7 @@ export const EditProduct = () => {
 
                 {/* BOTONES DE ACCIÓN */}
                 <div className="form-actions">
-                    <button type="button" className="btn-cancel" onClick={() => navigate('/admin/products')}>
+                    <button type="button"  onClick={() => navigate('/admin/products')}>
                         Cancelar
                     </button>
                     <button type="submit" className="btn-save" disabled={isSaving || isLoading}>

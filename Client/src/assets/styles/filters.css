@@ -692,18 +692,14 @@
 }
 
 
-/* css de filtros de orden */
+/* Contenedor principal - Desktop */
 
-.sort-controls-wrapper {
-       display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin: 0;
-}
+
 
 .sort-controls {
     position: relative;
     display: inline-block;
+   order: 0;
 }
 
 .sort-trigger {
@@ -742,13 +738,13 @@
 .sort-menu {
     position: absolute;
     top: 110%;
-    /* right: 0; */
+    left: 0; 
     min-width: 180px;
     background: white;
     border: 1px solid var(--border-color);
     border-radius: 0.75rem;
     box-shadow: var(--shadow-md);
-      z-index: 1000;  
+    z-index: 1000;  
     overflow: hidden;
 }
 
@@ -787,30 +783,35 @@
     to { transform: rotate(360deg); }
 }
 
-/* Mobile */
+/* Mobile - Columna con p arriba y filtro abajo */
 @media (max-width: 768px) {
     .sort-controls-wrapper {
-        justify-content: center;
+        flex-direction: column; 
+        justify-content: flex-start;
+        align-items: center;
         width: 100%;
+        gap: 2rem; 
     }
 
-    
-    .sort-controls-wrapper p {
-        order: -1;            
-        margin: 0;
+    .products-count {
+        order: 1;
+        margin: 1rem 0;
         font-size: 0.875rem;
         color: var(--text-secondary);
+        width: 100%;
+        text-align: center; 
     }
 
     .sort-controls {
+        order: 0; 
         width: 100%;
         max-width: 300px;
     }
 
     .sort-trigger {
-              width: 100%;
+        width: 100%;
         justify-content: center;
-        padding: 0.5rem 0.875rem;
+        padding: 1rem 0.875rem;
         font-size: 0.8125rem;
     }
 
@@ -822,7 +823,7 @@
         right: 0;
         width: 100%;
         border-radius: 1rem 1rem 0 0;
-        z-index: 9999;            /* ← fixed necesita z-index alto */
+        z-index: 9999;
         animation: slideUp 0.3s ease;
     }
 
@@ -838,15 +839,14 @@
     }
 }
 
+/* Ajustes para pantallas muy pequeñas */
 @media (max-width: 480px) {
     .sort-controls-wrapper {
         width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .sort-controls-wrapper{
-        width: 100%;
+        gap: 0.5rem;
     }
     
+    .sort-controls {
+        max-width: 100%; /* Ocupa todo el ancho disponible */
+    }
 }
