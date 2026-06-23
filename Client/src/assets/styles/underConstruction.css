@@ -257,7 +257,7 @@
         min-height: 50vh;
         padding: 1.5rem;
         border-radius: 1rem;
-        margin: 1rem 0;
+        margin: 15rem auto;
     }
     
     .construction-icon-wrapper {
@@ -301,7 +301,8 @@
 
 @media (max-width: 480px) {
     .under-construction {
-        min-height: 40vh;
+        margin: 15rem auto;
+        min-height: 70vh;
         padding: 1rem;
     }
     

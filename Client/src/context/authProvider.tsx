@@ -179,7 +179,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
         
         try {
-            const response = await axiosInstance.put('/auth/change-password', credentials);
+            const response = await axiosInstance.put(`${API_URL}/auth/change-password`, credentials);
             if (response.data.success) {
                 return response.data;
             }

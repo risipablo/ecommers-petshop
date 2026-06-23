@@ -243,18 +243,24 @@
    RESPONSIVE - TABLET
    ========================================== */
 
-@media (max-width: 768px) {
+@media (max-width: 968px) {
     .navbar-container { padding: 0.5rem 1rem; border-top: none; }
+    .menu-icon{
+        display: none;
+    }
     .menu { gap: 1.5rem; }
     .menu-section { gap: 1.2rem; }
     .nav-link { margin: 0.3rem 0.6rem; font-size: 0.95rem; }
 }
 
+
+
+
 /* ==========================================
    RESPONSIVE - MÓVIL
    ========================================== */
 
-@media (max-width: 680px) {
+@media (max-width: 900px) {
     .navbar-container {
         position: relative;
         padding: 1rem 0.8rem;
