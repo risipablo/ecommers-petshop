@@ -1,14 +1,14 @@
 // pages/profilePage.tsx
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/authProvider';
-import { User, Mail, Shield, LogOut, Edit2, Key, Save, X, Lock } from 'lucide-react';
+import { User, Mail, Shield, LogOut, Edit2, Key, Save, X, Lock, Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const ProfilePage = () => {
 
     useEffect(() => {
-            window.scrollTo({ top: 0, behavior: 'instant' });
-        }, [location.pathname]);
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }, [location.pathname]);
 
         
     const { user, isAdmin, logout, changeName, changePassword } = useAuth();
@@ -17,6 +17,12 @@ export const ProfilePage = () => {
     const [isEditingName, setIsEditingName] = useState(false);
     const [newName, setNewName] = useState('');
     const [isChangingPassword, setIsChangingPassword] = useState(false);
+    
+    // Estados para mostrar/ocultar contraseñas
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    
     const [passwordData, setPasswordData] = useState({
         email: '',
         currentPassword: '',
@@ -93,6 +99,10 @@ export const ProfilePage = () => {
                 newPassword: '',
                 confirmNewPassword: ''
             });
+            // Resetear los estados de visibilidad
+            setShowCurrentPassword(false);
+            setShowNewPassword(false);
+            setShowConfirmPassword(false);
             setTimeout(() => setSuccess(''), 3000);
         } catch (err: unknown) {
             setError((err as Error).message);
@@ -223,23 +233,39 @@ export const ProfilePage = () => {
                                 <div className="form-group">
                                     <Lock size={18} />
                                     <input
-                                        type="password"
+                                        type={showCurrentPassword ? "text" : "password"}
                                         placeholder="Contraseña actual"
                                         value={passwordData.currentPassword}
                                         onChange={(e) => handlePasswordChange('currentPassword', e.target.value)}
                                         required
                                     />
+                                    <button 
+                                        type="button"
+                                        className="password-toggle"
+                                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                                        aria-label={showCurrentPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                    >
+                                        {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    </button>
                                 </div>
                                 
                                 <div className="form-group">
                                     <Lock size={18} />
                                     <input
-                                        type="password"
+                                        type={showNewPassword ? "text" : "password"}
                                         placeholder="Nueva contraseña"
                                         value={passwordData.newPassword}
                                         onChange={(e) => handlePasswordChange('newPassword', e.target.value)}
                                         required
                                     />
+                                    <button 
+                                        type="button"
+                                        className="password-toggle"
+                                        onClick={() => setShowNewPassword(!showNewPassword)}
+                                        aria-label={showNewPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                    >
+                                        {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    </button>
                                 </div>
                                 
                                 {passwordErrors.length > 0 && (
@@ -254,12 +280,20 @@ export const ProfilePage = () => {
                                 <div className="form-group">
                                     <Lock size={18} />
                                     <input
-                                        type="password"
+                                        type={showConfirmPassword ? "text" : "password"}
                                         placeholder="Confirmar nueva contraseña"
                                         value={passwordData.confirmNewPassword}
                                         onChange={(e) => handlePasswordChange('confirmNewPassword', e.target.value)}
                                         required
                                     />
+                                    <button 
+                                        type="button"
+                                        className="password-toggle"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        aria-label={showConfirmPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                    >
+                                        {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    </button>
                                 </div>
                                 
                                 <div className="modal-actions">

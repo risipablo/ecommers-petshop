@@ -41,7 +41,7 @@ export const UserIcon = () => {
                 </div>
 
                 {isDropdownOpen && (
-                    <div className="user-dropdown">
+                    <div className="user-dropdown2">
                         <button 
                             className="dropdown-item"
                             onClick={() => {
