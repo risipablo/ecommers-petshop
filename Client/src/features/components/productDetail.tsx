@@ -608,9 +608,13 @@ export function ProductDetail() {
 
                                                 <div className="related-product-card">
                                                     <div className="related-image-wrapper">
-                                                        <img
-                                                            src={relatedProduct.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
-                                                            alt={relatedProduct.name}
+                                                    <OptimizedImage
+                                                            src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
+                                                            alt={product.name}
+                                                            className="product-image"
+                                                            width={300}
+                                                            height={300}
+                                                            quality={80}
                                                             loading="lazy"
                                                         />
                                                     </div>

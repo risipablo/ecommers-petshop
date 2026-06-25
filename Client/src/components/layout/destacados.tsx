@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../assets/styles/destacosHome.css';
 import '../../assets/styles/productList.css';
 import { UseDestacados } from '../../features/hooks/useDestacados';
+import { OptimizedImage } from '../common/optimazeImage';
 
 export const Destacados = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -222,11 +223,14 @@ export const Destacados = () => {
                   <div className="product-card">
                     {/* Imagen con aspect ratio consistente */}
                     <div className="product-image-container">
-                      <img
-                        src={product.imageUrl || product.images?.[0]?.url || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
-                        alt={product.name}
-                        className="product-image"
-                        loading="lazy"
+                    <OptimizedImage
+                          src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
+                          alt={product.name}
+                          className="product-image"
+                          width={300}
+                          height={300}
+                          quality={80}
+                          loading="lazy"
                       />
                     </div>
 

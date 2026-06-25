@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import '../../assets/styles/destacosHome.css';
 import { UseLiquidacion } from '../../features/hooks/useLiquidacion';
+import { OptimizedImage } from '../common/optimazeImage';
 
 export const LiquidacionProduct = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -229,12 +230,15 @@ export const LiquidacionProduct = () => {
                   <div className="related-product-card">
                     {/* Imagen */}
                     <div className="related-image-wrapper">
-                      <img
-                        src={product.imageUrl || product.images?.[0]?.url || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
+                    <OptimizedImage
+                        src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
                         alt={product.name}
-                        className="featured-image"
+                        className="product-image"
+                        width={300}
+                        height={300}
+                        quality={80}
                         loading="lazy"
-                      />
+                    />
                     </div>
 
                     {/* Línea divisoria */}

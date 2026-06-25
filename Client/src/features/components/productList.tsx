@@ -13,7 +13,7 @@ import { Filters } from './filters';
 import type { Product } from '../types/product.type';
 import { SEO } from '../../components/common/SEO';
 import { SortControls } from './filterPrice';
-import { LazyImage } from './lazyImage';
+import { OptimizedImage } from '../../components/common/optimazeImage';
 
 export const ProductList = () => {
     const { filteredProducts: contextFilteredProducts, searchTerms, searchQuery, isLoading, deleteProduct } = useProducts();
@@ -512,12 +512,16 @@ const getSEOKeywords = () => {
                                     )}
 
                                     <div className="product-image-container">
-                                        <LazyImage
-                                                src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
-                                                alt={product.name}
-                                                className="product-image"
-                                                fallback="https://via.placeholder.com/300x300?text=Sin+Imagen"
-                                            />
+                
+                                    <OptimizedImage
+                                        src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
+                                        alt={product.name}
+                                        className="product-image"
+                                        width={300}
+                                        height={300}
+                                        quality={80}
+                                        loading="lazy"
+                                    />
                                 </div>
 
                                     <div className="featured-divider">
