@@ -23,7 +23,7 @@ export const SliderMarcas = () => {
 
     return (
         <div className="container-marcas">
-            <h1>Marcas que trabajamos</h1>
+            <h1>Marcas Disponibles </h1>
             <div className="marcas-slider-wrapper">
                 <div className="marcas-slider">
                     {

@@ -69,56 +69,63 @@ export const ProductList = () => {
         window.scrollTo({ top: 0, behavior: 'instant' });
     }, [location.pathname]);
 
-    // Filtrar productos por categoría y mascota
-    useEffect(() => {
-        if (!isLoading) {
-            // Mostrar loader cuando hay búsqueda activa
-            if (searchQuery) {
-                setIsSearchLoading(true);
-            }
-            
-            let products = [...contextFilteredProducts];
-
-                if (
-                    categoryPath &&
-                    categoryPath !== 'todos' &&
-                    categoryPath !== 'search' &&
-                    !categoryPath.includes('edit-product') &&
-                    !categoryPath.includes('admin')
-                ) {
-                    products = products.filter(
-                        (p) => p.category?.toLowerCase() === categoryPath.toLowerCase()
-                    );
-            }
-
-            // Filtrar por mascota (desde query param ?pet=)
-            if (petFilter && petFilter !== 'todos') {
-                products = products.filter(
-                    (p) => p.pet?.toLowerCase() === petFilter.toLowerCase()
-                );
-            }
-
-            const inStock = products.filter(p => p.stock === 'Disponible' || p.stock === 'Ultimos en stock');
-            const outOfStock = products.filter(p => p.stock === 'Agotado');
-            const noStock = products.filter(p => !p.stock || p.stock === '' || p.stock === null);
-
-            const sortedStock = [...inStock, ...noStock, ...outOfStock];
-
-            setLocalProducts(sortedStock);
-            setFilteredProductsState(sortedStock);
-            setSortedProducts([])
-            setCurrentPage(1);
-
-            const paginated = sortedStock.slice(0, itemsPerPage)
-            setPaginatedProducts(paginated)
-            setTotalPages(Math.ceil(sortedStock.length / itemsPerPage))
-            
-    
-            setTimeout(() => {
-                setIsSearchLoading(false);
-            }, 300);
+// Filtrar productos por categoría y mascota
+useEffect(() => {
+    if (!isLoading) {
+        // Mostrar loader cuando hay búsqueda activa
+        if (searchQuery) {
+            setIsSearchLoading(true);
         }
-    }, [contextFilteredProducts, isLoading, categoryPath, petFilter, searchQuery,itemsPerPage]);
+        
+        let products = [...contextFilteredProducts];
+
+        if (
+            categoryPath &&
+            categoryPath !== 'todos' &&
+            categoryPath !== 'search' &&
+            !categoryPath.includes('edit-product') &&
+            !categoryPath.includes('admin')
+        ) {
+            products = products.filter(
+                (p) => p.category?.toLowerCase() === categoryPath.toLowerCase()
+            );
+        }
+
+        // Filtrar por mascota (desde query param ?pet=)
+        if (petFilter && petFilter !== 'todos') {
+            products = products.filter(
+                (p) => p.pet?.toLowerCase() === petFilter.toLowerCase()
+            );
+        }
+
+
+        
+        const shuffled = [...products];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+
+        const inStock = shuffled.filter(p => p.stock === 'Disponible' || p.stock === 'Ultimos en stock');
+        const outOfStock = shuffled.filter(p => p.stock === 'Agotado');
+        const noStock = shuffled.filter(p => !p.stock || p.stock === '' || p.stock === null);
+
+        const sortedStock = [...inStock, ...noStock, ...outOfStock];
+
+        setLocalProducts(sortedStock);
+        setFilteredProductsState(sortedStock);
+        setSortedProducts([]);
+        setCurrentPage(1);
+
+        const paginated = sortedStock.slice(0, itemsPerPage);
+        setPaginatedProducts(paginated);
+        setTotalPages(Math.ceil(sortedStock.length / itemsPerPage));
+        
+        setTimeout(() => {
+            setIsSearchLoading(false);
+        }, 300);
+    }
+}, [contextFilteredProducts, isLoading, categoryPath, petFilter, searchQuery, itemsPerPage]);
 
     
     useEffect(() => {
@@ -142,6 +149,19 @@ export const ProductList = () => {
         const paginated = productsToPaginate.slice(startIndex, endIndex);
         setPaginatedProducts(paginated);
     }
+
+            // scroll para filtros
+        if (filterProductsState.length > 0) {
+            const productsContainer = document.querySelector('.products-main-content')
+            if(productsContainer){
+                setTimeout(() => {
+                    const offset = 300
+                    const top = productsContainer.getBoundingClientRect().top + window.pageYOffset - offset
+                    window.scroll({top, behavior:'smooth'})
+                },200)
+            }
+        }
+
 }, [filterProductsState, currentPage, itemsPerPage]);
 
     const getTitle = () => {
@@ -264,19 +284,41 @@ export const ProductList = () => {
         return pageNumbers;
     };
 
-    const getSEOTitle = () => {
-        if (categoryPath === 'alimentos') return 'Alimentos para Mascotas'
-        if (categoryPath === 'accesorios') return 'Accesorios para Mascotas'
-        if (categoryPath === 'higiene') return 'Higiene y Cuidado para Mascotas'
-        if (categoryPath === 'indumentaria') return 'Indumentaria para Mascotas'
-        return 'Productos para Mascotas'
-    }
+const getSEOTitle = () => {
+    const titles: Record<string, string> = {
+        'alimentos': 'Alimentos Premium para Mascotas | Bambina Petshop',
+        'accesorios': 'Accesorios para Mascotas | Collares, Correas, Juguetes | Bambina Petshop',
+        'higiene': 'Higiene y Cuidado para Mascotas | Shampoos, Cepillos | Bambina Petshop',
+        'indumentaria': 'Indumentaria para Mascotas | Ropa y Accesorios | Bambina Petshop',
+        'colchonetas': 'Colchonetas y Camas para Mascotas | Bambina Petshop',
+        'search': 'Resultados de Búsqueda | Bambina Petshop'
+    };
+    return titles[categoryPath] || 'Bambina Petshop - Todo para tu Mascota';
+}
 
-    const getSEODescription = () => {
-        if (categoryPath === 'alimentos') return 'Los mejores alimentos balanceados para perros y gatos. Marcas premium, nutrición completa y sabores que aman tus mascotas.'
-        if (categoryPath === 'accesorios') return 'Descubrí nuestra colección de accesorios para mascotas. Collares, correas, camas, juguetes y mucho más.'
-        return 'Productos de calidad para el bienestar de tu mascota. Envíos a todo el país.'
-    }
+const getSEODescription = () => {
+    const descriptions: Record<string, string> = {
+        'alimentos': 'Descubrí los mejores alimentos balanceados para perros y gatos. Marcas premium, nutrición completa y sabores que tus mascotas aman. Envíos a todo el país.',
+        'accesorios': 'Explorá nuestra colección de accesorios para mascotas. Collares, correas, camas, juguetes interactivos y más. Calidad y estilo para tu compañero.',
+        'higiene': 'Cuidá la higiene de tu mascota con nuestros productos especializados. Shampoos, cepillos, cortaúñas y más para un cuidado completo.',
+        'indumentaria': 'Vestí a tu mascota con estilo. Ropa cómoda y accesorios para todas las estaciones. Talle y calidad garantizada.',
+        'colchonetas': 'El descanso de tu mascota es importante. Colchonetas y camas cómodas y duraderas para un sueño reparador.',
+        'search': 'Encontrá lo que buscás para tu mascota. Productos de calidad en todas las categorías.'
+    };
+    return descriptions[categoryPath] || 'Encontrá todo lo que necesitás para el bienestar, la salud y la felicidad de tu mascota en Bambina Petshop.';
+}
+
+
+const getSEOKeywords = () => {
+    const keywords: Record<string, string> = {
+        'alimentos': 'alimentos para mascotas, comida para perros, comida para gatos, alimentos balanceados, nutrición animal, Bambina Petshop',
+        'accesorios': 'accesorios para mascotas, collares para perros, correas, juguetes para gatos, camas para mascotas, Bambina Petshop',
+        'higiene': 'higiene para mascotas, shampoo para perros, cuidado dental, cepillos para mascotas, Bambina Petshop',
+        'indumentaria': 'ropa para perros, indumentaria para mascotas, abrigos para perros, accesorios de moda, Bambina Petshop',
+        'colchonetas': 'colchonetas para mascotas, camas para perros, descanso para mascotas, Bambina Petshop'
+    };
+    return keywords[categoryPath] || 'mascotas, animales, petshop, Bambina Petshop, Cipolletti, Río Negro';
+}
 
     const truncateText = (text: string, maxLength: number = 28) => {
         if (!text) return '';
@@ -374,6 +416,7 @@ export const ProductList = () => {
             <SEO 
                 title={getSEOTitle()}
                 description={getSEODescription()}
+                key={getSEOKeywords()}
                 url={`https://ecommers-petshop.vercel.app/${categoryPath}`}
             />
             <div className="products-header">

@@ -23,8 +23,8 @@ export const LiquidacionProduct = () => {
 
     const handleResize = () => {
       if (window.innerWidth >= 1280) setItemsPerView(4);
-      else if (window.innerWidth >= 1024) setItemsPerView(3);
-      else if (window.innerWidth >= 768) setItemsPerView(2);
+      else if (window.innerWidth >= 1024) setItemsPerView(4);
+      else if (window.innerWidth >= 768) setItemsPerView(3);
       else setItemsPerView(1);
     };
 
@@ -64,7 +64,7 @@ export const LiquidacionProduct = () => {
     : [];
   const realStart = cloneCount;
   const trackIndex = currentIndex + realStart;
-  const trackOffset = cardWidth > 0 ? trackIndex * (cardWidth + GAP_PX) : 0;
+  const trackOffset = cardWidth > 0 ? Math.round(trackIndex * (cardWidth + GAP_PX)) : 0; 
 
   const startAutoplay = useCallback(() => {
     if (autoplayRef.current) clearInterval(autoplayRef.current);
@@ -206,21 +206,16 @@ export const LiquidacionProduct = () => {
                   }}
                   onClick={() => handleProductClick(product._id)}
                 >
-                  {/* Badges */}
-                  {isOutOfStock && (
-                    <div className="stock-badge-destacado">
-                      ❌ Sin stock
-                    </div>
-                  )}
+                  
                   
                   {hasDiscount && !isOutOfStock && (
-                    <div className="discount-badge-destacado">
+                    <div className="discount-badge">
                       🏷️ Oferta
                     </div>
                   )}
 
                   {hasLiquidacion && !isOutOfStock && (
-                    <div className="liquidacion-badge-destacado">
+                    <div className="liquidacion-badge">
                       🔥 Liquidación
                     </div>
                   )}
@@ -248,7 +243,7 @@ export const LiquidacionProduct = () => {
                     {/* Contenido */}
                     <div className="related-content">
                       <h3 className="related-name" title={product.name}>
-                        {product.name}
+                        {(product.name).toUpperCase()}
                       </h3>
 
                       {/* Mostrar kg SOLO si la categoría es alimentos */}

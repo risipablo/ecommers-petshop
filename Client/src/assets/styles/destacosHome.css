@@ -62,9 +62,9 @@
 .featured-track {
     display: flex;
     gap: 16px;
-    will-change: transform;
+    will-change: transform; 
     backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 /* ==========================================
@@ -83,32 +83,7 @@
 }
 
 
-/* ==========================================
-   IMAGEN
-   ========================================== */
 
-.featured-image-container {
-    position: relative;
-    width: 100%;
-    height: 180px;
-    background: linear-gradient(180deg, #ffffff 0%, #faf8ff 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-}
-
-.featured-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: transform var(--featured-transition);
-    display: block;
-}
-
-.featured-card:hover .featured-image {
-    transform: scale(1.05);
-}
 
 /* ==========================================
    DIVISOR
@@ -277,6 +252,14 @@
     border-radius: 0.5rem;
 }
 
+    .product-content {
+    padding: 0.3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+
 /* Animación */
 @keyframes skeleton-sweep {
     0%   { background-position: 200% 0; }
@@ -430,7 +413,9 @@
     letter-spacing: -0.02em;
     margin: 0 0 1.5rem 0;
     text-align: center;
-}
+    }
+
+
 }
 
 

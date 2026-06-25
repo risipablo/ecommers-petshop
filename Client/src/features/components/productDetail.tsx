@@ -47,23 +47,24 @@ export function ProductDetail() {
 
     const hasMultipleImages = images.length > 1;
 
-    const GAP = 20;
-    const cloneCount = itemsPerView;
-    const clonedProducts = relatedProducts.length > 0 && relatedProducts.length > itemsPerView
+    const GAP = 16;
+    const itemsPerViewReal = Math.min(itemsPerView, relatedProducts.length);
+    const cloneCount = itemsPerViewReal;
+    const clonedProducts = relatedProducts.length > 0 && relatedProducts.length > itemsPerViewReal
         ? [...relatedProducts.slice(-cloneCount), ...relatedProducts, ...relatedProducts.slice(0, cloneCount)]
         : [...relatedProducts];
-    const realStart = relatedProducts.length > itemsPerView ? cloneCount : 0;
+    const realStart = relatedProducts.length > itemsPerViewReal ? cloneCount : 0;
     const trackIndex = currentIndex + realStart;
 
     // Calcular ancho real de cada card desde el contenedor
     const calculateCardWidth = useCallback(() => {
         if (!carouselRef.current) return;
         const containerWidth = carouselRef.current.offsetWidth;
-        const totalGap = GAP * (itemsPerView - 1);
-        setCardWidth((containerWidth - totalGap) / itemsPerView);
-    }, [itemsPerView]);
+        const totalGap = GAP * (itemsPerViewReal - 1);
+        setCardWidth((containerWidth - totalGap) / itemsPerViewReal);
+    }, [itemsPerViewReal]);
 
-        useEffect(() => {
+    useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' });
     }, [location.pathname]);
 
@@ -76,7 +77,7 @@ export function ProductDetail() {
             if (window.innerWidth >= 1280) {
                 setItemsPerView(4);
             } else if (window.innerWidth >= 1024) {
-                setItemsPerView(3);
+                setItemsPerView(4);
             } else if (window.innerWidth >= 768) {
                 setItemsPerView(2);
             } else {
@@ -109,7 +110,7 @@ export function ProductDetail() {
 
     // Loop infinito: saltar sin animación cuando llegamos a los clones
     useEffect(() => {
-        if (relatedProducts.length === 0 || relatedProducts.length <= itemsPerView) return;
+        if (relatedProducts.length === 0 || relatedProducts.length <= itemsPerViewReal) return;
 
         if (currentIndex >= relatedProducts.length) {
             const timer = setTimeout(() => {
@@ -126,7 +127,7 @@ export function ProductDetail() {
             }, 500);
             return () => clearTimeout(timer);
         }
-    }, [currentIndex, relatedProducts.length, itemsPerView]);
+    }, [currentIndex, relatedProducts.length, itemsPerViewReal]);
 
     useEffect(() => {
         if (!isTransitioning) {
@@ -194,15 +195,14 @@ export function ProductDetail() {
         }
     };
 
-
     const nextSlide = () => {
-        if (relatedProducts.length <= itemsPerView) return;
+        if (relatedProducts.length <= itemsPerViewReal) return;
         setIsTransitioning(true);
         setCurrentIndex((prev) => prev + 1);
     };
 
     const prevSlide = () => {
-        if (relatedProducts.length <= itemsPerView) return;
+        if (relatedProducts.length <= itemsPerViewReal) return;
         setIsTransitioning(true);
         setCurrentIndex((prev) => prev - 1);
     };
@@ -220,9 +220,9 @@ export function ProductDetail() {
     };
 
     if (!product) return null
-  const productImage = product.imageUrl || product.images?.[0]?.url
-  const productUrl = `https://ecommers-petshop.vercel.app/item/${product._id}`
-  const productPrice = typeof product.price === 'number' ? product.price : parseFloat(product.price)
+    const productImage = product.imageUrl || product.images?.[0]?.url
+    const productUrl = `https://ecommers-petshop.vercel.app/item/${product._id}`
+    const productPrice = typeof product.price === 'number' ? product.price : parseFloat(product.price)
 
     if (loading) {
         return (
@@ -267,7 +267,6 @@ export function ProductDetail() {
                 type="product"
             />
 
-
             <div className="detail-header">
                 <Link to={backPath} className="back-link">
                     <ArrowLeft size={20} strokeWidth={2} />
@@ -294,25 +293,22 @@ export function ProductDetail() {
                         className={`main-image-wrapper 
                             ${product.stock === 'Agotado' ? 'image-out-of-stock' : ''} 
                             ${product.descuento === 'si' || product.descuento === 'liquidacion' ? 'image-on-sale' : ''}
-                            
                         `}
                         data-discount-label={
                             product.descuento === 'liquidacion' ? '🔥 Liquidación' : 
                             product.descuento === 'si' ? '% Descuento' : ''
-                            
                         }
                     >
-
-                            <OptimizedImage
-                                src={images[selectedImageIndex]?.url || product.imageUrl || 'https://via.placeholder.com/500x500?text=Sin+Imagen'}
-                                alt={product.name}
-                                className="main-image"
-                                width={500}
-                                height={500}
-                                quality={85}
-                                loading="eager"
-                                fallback="https://via.placeholder.com/500x500?text=Sin+Imagen"
-                            />
+                        <OptimizedImage
+                            src={images[selectedImageIndex]?.url || product.imageUrl || 'https://via.placeholder.com/500x500?text=Sin+Imagen'}
+                            alt={product.name}
+                            className="main-image"
+                            width={500}
+                            height={500}
+                            quality={85}
+                            loading="eager"
+                            fallback="https://via.placeholder.com/500x500?text=Sin+Imagen"
+                        />
 
                         <button
                             className="zoom-btn"
@@ -349,12 +345,6 @@ export function ProductDetail() {
                 <div className="product-info-section">
                     <h1 className="product-title">{(product.name).toUpperCase()}</h1>
 
-                    {isAlimentos && product.kg && (
-                        <div className="kg-section-front">
-                            <span className="brand-label">{product.kg} kg</span>
-                        </div>
-                    )}
-
                     {isHigiene && product.brand && (
                         <div className="kg-section-front">
                             <span className="brand-label">{product.brand}</span>
@@ -368,27 +358,46 @@ export function ProductDetail() {
                     )}
 
                     {isColchoneta && product.kg && (
-                             <div className="kg-section-front">
+                        <div className="kg-section-front">
                             <span className="brand-label">{product.kg}</span>
                         </div>
                     )}
 
                     {isAccesorios && product.brand && (
-                             <div className="kg-section-front">
+                        <div className="kg-section-front">
                             <span className="brand-label">{product.brand}</span>
                         </div>
                     )}
 
-                    
+                    {isAlimentos && product.kg && product.condition?.toLowerCase() !== 'pouch' && product.condition?.toLowerCase() !== 'lata' && product.condition?.toLowerCase() !== 'snacks' && (
+                        <div className="kg-section-front">
+                            <p className="products-kg">{product.kg} kg</p>
+                        </div>
+                    )}
+
+                    {isAlimentos && product.condition?.toLowerCase() === 'pouch' && product.kg && (
+                        <div className="kg-section-front">
+                            <p className="products-kg">{product.kg} gr</p>
+                        </div>
+                    )}
+
+                    {isAlimentos && product.condition?.toLowerCase() === 'lata' && product.kg && (
+                        <div className="kg-section-front">
+                            <p className="products-kg">{product.kg} gr</p>
+                        </div>
+                    )}
+
+                    {isAlimentos && product.condition?.toLowerCase() === 'snacks' && product.kg && (
+                        <div className="kg-section-front">
+                            <p className="products-kg">{product.kg} gr</p>
+                        </div>
+                    )}
 
                     <div className="price-section">
                         <span className="current-price">${formatPrice(product.price)}</span>
                     </div>
 
-                    {/* Stock y Descuento - Badges de estado */}
                     <div className="product-detail-status-wrapper">
-
-                        {/* Stock */}
                         {product.stock && (
                             <div
                                 className={`product-detail-badge product-detail-stock-badge ${
@@ -402,7 +411,6 @@ export function ProductDetail() {
                                 {product.stock === 'Disponible' && <Check size={16} strokeWidth={2} />}
                                 {product.stock === 'Ultimos en stock' && <AlertCircle size={16} strokeWidth={2} />}
                                 {product.stock === 'Agotado' && <XCircle size={16} strokeWidth={2} />}
-
                                 <span>
                                     {product.stock === 'Disponible' && 'Stock disponible'}
                                     {product.stock === 'Ultimos en stock' && 'Últimas unidades'}
@@ -411,7 +419,6 @@ export function ProductDetail() {
                             </div>
                         )}
 
-                        {/* Descuento */}
                         {product.descuento && (
                             <div
                                 className={`product-detail-badge product-detail-offer-badge ${
@@ -424,14 +431,12 @@ export function ProductDetail() {
                             >
                                 {product.descuento === 'si' && <Tag size={16} strokeWidth={2} />}
                                 {product.descuento === 'liquidacion' && <Flame size={16} strokeWidth={2} />}
-
                                 <span>
                                     {product.descuento === 'si' && 'Descuento'}
                                     {product.descuento === 'liquidacion' && 'Liquidación'}
                                 </span>
                             </div>
                         )}
-
                     </div>
 
                     {product.brand && (
@@ -469,25 +474,25 @@ export function ProductDetail() {
                         </div>
                     )}
 
-                        {product.description && (
-                            <div className="description-section">
-                                <h2 className="section-title">Descripción del producto</h2>
-                                <div className={`description-content ${!expanded && product.description.length > 1000 ? 'description-collapsed' : ''}`}>
-                                    {product.description.split(' - ').map((item, index) => (
-                                        <p key={index}>{item}</p>
-                                    ))}
-                                </div>
-                                {product.description.length > 1000 && (
-                                    <button
-                                        className={`description-toggle-btn ${expanded ? 'expanded' : ''}`}
-                                        onClick={() => setExpanded(!expanded)}
-                                    >
-                                        {expanded ? 'Ver menos' : 'Ver más'}
-                                        <span className="toggle-icon">{expanded ? '▲' : '▼'}</span>
-                                    </button>
-                                )}
+                    {product.description && (
+                        <div className="description-section">
+                            <h2 className="section-title">Descripción del producto</h2>
+                            <div className={`description-content ${!expanded && product.description.length > 1000 ? 'description-collapsed' : ''}`}>
+                                {product.description.split(' - ').map((item, index) => (
+                                    <p key={index}>{item}</p>
+                                ))}
                             </div>
-                        )}
+                            {product.description.length > 1000 && (
+                                <button
+                                    className={`description-toggle-btn ${expanded ? 'expanded' : ''}`}
+                                    onClick={() => setExpanded(!expanded)}
+                                >
+                                    {expanded ? 'Ver menos' : 'Ver más'}
+                                    <span className="toggle-icon">{expanded ? '▲' : '▼'}</span>
+                                </button>
+                            )}
+                        </div>
+                    )}
 
                     {product.category && (
                         <div className="category-section">
@@ -496,214 +501,203 @@ export function ProductDetail() {
                         </div>
                     )}
                 </div>
-
-
-
-        
-
             </div>
 
             <div className="footer-detail">
-            {/* Stock */}
-            {product.stock && (
-                <div className={`stock-section ${product.stock === 'Disponible' ? 'in-stock' : 'Agotado'}`}>
-                    <span className="stock-label">
-                        {product.stock === 'Disponible' ? <Check /> : <XCircle />}
-                    </span>
-                    <span className="stock-value">
-                        {product.stock === 'Disponible'
-                            ? 'Este producto tiene stock disponible'
-                            : product.stock === 'Ultimos en stock'
-                            ? 'Este producto tiene stock limitado, consultar por mensaje'
-                            : 'Este producto no tiene stock por el momento'}
-                    </span>
-                </div>
-            )}
-
-            {/* Descuento */}
-            {product.descuento && (
-                <div className={`discount-section ${product.descuento === 'si' ? 'no' : product.descuento === 'liquidacion' ? 'liquidacion' : ''}`}>
-                    <span>
-                        {product.descuento === 'si'
-                            ? 'Este producto tiene descuento, consultar por mensaje'
-                            : product.descuento === 'liquidacion'
-                            ? 'Este producto está en liquidación'
-                            : product.descuento === ' '
-                            ? ' '
-                            : 'Este producto no tiene descuento actualmente'}
-                    </span>
-                </div>
-            )}
-
-            </div>
-
- {relatedProducts.length > 0 && (
-    <div className="related-products-section">
-        <h2 className="section-title">Productos relacionados</h2>
-        {loadingRelated ? (
-            <div className="loading-related">Cargando productos relacionados...</div>
-        ) : (
-            <div className="related-carousel-wrapper">
-                {relatedProducts.length > itemsPerView && (
-                    <button
-                        onClick={prevSlide}
-                        className="related-nav related-nav-left"
-                        aria-label="Anterior"
-                    >
-                        <ChevronLeft />
-                    </button>
+                {product.stock && (
+                    <div className={`stock-section ${product.stock === 'Disponible' ? 'in-stock' : 'Agotado'}`}>
+                        <span className="stock-label">
+                            {product.stock === 'Disponible' ? <Check /> : <XCircle />}
+                        </span>
+                        <span className="stock-value">
+                            {product.stock === 'Disponible'
+                                ? 'Este producto tiene stock disponible'
+                                : product.stock === 'Ultimos en stock'
+                                ? 'Este producto tiene stock limitado, consultar por mensaje'
+                                : 'Este producto no tiene stock por el momento'}
+                        </span>
+                    </div>
                 )}
 
-                <div className="related-carousel" ref={carouselRef}>
-                    <div
-                        className="related-track"
-                        style={{
-                            transform: `translateX(-${trackOffset}px)`,
-                            transition: isTransitioning
-                                ? 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                                : 'none',
-                        }}
-                    >
-                        {clonedProducts.map((relatedProduct, idx) => {
-                            const isAlimentosRelated = relatedProduct.category === 'alimentos';
-                            const isIndumentariaRelated = relatedProduct.category === 'indumentaria';
-                            const isOutOfStock = relatedProduct.stock === 'Agotado';
-                            const hasDiscount = relatedProduct.descuento === 'si';
-                            const hasLiquidacion = relatedProduct.descuento === 'liquidacion';
-                            const isUltimosStock = relatedProduct.stock === 'Ultimos en stock';
+                {product.descuento && (
+                    <div className={`discount-section ${product.descuento === 'si' ? 'no' : product.descuento === 'liquidacion' ? 'liquidacion' : ''}`}>
+                        <span>
+                            {product.descuento === 'si'
+                                ? 'Este producto tiene descuento, consultar por mensaje'
+                                : product.descuento === 'liquidacion'
+                                ? 'Este producto está en liquidación'
+                                : product.descuento === ' '
+                                ? ' '
+                                : 'Este producto no tiene descuento actualmente'}
+                        </span>
+                    </div>
+                )}
+            </div>
 
-                            return (
-                                <Link
-                                    key={`${relatedProduct._id}-${idx}`}
-                                    to={`/item/${relatedProduct._id}`}
-                                    state={{ from: backPath }}
-                                    onClick={handleRelatedProductClick}
-                                    className={`related-product-card-link ${isOutOfStock ? 'out-of-stock' : ''} ${hasDiscount ? 'discount' : ''} ${hasLiquidacion ? 'liquidacion' : ''} ${isUltimosStock ? 'ultimos-stock' : ''}`}
+            {relatedProducts.length > 0 && (
+                <div className="related-products-section">
+                    <h2 className="realted-title">Productos relacionados</h2>
+                    {loadingRelated ? (
+                        <div className="loading-related">Cargando productos relacionados...</div>
+                    ) : (
+                        <div className="related-carousel-wrapper">
+                            {relatedProducts.length > itemsPerView && (
+                                <button
+                                    onClick={prevSlide}
+                                    className="related-nav related-nav-left"
+                                    aria-label="Anterior"
+                                >
+                                    <ChevronLeft />
+                                </button>
+                            )}
+
+                            <div className="related-carousel" ref={carouselRef}>
+                                <div
+                                    className="related-track"
                                     style={{
-                                        width: cardWidth > 0 ? `${cardWidth}px` : undefined,
-                                        flexShrink: 0,
-                                        position: 'relative',
+                                        transform: `translateX(-${trackOffset}px)`,
+                                        transition: isTransitioning
+                                            ? 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                                            : 'none',
                                     }}
                                 >
-                                    {/* Badges - SIN STOCK (izquierda arriba) */}
-                                    {isOutOfStock && (
-                                        <div className="stock-badge-related">
-                                            ❌ Sin stock
-                                        </div>
-                                    )}
-                                    
-                                    {/* Badges - ÚLTIMOS EN STOCK (izquierda abajo, debajo de Sin stock) */}
-                                    {isUltimosStock && !isOutOfStock && (
-                                        <div className="ultimos-stock-badge-related">
-                                            ⚡ Últimos en stock
-                                        </div>
-                                    )}
-                                    
-                                    {/* Badges - OFERTA (derecha arriba) */}
-                                    {hasDiscount && !isOutOfStock && (
-                                        <div className="discount-badge-related">
-                                            🏷️ Oferta
-                                        </div>
-                                    )}
+                                    {clonedProducts.map((relatedProduct, idx) => {
+                                        const isAlimentosRelated = relatedProduct.category === 'alimentos';
+                                        const isIndumentariaRelated = relatedProduct.category === 'indumentaria';
+                                        const isOutOfStock = relatedProduct.stock === 'Agotado';
+                                        const hasDiscount = relatedProduct.descuento === 'si';
+                                        const hasLiquidacion = relatedProduct.descuento === 'liquidacion';
+                                        const isUltimosStock = relatedProduct.stock === 'Ultimos en stock';
 
-                                    {/* Badges - LIQUIDACIÓN (derecha abajo, debajo de Oferta) */}
-                                    {hasLiquidacion && !isOutOfStock && (
-                                        <div className="liquidacion-badge-related">
-                                            🔥 Liquidación
-                                        </div>
-                                    )}
+                                        return (
+                                            <Link
+                                                key={`${relatedProduct._id}-${idx}`}
+                                                to={`/item/${relatedProduct._id}`}
+                                                state={{ from: backPath }}
+                                                onClick={handleRelatedProductClick}
+                                                className={`related-product-card-link ${isOutOfStock ? 'out-of-stock' : ''} ${hasDiscount ? 'discount' : ''} ${hasLiquidacion ? 'liquidacion' : ''} ${isUltimosStock ? 'ultimos-stock' : ''}`}
+                                                style={{
+                                                    width: cardWidth > 0 ? `${cardWidth}px` : undefined,
+                                                    flexShrink: 0,
+                                                    position: 'relative',
+                                                }}
+                                            >
+                                                {isOutOfStock && (
+                                                    <div className="stock-badge-related">
+                                                        ❌ Sin stock
+                                                    </div>
+                                                )}
+                                                
+                                                {isUltimosStock && !isOutOfStock && (
+                                                    <div className="ultimos-stock-badge-related">
+                                                        ⚡ Últimos en stock
+                                                    </div>
+                                                )}
+                                                
+                                                {hasDiscount && !isOutOfStock && (
+                                                    <div className="discount-badge-related">
+                                                        🏷️ Oferta
+                                                    </div>
+                                                )}
 
-                                    <div className="related-product-card">
-                                        <div className="related-image-wrapper">
-                                            <img
-                                                src={relatedProduct.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
-                                                alt={relatedProduct.name}
-                                                loading="lazy"
-                                            />
-                                        </div>
-                                        
-                                        <div className="featured-divider">
-                                        </div>
+                                                {hasLiquidacion && !isOutOfStock && (
+                                                    <div className="liquidacion-badge-related">
+                                                        🔥 Liquidación
+                                                    </div>
+                                                )}
 
-                                        <div className="related-content">
-                                            <h3 className="related-name" title={relatedProduct.name}>
-                                                {(relatedProduct.name).toUpperCase()}
-                                            </h3>
+                                                <div className="related-product-card">
+                                                    <div className="related-image-wrapper">
+                                                        <img
+                                                            src={relatedProduct.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
+                                                            alt={relatedProduct.name}
+                                                            loading="lazy"
+                                                        />
+                                                    </div>
+                                                    
+                                                    <div className="featured-divider">
+                                                    </div>
 
-                                            {isAlimentosRelated && relatedProduct.kg && (
-                                                <p className="product-kg">Kilos: {relatedProduct.kg} kg</p>
-                                            )}
+                                                    <div className="related-content">
+                                                        <h3 className="related-name" title={relatedProduct.name}>
+                                                            {(relatedProduct.name).toUpperCase()}
+                                                        </h3>
 
-                                            {isIndumentariaRelated && relatedProduct.kg && (
-                                                <p className="product-kg">Talle: {relatedProduct.kg}</p>
-                                            )}
+                                                        {isAlimentosRelated && relatedProduct.kg && (
+                                                            <p className="product-kg">Kilos: {relatedProduct.kg} kg</p>
+                                                        )}
 
-                                            {isColchoneta && relatedProduct.kg && (
-                                                <p className="product-kg">{relatedProduct.kg}</p>
-                                            )}
+                                                        {isIndumentariaRelated && relatedProduct.kg && (
+                                                            <p className="product-kg">Talle: {relatedProduct.kg}</p>
+                                                        )}
 
-                                            <div className="price-action-row">
-                                                <div className="price-section">
-                                                    <span className="currency">$</span>
-                                                    <span className="price-amount">{formatPrice(relatedProduct.price)}</span>
+                                                        {isColchoneta && relatedProduct.kg && (
+                                                            <p className="product-kg">{relatedProduct.kg}</p>
+                                                        )}
+
+                                                        <div className="price-action-row">
+                                                            <div className="price-section">
+                                                                <span className="currency">$</span>
+                                                                <span className="price-amount">{formatPrice(relatedProduct.price)}</span>
+                                                            </div>
+                                                            <div className="view-btn">
+                                                                <Eye size={16} />
+                                                                <span>Ver</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className="view-btn">
-                                                    <Eye size={16} />
-                                                    <span>Ver</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            );
-                        })}
-                    </div>
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {relatedProducts.length > itemsPerView && (
+                                <button
+                                    onClick={nextSlide}
+                                    className="related-nav related-nav-right"
+                                    aria-label="Siguiente"
+                                >
+                                    <ChevronRight />
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+                    {relatedProducts.length > itemsPerView && (
+                        <div className="related-dots">
+                            {Array.from({ length: Math.min(relatedProducts.length, 6) }).map((_, index) => (
+                                <button
+                                    key={index}
+                                    className={`related-dot ${(currentIndex % relatedProducts.length) === index ? 'active' : ''}`}
+                                    onClick={() => {
+                                        setIsTransitioning(true);
+                                        setCurrentIndex(index);
+                                    }}
+                                    aria-label={`Ir a slide ${index + 1}`}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
+            )}
 
-                {relatedProducts.length > itemsPerView && (
-                    <button
-                        onClick={nextSlide}
-                        className="related-nav related-nav-right"
-                        aria-label="Siguiente"
-                    >
-                        <ChevronRight />
-                    </button>
-                )}
-            </div>
-        )}
-
-        {relatedProducts.length > itemsPerView && (
-            <div className="related-dots">
-                {Array.from({ length: Math.min(relatedProducts.length, 6) }).map((_, index) => (
-                    <button
-                        key={index}
-                        className={`related-dot ${(currentIndex % relatedProducts.length) === index ? 'active' : ''}`}
-                        onClick={() => {
-                            setIsTransitioning(true);
-                            setCurrentIndex(index);
-                        }}
-                        aria-label={`Ir a slide ${index + 1}`}
-                    />
-                ))}
-            </div>
-        )}
-    </div>
-)}
             {/* Modal de zoom */}
             {isZoomModalOpen && (
                 <div className="zoom-modal" onClick={() => setIsZoomModalOpen(false)}>
                     <div className="zoom-modal-content" onClick={(e) => e.stopPropagation()}>
                         <button className="zoom-close-btn" onClick={() => setIsZoomModalOpen(false)}>
-                                <X size={24} />
+                            <X size={24} />
                         </button>
 
                         {hasMultipleImages && (
-                                <button className="zoom-nav zoom-prev" onClick={prevImage}>
-                                    <ChevronLeft size={32} />
-                                </button>
-                            )}
+                            <button className="zoom-nav zoom-prev" onClick={prevImage}>
+                                <ChevronLeft size={32} />
+                            </button>
+                        )}
 
-                    <div className="zoom-image-container">
+                        <div className="zoom-image-container">
                             <img
                                 src={images[selectedImageIndex]?.url || product.imageUrl}
                                 alt={product.name}
@@ -711,11 +705,11 @@ export function ProductDetail() {
                             />
                         </div>
 
-{hasMultipleImages && (
-        <button className="zoom-nav zoom-next" onClick={nextImage}>
-            <ChevronRight size={32} />
-        </button>
-    )}
+                        {hasMultipleImages && (
+                            <button className="zoom-nav zoom-next" onClick={nextImage}>
+                                <ChevronRight size={32} />
+                            </button>
+                        )}
                         {hasMultipleImages && (
                             <div className="zoom-thumbnails">
                                 {images.map((img, idx) => (

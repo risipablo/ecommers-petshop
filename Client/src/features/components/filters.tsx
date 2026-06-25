@@ -187,6 +187,17 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
         );
     };
 
+    const scrollToProducts = () => {
+        const productsContainer = document.querySelector('.products-main-content')
+        if(productsContainer){
+            const offset = 100
+            const top = productsContainer.getBoundingClientRect().top + window.pageYOffset - offset
+            window.scrollTo({top, behavior: 'smooth'})
+        } else {
+            window.scrollTo({top: 0, behavior: 'smooth'})
+        }
+    }
+
     const clearAllFilters = () => {
         setSelectedPets([]);
         setSelectedBrands([]);
@@ -196,6 +207,7 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
         setSelectedDiscount([]);
         setTempPriceRange({ min: priceRange.min, max: priceRange.max });
         setIsMobileMenuOpen(false)
+        setTimeout(scrollToProducts, 100);
     };
 
     const hasActiveFilters = selectedPets.length > 0 || selectedBrands.length > 0 || 
@@ -310,7 +322,7 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
 
                     
 
-                    {/* 🔥 Sección de Descuentos actualizada */}
+                    
                     <FilterSection
                         title="Descuentos"
                         section="discount"
@@ -458,7 +470,7 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
                             <button className="clear-filters-btn" onClick={clearAllFilters}>
                                 Limpiar todo
                             </button>
-                            <button className="apply-filters-btn" onClick={() => setIsMobileMenuOpen(false)}>
+                            <button className="apply-filters-btn" onClick={() => {setIsMobileMenuOpen(false); setTimeout(scrollToProducts, 300);} } >
                                 Aplicar filtros
                             </button>
                         </div>

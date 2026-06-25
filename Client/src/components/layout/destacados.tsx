@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import '../../assets/styles/destacosHome.css';
+import '../../assets/styles/productList.css';
 import { UseDestacados } from '../../features/hooks/useDestacados';
 
 export const Destacados = () => {
@@ -24,7 +25,7 @@ export const Destacados = () => {
 
     const handleResize = () => {
       if (window.innerWidth >= 1280) setItemsPerView(4);
-      else if (window.innerWidth >= 1024) setItemsPerView(3);
+      else if (window.innerWidth >= 1024) setItemsPerView(4);
       else if (window.innerWidth >= 768) setItemsPerView(2);
       else setItemsPerView(1);
     };
@@ -58,7 +59,7 @@ export const Destacados = () => {
     : [];
   const realStart = cloneCount;
   const trackIndex = currentIndex + realStart;
-  const trackOffset = cardWidth > 0 ? trackIndex * (cardWidth + GAP_PX) : 0;
+  const trackOffset = cardWidth > 0 ? Math.round(trackIndex * (cardWidth + GAP_PX)) : 0; // redondeo decimal para los navegadores
 
   const startAutoplay = useCallback(() => {
     if (autoplayRef.current) clearInterval(autoplayRef.current);
@@ -191,7 +192,7 @@ export const Destacados = () => {
               return (
                 <div
                   key={`${product._id}-${index}`}
-                  className={`related-product-card-link ${isOutOfStock ? 'out-of-stock' : ''} ${hasDiscount ? 'discount' : ''} ${hasLiquidacion ? 'liquidacion' : ''}`}
+                  className={`related-product-card ${isOutOfStock ? 'out-of-stock' : ''} ${hasDiscount ? 'discount' : ''} ${hasLiquidacion ? 'liquidacion' : ''}`}
                   style={{
                     width: cardWidth > 0 ? `${cardWidth}px` : undefined,
                     flexShrink: 0,
@@ -218,13 +219,13 @@ export const Destacados = () => {
                     </div>
                   )}
 
-                  <div className="related-product-card">
+                  <div className="product-card">
                     {/* Imagen con aspect ratio consistente */}
-                    <div className="related-image-wrapper">
+                    <div className="product-image-container">
                       <img
                         src={product.imageUrl || product.images?.[0]?.url || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
                         alt={product.name}
-                        className="featured-image"
+                        className="product-image"
                         loading="lazy"
                       />
                     </div>
@@ -233,9 +234,9 @@ export const Destacados = () => {
                     <div className="featured-divider" />
 
                     {/* Contenido con altura mínima fija */}
-                    <div className="related-content">
-                      <h3 className="related-name" title={product.name}>
-                        {product.name}
+                    <div className="product-content">
+                      <h3 className="product-name" title={product.name}>
+                        {(product.name).toUpperCase()}
                       </h3>
 
                       {/* Mostrar kg SOLO si la categoría es alimentos */}
