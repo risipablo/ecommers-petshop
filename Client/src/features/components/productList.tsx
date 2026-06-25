@@ -486,7 +486,7 @@ export const ProductList = () => {
                                         </h3>
 
                                         {/* Mostrar información específica según categoría - AHORA FUNCIONA EN BÚSQUEDA */}
-                                        {activeCategory === 'alimentos' && product.kg && product.condition?.toLowerCase() !== 'pouch' && (
+                                        {activeCategory === 'alimentos' && product.kg && product.condition?.toLowerCase() !== 'pouch'  && product.condition?.toLowerCase() !== 'lata'  && product.condition?.toLowerCase() !== 'snacks' && (
                                             <p className="products-kg">{product.kg} kg</p>
                                         )}
 
@@ -497,6 +497,10 @@ export const ProductList = () => {
                                         {activeCategory === 'alimentos' && product.condition?.toLowerCase() === 'lata' && product.kg && (
                                             <p className="products-kg">{product.kg} gr</p>
                                         )}
+                                           {activeCategory === 'alimentos' && product.condition?.toLowerCase() === 'snacks' && product.kg && (
+                                            <p className="products-kg">{product.kg} gr</p>
+                                        )}
+                                        
                                         
                                         {activeCategory === 'indumentaria' && product.kg && (
                                             <p className="products-kg">Talle: {product.kg}</p>

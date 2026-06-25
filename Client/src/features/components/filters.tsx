@@ -28,13 +28,13 @@ export const Filters = ({ products, onFilterChange }: FiltersProps) => {
     const [tempPriceRange, setTempPriceRange] = useState<{ min: number; max: number }>({ min: 0, max: 100000 });
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [openSections, setOpenSections] = useState({
-        pet: false,
-        brand: false,
-        age: false,
-        weight: false,
-        condition: false,
+        pet: true,
+        brand: true,
+        age: true,
+        weight: true,
+        condition: true,
         price: true,
-        discount: false
+        discount: true
     });
 
     // Obtener opciones únicas de los productos (ordenadas alfabéticamente)

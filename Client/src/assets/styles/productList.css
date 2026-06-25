@@ -133,7 +133,7 @@
 
     position: relative;
     width: 100%;
-    height: 250px;
+    height: 220px;
     padding: 1.5rem;
     box-sizing: border-box;
     background: linear-gradient(180deg, #ffffff 0%, #faf8ff 100%);
@@ -186,7 +186,7 @@
 .products-kg {
     font-size: 0.9rem;
     color: #7d7c7f;
-    margin: 0.7rem auto;
+    margin: 0.2rem auto;
 }
 
 
