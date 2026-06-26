@@ -193,7 +193,7 @@ export const Destacados = () => {
               return (
                 <div
                   key={`${product._id}-${index}`}
-                  className={`related-product-card ${isOutOfStock ? 'out-of-stock' : ''} ${hasDiscount ? 'discount' : ''} ${hasLiquidacion ? 'liquidacion' : ''}`}
+                  className={`related-product-card-destacado ${isOutOfStock ? 'out-of-stock' : ''} ${hasDiscount ? 'discount' : ''} ${hasLiquidacion ? 'liquidacion' : ''}`}
                   style={{
                     width: cardWidth > 0 ? `${cardWidth}px` : undefined,
                     flexShrink: 0,
@@ -203,26 +203,26 @@ export const Destacados = () => {
                 >
                   {/* Badges */}
                   {isOutOfStock && (
-                    <div className="stock-badge-destacado">
+                    <div className="stock-badge">
                       ❌ Sin stock
                     </div>
                   )}
                   
                   {hasDiscount && !isOutOfStock && (
-                    <div className="discount-badge-destacado">
+                    <div className="discount-badge">
                       🏷️ Oferta
                     </div>
                   )}
 
                   {hasLiquidacion && !isOutOfStock && (
-                    <div className="liquidacion-badge-destacado">
+                    <div className="liquidacion-badge">
                       🔥 Liquidación
                     </div>
                   )}
 
-                  <div className="product-card">
+                  <div className="featured-card">
                     {/* Imagen con aspect ratio consistente */}
-                    <div className="product-image-container">
+                    <div className="product-image-container-destacado">
                     <OptimizedImage
                           src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
                           alt={product.name}
@@ -237,42 +237,51 @@ export const Destacados = () => {
                     {/* Línea divisoria */}
                     <div className="featured-divider" />
 
-                    {/* Contenido con altura mínima fija */}
-                    <div className="product-content">
-                      <h3 className="product-name" title={product.name}>
+
+                    <div className="product-content-destacado">
+                      <h3 className="product-name-destacado" title={product.name}>
                         {(product.name).toUpperCase()}
                       </h3>
 
-                      {/* Mostrar kg SOLO si la categoría es alimentos */}
-                      {product.category === 'alimentos' && product.kg && (
-                        <p className="product-kg">Kilos: {product.kg} kg</p>
-                      )}
+                          {product.category === 'alimentos' && product.kg && product.condition?.toLowerCase() !== 'pouch'  && product.condition?.toLowerCase() !== 'lata'  && product.condition?.toLowerCase() !== 'snacks' && (
+                            <p className="products-kg-destacado">{product.kg} kg</p>
+                        )}
 
-                      {product.category === 'indumentaria' && product.kg && (
-                        <p className="product-kg">Talles: {product.kg}</p>
-                      )}
+                        {product.category === 'alimentos' && product.condition?.toLowerCase() === 'pouch' && product.kg && (
+                            <p className="products-kg-destacado">{product.kg} gr</p>
+                        )}
 
-                      {product.category === 'colchonetas' && product.kg && (
-                        <p className="product-kg">{product.kg}</p>
-                      )}
+                        {product.category === 'alimentos' && product.condition?.toLowerCase() === 'lata' && product.kg && (
+                            <p className="products-kg-destacado">{product.kg} gr</p>
+                        )}
+                            {product.category === 'alimentos' && product.condition?.toLowerCase() === 'snacks' && product.kg && (
+                            <p className="products-kg-destacado">{product.kg} gr</p>
+                        )}
+                        
+                        
+                        {product.category === 'indumentaria' && product.kg && (
+                            <p className="products-kg-destacado">Talle: {product.kg}</p>
+                        )}
 
-                      {product.category === 'accesorios' && product.brand && (
-                        <p className="product-kg">{product.brand}</p>
-                      )}
+                        {product.category === 'colchonetas' && product.kg && (
+                            <p className="products-kg-destacado">{product.kg}</p>
+                        )} 
 
-                      {product.category === 'higiene' && product.brand && (
-                        <p className="product-kg">{product.kg}</p>
-                      )}
+                        {product.category === 'accesorios' && product.brand && (
+                            <p className="products-kg-destacado">{product.brand}</p>
+                        )}
+                        {product.category === 'higiene' && product.brand && (
+                            <p className="products-kg-destacado">{product.brand}</p>
+                        )}
 
-                      {/* Fila precio + botón */}
-                      <div className="price-action-row">
-                        <div className="price-section">
-                          <span className="currency">$</span>
-                          <span className="price-amount">{formatPrice(product.price)}</span>
+                      <div className="price-action-row-destacdo">
+                        <div className="price-section-destacado">
+                          <span className="currency-destacado">$</span>
+                          <span className="price-amount-destacado">{formatPrice(product.price)}</span>
                         </div>
 
                         <button
-                          className="view-btn"
+                          className="view-btn-destacado"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleProductClick(product._id);
