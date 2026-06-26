@@ -12,12 +12,12 @@ import {
 export const Footer = () => {
   
   const categories = [
-    { id: 'alimentos', name: 'Alimentos', path: '/alimentos' },
-    { id: 'accesorios', name: 'Accesorios', path: '/accesorios' },
-    { id: 'indumentaria', name: 'Indumentaria', path: '/indumentaria' },
-    // { id: 'articulos', name: 'Artículos', path: '/articulos' },
-    { id: 'contacto', name: 'Contacto', path: '/contacto' },
-    { id: 'ubicacion', name: '¿Cómo llegar?', path: '/ubicacion' }
+    { name: 'Alimentos', path: '/alimentos' },
+    { name: 'Accesorios', path: '/accesorios' },
+    { name: 'Indumentaria', path: '/indumentaria' },
+    { name: 'Artículos', path: '/articulos' },
+    { name: 'Contacto', path: '/contacto' },
+    { name: '¿Cómo llegar?', path: '/ubicacion' }
   ];
 
   const contacts = [
@@ -64,8 +64,8 @@ export const Footer = () => {
             <ul>
               {categories.map((category) => (
                 <li 
-                  key={category.id} 
-                  id={`contenedor-productos-${category.id}`}
+                  key={category.path} 
+                  id={`contenedor-productos-${category.name.replace(/\s+/g, '-').toLowerCase()}`}
                 >
                   <a href={category.path}>{category.name}</a>
                 </li>
