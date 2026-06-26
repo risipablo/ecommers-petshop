@@ -1,16 +1,8 @@
-import "../../assets/styles/footer.css"
-
-import { 
-  MapPin, 
-  Mail, 
-  Phone, 
-  Instagram, 
-  Facebook,
-//   MessageCircle
-} from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { MapPin, Mail, Phone, Instagram, Facebook } from 'lucide-react';
+import "../../assets/styles/footer.css";
 
 export const Footer = () => {
-  
   const categories = [
     { name: 'Alimentos', path: '/alimentos' },
     { name: 'Accesorios', path: '/accesorios' },
@@ -24,17 +16,20 @@ export const Footer = () => {
     { 
       icon: <Phone size={18} />, 
       text: '(299) 4707701', 
-      link: 'https://wa.me/542994707701' 
+      link: 'https://wa.me/542994707701',
+      external: true
     },
     { 
       icon: <MapPin size={18} />, 
       text: 'Belgrano 321 - Cipolletti', 
-      link: '/ubicacion' 
+      link: '/ubicacion',
+      external: false
     },
     { 
       icon: <Mail size={18} />, 
       text: 'bambinapetshop@hotmail.com', 
-      link: '/contacto' 
+      link: '/contacto',
+      external: false
     }
   ];
 
@@ -55,19 +50,17 @@ export const Footer = () => {
 
   return (
     <footer id="pie-pagina" className="pie-pagina">
-        
       <div className="grupo-1">
-        
+        {/* Categorías */}
         <div className="box">
           <h3>Categorías</h3>
           <div className="Categorias">
             <ul>
               {categories.map((category) => (
-                <li 
-                  key={category.path} 
-                  id={`contenedor-productos-${category.name.replace(/\s+/g, '-').toLowerCase()}`}
-                >
-                  <a href={category.path}>{category.name}</a>
+                <li key={category.path}>
+                  <Link to={category.path}>
+                    {category.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -82,9 +75,15 @@ export const Footer = () => {
               {contacts.map((contact, index) => (
                 <li key={index}>
                   <span className="contact-icon">{contact.icon}</span>
-                  <a href={contact.link} target={contact.link.startsWith('http') ? '_blank' : '_self'}>
-                    {contact.text}
-                  </a>
+                  {contact.external ? (
+                    <a href={contact.link} target="_blank" rel="noopener noreferrer">
+                      {contact.text}
+                    </a>
+                  ) : (
+                    <Link to={contact.link}>
+                      {contact.text}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -110,19 +109,6 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-
-
-      {/* <div className="btn-wsp">
-        <a
-          href="https://wa.me/542994707701"
-          className="btn-wsp"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Contactar por WhatsApp"
-        >
-          <MessageCircle size={28} />
-        </a>
-      </div> */}
 
       {/* Copyright */}
       <div className="grupo-2">
