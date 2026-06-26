@@ -2,9 +2,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import '../../assets/styles/destacosHome.css';
 import { UseLiquidacion } from '../../features/hooks/useLiquidacion';
 import { OptimizedImage } from '../common/optimazeImage';
+import "../../assets/styles/destacosHome.css"
 
 export const LiquidacionProduct = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -199,7 +199,7 @@ export const LiquidacionProduct = () => {
               return (
                 <div
                   key={`${product._id}-${index}`}
-                  className={`related-product-card-link ${isOutOfStock ? 'out-of-stock' : ''} ${hasDiscount ? 'discount' : ''} ${hasLiquidacion ? 'liquidacion' : ''}`}
+                  className={`related-product-card-destacado`}
                   style={{
                     width: cardWidth > 0 ? `${cardWidth}px` : undefined,
                     flexShrink: 0,
@@ -227,9 +227,9 @@ export const LiquidacionProduct = () => {
                     </div>
                   )}
 
-                  <div className="related-product-card">
+                  <div className="featured-card">
                     {/* Imagen */}
-                    <div className="related-image-wrapper">
+                    <div className="product-image-container-destacado">
                     <OptimizedImage
                         src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
                         alt={product.name}
@@ -245,8 +245,8 @@ export const LiquidacionProduct = () => {
                     <div className="featured-divider" />
 
                     {/* Contenido */}
-                    <div className="related-content">
-                      <h3 className="related-name" title={product.name}>
+                    <div className="product-content-destacado">
+                      <h3 className="product-name-destacado" title={product.name}>
                         {(product.name).toUpperCase()}
                       </h3>
 
@@ -268,14 +268,14 @@ export const LiquidacionProduct = () => {
                       )}
 
                       {/* Fila precio + botón */}
-                      <div className="price-action-row">
-                        <div className="price-section">
-                          <span className="currency">$</span>
-                          <span className="price-amount">{formatPrice(product.price)}</span>
+                      <div className="price-action-row-destacdo">
+                        <div className="price-section-destacado">
+                          <span className="currency-destacado">$</span>
+                          <span className="price-amount-destacado">{formatPrice(product.price)}</span>
                         </div>
 
                         <button
-                          className="view-btn"
+                          className="view-btn-destacado"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleProductClick(product._id);

@@ -193,7 +193,7 @@ export const Destacados = () => {
               return (
                 <div
                   key={`${product._id}-${index}`}
-                  className={`related-product-card-destacado ${isOutOfStock ? 'out-of-stock' : ''} ${hasDiscount ? 'discount' : ''} ${hasLiquidacion ? 'liquidacion' : ''}`}
+                  className={`related-product-card-destacado`}
                   style={{
                     width: cardWidth > 0 ? `${cardWidth}px` : undefined,
                     flexShrink: 0,
