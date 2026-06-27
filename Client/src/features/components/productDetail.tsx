@@ -564,6 +564,9 @@ const API_URL = config.Api;
                                     {clonedProducts.map((relatedProduct, idx) => {
                                         const isAlimentosRelated = relatedProduct.category === 'alimentos';
                                         const isIndumentariaRelated = relatedProduct.category === 'indumentaria';
+                                        const isHigieneRelated = relatedProduct.category === 'higiene';
+                                        const isAccesoriosRelated = relatedProduct.category === 'accesorios';
+                                        const isColchonetaRelated = relatedProduct.category === 'colchonetas';
                                         const isOutOfStock = relatedProduct.stock === 'Agotado';
                                         const hasDiscount = relatedProduct.descuento === 'si';
                                         const hasLiquidacion = relatedProduct.descuento === 'liquidacion';
@@ -609,8 +612,8 @@ const API_URL = config.Api;
                                                 <div className="related-product-card">
                                                     <div className="related-image-wrapper">
                                                     <OptimizedImage
-                                                            src={product.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
-                                                            alt={product.name}
+                                                            src={relatedProduct.imageUrl || 'https://via.placeholder.com/300x300?text=Sin+Imagen'}
+                                                            alt={relatedProduct.name}
                                                             className="product-image"
                                                             width={300}
                                                             height={300}
@@ -627,17 +630,39 @@ const API_URL = config.Api;
                                                             {(relatedProduct.name).toUpperCase()}
                                                         </h3>
 
-                                                        {isAlimentosRelated && relatedProduct.kg && (
-                                                            <p className="product-kg">Kilos: {relatedProduct.kg} kg</p>
-                                                        )}
+                                                        
+                                                {isAlimentosRelated && relatedProduct.kg && relatedProduct.condition?.toLowerCase() !== 'pouch'  && relatedProduct.condition?.toLowerCase() !== 'lata'  && relatedProduct.condition?.toLowerCase() !== 'snacks' && (
+                                                    <p className="products-kg-destacado">{relatedProduct.kg} kg</p>
+                                                )}
 
-                                                        {isIndumentariaRelated && relatedProduct.kg && (
-                                                            <p className="product-kg">Talle: {relatedProduct.kg}</p>
-                                                        )}
+                                                {isAlimentosRelated && relatedProduct.condition?.toLowerCase() === 'pouch' && relatedProduct.kg && (
+                                                    <p className="products-kg-destacado">{relatedProduct.kg} gr</p>
+                                                )}
 
-                                                        {isColchoneta && relatedProduct.kg && (
-                                                            <p className="product-kg">{relatedProduct.kg}</p>
-                                                        )}
+                                                {isAlimentosRelated && relatedProduct.condition?.toLowerCase() === 'lata' && relatedProduct.kg && (
+                                                    <p className="products-kg-destacado">{relatedProduct.kg} gr</p>
+                                                )}
+                                                    {isAlimentosRelated && relatedProduct.condition?.toLowerCase() === 'snacks' && relatedProduct.kg && (
+                                                    <p className="products-kg-destacado">{relatedProduct.kg} gr</p>
+                                                )}
+                
+                                            
+                                                {isIndumentariaRelated && relatedProduct.kg && (
+                                                    <p className="products-kg-destacado">Talle: {relatedProduct.kg}</p>
+                                                )}
+
+                                                {isColchonetaRelated && relatedProduct.kg && (
+                                                    <p className="products-kg-destacado">{relatedProduct.kg}</p>
+                                                )} 
+
+                                                {isAccesoriosRelated && relatedProduct.brand && (
+                                                    <p className="products-kg-destacado">{relatedProduct.brand}</p>
+                                                )}
+                                                {isHigieneRelated && relatedProduct.brand && (
+                                                    <p className="products-kg-destacado">{relatedProduct.brand}</p>
+                                                )} 
+
+
 
                                                         <div className="price-action-row">
                                                             <div className="price-section">

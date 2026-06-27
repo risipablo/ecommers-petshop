@@ -251,21 +251,37 @@ export const LiquidacionProduct = () => {
                       </h3>
 
                       {/* Mostrar kg SOLO si la categoría es alimentos */}
-                      {product.category === 'alimentos' && product.kg && (
-                        <p className="products-kg">Kilos: {product.kg} kg</p>
-                      )}
+                     
+                          {product.category === 'alimentos' && product.kg && product.condition?.toLowerCase() !== 'pouch'  && product.condition?.toLowerCase() !== 'lata'  && product.condition?.toLowerCase() !== 'snacks' && (
+                            <p className="products-kg-destacado">{product.kg} kg</p>
+                        )}
 
-                      {product.category === 'indumentaria' && product.kg && (
-                        <p className="products-kg">Talles: {product.kg}</p>
-                      )}
+                        {product.category === 'alimentos' && product.condition?.toLowerCase() === 'pouch' && product.kg && (
+                            <p className="products-kg-destacado">{product.kg} gr</p>
+                        )}
 
-                      {product.category === 'colchonetas' && product.kg && (
-                          <p className="products-kg">{product.kg}</p>
-                      )} 
+                        {product.category === 'alimentos' && product.condition?.toLowerCase() === 'lata' && product.kg && (
+                            <p className="products-kg-destacado">{product.kg} gr</p>
+                        )}
+                            {product.category === 'alimentos' && product.condition?.toLowerCase() === 'snacks' && product.kg && (
+                            <p className="products-kg-destacado">{product.kg} gr</p>
+                        )}
+                        
+                        
+                        {product.category === 'indumentaria' && product.kg && (
+                            <p className="products-kg-destacado">Talle: {product.kg}</p>
+                        )}
 
-                      {product.category === 'accesorios' && product.brand && (
-                          <p className="products-kg">{product.brand}</p>
-                      )}
+                        {product.category === 'colchonetas' && product.kg && (
+                            <p className="products-kg-destacado">{product.kg}</p>
+                        )} 
+
+                        {product.category === 'accesorios' && product.brand && (
+                            <p className="products-kg-destacado">{product.brand}</p>
+                        )}
+                        {product.category === 'higiene' && product.brand && (
+                            <p className="products-kg-destacado">{product.brand}</p>
+                        )}
 
                       {/* Fila precio + botón */}
                       <div className="price-action-row-destacdo">
