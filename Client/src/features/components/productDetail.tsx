@@ -14,7 +14,7 @@ import { OptimizedImage } from '../../components/common/optimazeImage';
 
 const API_URL = config.Api;
 
-export function ProductDetail() {
+ function ProductDetail() {
     const { id } = useParams<{ id: string }>();
     const location = useLocation();
     const navigate = useNavigate();
@@ -758,3 +758,5 @@ export function ProductDetail() {
         </div>
     );
 }
+
+export default ProductDetail

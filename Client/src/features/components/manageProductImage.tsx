@@ -9,7 +9,7 @@ import type { ProductImage, Product } from "../types/product.type";
 
 const API_URL = 'https://ecommers-petshop.onrender.com/api'
 
-export const ManageProductImages = () => {
+const ManageProductImages = () => {
     const { id } = useParams<{ id: string }>();
     const { product, loading } = useProduct(id || "") as { product: Product | null; loading: boolean };
     const { isAdmin } = useAuth();
@@ -243,3 +243,5 @@ export const ManageProductImages = () => {
         </div>
     );
 };
+
+export default ManageProductImages

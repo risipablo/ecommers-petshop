@@ -1,43 +1,25 @@
+// components/layout/sliderHeader.tsx (actualizado para WebP)
 import { useState, useEffect, type SetStateAction } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '../../assets/styles/slider.css';
 
-// Imports para Desktop (versiones grandes)
-import desk1 from "../../assets/images/pic1d.png";
-import desk2 from "../../assets/images/pic3d.png";
-import desk3 from "../../assets/images/picd3.png";
 
-// Imports para Mobile (versiones pequeñas)
-import mobile1 from "../../assets/images/pic2.png";
-import mobile2 from "../../assets/images/pic1.png"
-import mobile3 from "../../assets/images/pic3.png";
+import desk1 from "../../assets/images/pic1d.webp";
+import desk2 from "../../assets/images/pic3d.webp"
+import desk3 from "../../assets/images/picd3.webp";
 
-export default function Carousel() {
+import mobile1 from "../../assets/images/pic1.webp";
+import mobile2 from "../../assets/images/pic2.webp";
+import mobile3 from "../../assets/images/pic3.webp";
+
+function SliderHeader() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   const slides = [
-    {
-      id: 1,
-      images: {
-        mobile: mobile1,
-        desktop: desk1
-      }
-    },
-    {
-      id: 2,
-      images: {
-        mobile: mobile2,
-        desktop: desk2
-      }
-    },
-    {
-      id: 3,
-      images: {
-        mobile: mobile3,
-        desktop: desk3
-      }
-    }
+    { id: 1, mobile: mobile1, desktop: desk1, alt: "Banner promocional Bambina Petshop - Alimentos y accesorios" },
+    { id: 2, mobile: mobile2, desktop: desk2, alt: "Ofertas especiales en Bambina Petshop" },
+    { id: 3, mobile: mobile3, desktop: desk3, alt: "Productos destacados para tu mascota" }
   ];
 
   const nextSlide = () => {
@@ -64,42 +46,36 @@ export default function Carousel() {
 
   return (
     <div className="carousel-container">
-      {/* Slides */}
       <div 
         className="carousel-slides"
         style={{ transform: `translateX(-${currentSlide * 100}%)` }}
       >
-        {slides.map((slide) => (
+        {slides.map((slide, index) => (
           <div key={slide.id} className="carousel-slide">
             <picture>
               <source 
-                media="(max-width: 767px)" 
-                srcSet={slide.images.mobile}
-              />
-              <source 
-                media="(min-width: 768px)" 
-                srcSet={slide.images.desktop}
+                media="(max-width: 768px)" 
+                srcSet={slide.mobile}
+                type="image/webp"
               />
               <img 
-                src={slide.images.desktop} 
-                alt={`Slide ${slide.id}`}
+                src={slide.desktop}
+                alt={slide.alt}
                 className="carousel-image"
-                loading="lazy"
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "low"}
+                decoding="async"
               />
             </picture>
             
             <div className="carousel-overlay" />
-            
             <div className="carousel-content">
-              <div className="carousel-text">
-                {/* Contenido si lo necesitas */}
-              </div>
+              <div className="carousel-text" />
             </div>
           </div>
         ))}
       </div>
 
-      {/* Botones de navegación */}
       <button
         onClick={prevSlide}
         onMouseEnter={() => setIsAutoPlaying(false)}
@@ -135,3 +111,6 @@ export default function Carousel() {
     </div>
   );
 }
+
+
+export default SliderHeader

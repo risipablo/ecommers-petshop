@@ -1,4 +1,4 @@
-import { ProductList } from "../features/components/productList";
+import ProductList from "../features/components/productList";
 import { useProducts } from "../features/hooks/useProducts";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";

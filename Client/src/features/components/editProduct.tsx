@@ -12,8 +12,7 @@ import {config} from "../../config/index"
 
 const serverFront = config.Api
 
-
-export const EditProduct = () => {
+ const EditProduct = () => {
      useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' });
     }, [location.pathname]);
@@ -511,3 +510,5 @@ export const EditProduct = () => {
         </div>
     );
 };
+
+export default EditProduct

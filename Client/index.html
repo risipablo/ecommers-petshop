@@ -65,30 +65,30 @@
     <!-- 🆕 Preconnect para mejorar carga -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- index.html - Agregar preconnect para recursos externos -->
+    <link rel="dns-prefetch" href="https://bojhsruhbolbeefaacgd.supabase.co" />
     
     <!-- 🆕 Schema markup (para productos y organización) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Bambina Petshop",
-      "url": "https://bambinapetshop.com",
-      "logo": "https://bambinapetshop.com/logo.webp",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Belgrano 321",
-        "addressLocality": "Cipolletti",
-        "addressRegion": "Río Negro",
-        "postalCode": "8324",
-        "addressCountry": "AR"
-      },
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+54-299-470-7701",
-        "contactType": "sales"
-      }
-    }
-    </script>
+    <!-- En el index.html o mediante Helmet -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Bambina Petshop",
+  "image": "https://bambinapetshop.com/logo.webp",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Belgrano 321",
+    "addressLocality": "Cipolletti",
+    "addressRegion": "Río Negro",
+    "postalCode": "8324",
+    "addressCountry": "AR"
+  },
+  "telephone": "+542994707701",
+  "openingHours": "Mo-Fr 09:00-20:00",
+  "priceRange": "$$"
+}
+</script>
     
   </head>
   <body>

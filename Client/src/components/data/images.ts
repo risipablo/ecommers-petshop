@@ -1,6 +1,6 @@
-import image1 from "../../assets/images/Indumentaria.jpg";
-import image2 from "../../assets/images/juguetegato.jpg";
-import image3 from "../../assets/images/gridhigiene.png";
+import image1 from "../../assets/images/Indumentaria.webp";
+import image2 from "../../assets/images/juguetegato.webp";
+import image3 from "../../assets/images/gridhigiene.webp";
 
 export const imageGrid = [
     {

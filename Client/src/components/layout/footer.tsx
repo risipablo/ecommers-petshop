@@ -22,7 +22,7 @@ export const Footer = () => {
     { 
       icon: <MapPin size={18} />, 
       text: 'Belgrano 321 - Cipolletti', 
-      link: '/ubicacion',
+      link: '/contacto',
       external: false
     },
     { 

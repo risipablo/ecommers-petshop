@@ -4,7 +4,7 @@ import { useAuth } from '../context/authProvider';
 import { User, Mail, Shield, LogOut, Edit2, Key, Save, X, Lock, Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export const ProfilePage = () => {
+const ProfilePage = () => {
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' });
@@ -312,3 +312,5 @@ export const ProfilePage = () => {
         </div>
     );
 };
+
+export default ProfilePage

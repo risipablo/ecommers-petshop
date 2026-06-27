@@ -3,7 +3,7 @@ import { useProducts } from "../hooks/useProducts"
 import { X, Upload, CheckCircle } from "lucide-react"
 import "../../assets/styles/crud.css"
  
-export const Crud = () => {
+const Crud = () => {
     const { addProduct, isLoading, error } = useProducts()
     const [successMessage, setSuccessMessage] = useState("")
  
@@ -353,3 +353,6 @@ export const Crud = () => {
         </div>
     )
 }
+
+
+export default Crud

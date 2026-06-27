@@ -9,6 +9,14 @@ html{
     overflow-y: scroll;
 }
 
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('/fonts/Poppins.woff2') format('woff2');
+    font-display: swap;
+}
+
+
 ::-webkit-scrollbar {
     width: 8px;
 }

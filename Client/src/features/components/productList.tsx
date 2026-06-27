@@ -15,7 +15,7 @@ import { SEO } from '../../components/common/SEO';
 import { SortControls } from './filterPrice';
 import { OptimizedImage } from '../../components/common/optimazeImage';
 
-export const ProductList = () => {
+ const ProductList = () => {
     const { filteredProducts: contextFilteredProducts, searchTerms, searchQuery, isLoading, deleteProduct } = useProducts();
     const { isAdmin } = useAuth();
     const location = useLocation();
@@ -659,3 +659,5 @@ const getSEOKeywords = () => {
         </div>
     );
 };
+
+export default ProductList;
