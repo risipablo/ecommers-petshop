@@ -1,4 +1,6 @@
 // pages/home.tsx
+import "../assets/styles/index.css"
+import "../assets/styles/productList.css"
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { Header } from "../components/layout/header";

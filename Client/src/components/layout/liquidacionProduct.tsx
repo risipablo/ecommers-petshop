@@ -252,11 +252,11 @@ export const LiquidacionProduct = () => {
 
                       {/* Mostrar kg SOLO si la categoría es alimentos */}
                       {product.category === 'alimentos' && product.kg && (
-                        <p className="product-kg">Kilos: {product.kg} kg</p>
+                        <p className="products-kg">Kilos: {product.kg} kg</p>
                       )}
 
                       {product.category === 'indumentaria' && product.kg && (
-                        <p className="product-kg">Talles: {product.kg}</p>
+                        <p className="products-kg">Talles: {product.kg}</p>
                       )}
 
                       {product.category === 'colchonetas' && product.kg && (
