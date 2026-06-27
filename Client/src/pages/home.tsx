@@ -1,4 +1,4 @@
-// pages/home.tsx (SIN lazy loading)
+
 import { Route, Routes } from "react-router-dom";
 import { Header } from "../components/layout/header";
 import { BodyHome } from "./bodyHome";
