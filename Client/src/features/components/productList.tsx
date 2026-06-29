@@ -320,11 +320,11 @@ const getSEOKeywords = () => {
     return keywords[categoryPath] || 'mascotas, animales, petshop, Bambina Petshop, Cipolletti, Río Negro';
 }
 
-    const truncateText = (text: string, maxLength: number = 28) => {
+    const truncateText = (text: string, maxLength: number = 35) => {
         if (!text) return '';
         
         const isMobile = window.innerWidth <= 768;
-        const actualMaxLength = isMobile ? 18 : maxLength;
+        const actualMaxLength = isMobile ? 22 : maxLength;
         
         if (text.length <= actualMaxLength) return text;
         return text.slice(0, actualMaxLength) + '...';

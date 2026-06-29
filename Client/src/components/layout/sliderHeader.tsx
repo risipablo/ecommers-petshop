@@ -8,8 +8,8 @@ import desk1 from "../../assets/images/pic1d.webp";
 import desk2 from "../../assets/images/pic3d.webp"
 import desk3 from "../../assets/images/picd3.webp";
 
-import mobile1 from "../../assets/images/pic1.webp";
-import mobile2 from "../../assets/images/pic2.webp";
+import mobile1 from "../../assets/images/pic2.webp";
+import mobile2 from "../../assets/images/pic1.webp";
 import mobile3 from "../../assets/images/pic3.webp";
 
 function SliderHeader() {
