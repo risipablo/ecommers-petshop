@@ -48,7 +48,7 @@ async function keepSupabaseAlive() {
     }
 }
 
-// 🔥 EXPORTAR LA FUNCIÓN (esto es lo que faltaba)
+
 module.exports = { keepSupabaseAlive };
 
 // Si se ejecuta como script independiente

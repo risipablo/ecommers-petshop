@@ -10,7 +10,11 @@ html{
 }
 
 
-
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
 
 ::-webkit-scrollbar {
     width: 8px;
