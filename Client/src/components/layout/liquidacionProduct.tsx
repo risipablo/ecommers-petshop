@@ -25,14 +25,14 @@ export const LiquidacionProduct = () => {
     const handleResize = () => {
       if (window.innerWidth >= 1280) setItemsPerView(4);
       else if (window.innerWidth >= 1024) setItemsPerView(4);
-      else if (window.innerWidth >= 768) setItemsPerView(3);
+      else if (window.innerWidth >= 768) setItemsPerView(2);
       else setItemsPerView(1);
     };
 
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [fetch]);
+  }, []);
 
   // Reiniciar índice cuando cambian los productos
   useEffect(() => {
