@@ -11,6 +11,7 @@ export const LiquidacionProduct = () => {
   const [itemsPerView, setItemsPerView] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [cardWidth, setCardWidth] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -48,12 +49,24 @@ export const LiquidacionProduct = () => {
     setCardWidth((containerWidth - totalGap) / itemsPerView);
   }, [itemsPerView]);
 
+  // Forzar recalculo después del montaje
+  useEffect(() => {
+    setIsMounted(false);
+    const timer = setTimeout(() => {
+      calculateCardWidth();
+      setIsMounted(true);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [itemsPerView, products.length]);
+
+  // Recalcular cuando cambia el tamaño
   useEffect(() => {
     calculateCardWidth();
     window.addEventListener('resize', calculateCardWidth);
     return () => window.removeEventListener('resize', calculateCardWidth);
   }, [calculateCardWidth]);
 
+  // Delay adicional para asegurar que el DOM está listo
   useEffect(() => {
     const timer = setTimeout(calculateCardWidth, 50);
     return () => clearTimeout(timer);
@@ -65,7 +78,7 @@ export const LiquidacionProduct = () => {
     : [];
   const realStart = cloneCount;
   const trackIndex = currentIndex + realStart;
-  const trackOffset = cardWidth > 0 ? Math.round(trackIndex * (cardWidth + GAP_PX)) : 0; 
+  const trackOffset = cardWidth > 0 && isMounted ? Math.round(trackIndex * (cardWidth + GAP_PX)) : 0;
 
   const startAutoplay = useCallback(() => {
     if (autoplayRef.current) clearInterval(autoplayRef.current);
@@ -80,10 +93,10 @@ export const LiquidacionProduct = () => {
   }, []);
 
   useEffect(() => {
-    if (products.length === 0) return;
+    if (products.length === 0 || !isMounted) return;
     startAutoplay();
     return () => stopAutoplay();
-  }, [products.length, itemsPerView, startAutoplay, stopAutoplay]);
+  }, [products.length, itemsPerView, startAutoplay, stopAutoplay, isMounted]);
 
   useEffect(() => {
     if (products.length === 0) return;
@@ -186,8 +199,8 @@ export const LiquidacionProduct = () => {
           <div
             className="featured-track"
             style={{
-              transform: `translateX(-${trackOffset}px)`,
-              transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
+              transform: isMounted && cardWidth > 0 ? `translateX(-${trackOffset}px)` : 'none',
+              transition: isTransitioning && isMounted ? 'transform 0.5s ease-in-out' : 'none',
             }}
           >
             {clonedProducts.map((product, index) => {
@@ -207,7 +220,6 @@ export const LiquidacionProduct = () => {
                   }}
                   onClick={() => handleProductClick(product._id)}
                 >
-                  
                   
                   {hasDiscount && !isOutOfStock && (
                     <div className="discount-badge">
