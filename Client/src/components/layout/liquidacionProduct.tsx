@@ -29,7 +29,7 @@ export const LiquidacionProduct = () => {
     const handleResize = () => {
       if (window.innerWidth >= 1280) setItemsPerView(4);
       else if (window.innerWidth >= 1024) setItemsPerView(4);
-      else if (window.innerWidth >= 768) setItemsPerView(2);
+      else if (window.innerWidth >= 768) setItemsPerView(3);
       else setItemsPerView(1);
     };
 
@@ -38,7 +38,7 @@ export const LiquidacionProduct = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 🔥 Reiniciar índice cuando cambian los productos
+  // Reiniciar índice cuando cambian los productos
   useEffect(() => {
     if (products.length > 0) {
       setCurrentIndex(0);
@@ -48,6 +48,7 @@ export const LiquidacionProduct = () => {
         setIsMounted(true);
       }, 100);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [products.length]);
 
   const calculateCardWidth = useCallback(() => {
