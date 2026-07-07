@@ -20,6 +20,9 @@ export const LiquidacionProduct = () => {
 
   const GAP_PX = 16;
 
+
+  const [componentKey,] = useState(Date.now());
+
   useEffect(() => {
     fetch();
 
@@ -35,10 +38,15 @@ export const LiquidacionProduct = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Reiniciar índice cuando cambian los productos
+  // 🔥 Reiniciar índice cuando cambian los productos
   useEffect(() => {
     if (products.length > 0) {
       setCurrentIndex(0);
+      // Forzar actualización del slider
+      setTimeout(() => {
+        calculateCardWidth();
+        setIsMounted(true);
+      }, 100);
     }
   }, [products.length]);
 
@@ -49,28 +57,50 @@ export const LiquidacionProduct = () => {
     setCardWidth((containerWidth - totalGap) / itemsPerView);
   }, [itemsPerView]);
 
-  // Forzar recalculo después del montaje
+  // 🔥 Forzar recalculo después del montaje
   useEffect(() => {
     setIsMounted(false);
     const timer = setTimeout(() => {
       calculateCardWidth();
       setIsMounted(true);
-    }, 200);
+    }, 250);
     return () => clearTimeout(timer);
   }, [itemsPerView, products.length]);
 
-  // Recalcular cuando cambia el tamaño
+  // 🔥 Recalcular cuando cambia el tamaño
   useEffect(() => {
     calculateCardWidth();
     window.addEventListener('resize', calculateCardWidth);
     return () => window.removeEventListener('resize', calculateCardWidth);
   }, [calculateCardWidth]);
 
-  // Delay adicional para asegurar que el DOM está listo
+  // 🔥 Delay adicional para asegurar que el DOM está listo
   useEffect(() => {
     const timer = setTimeout(calculateCardWidth, 50);
     return () => clearTimeout(timer);
   }, [calculateCardWidth, products.length]);
+
+  // 🔥 Intersection Observer para recálculo cuando el componente es visible
+  useEffect(() => {
+    if (!isMounted || products.length === 0) return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setTimeout(() => {
+            calculateCardWidth();
+          }, 100);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    if (carouselRef.current) {
+      observer.observe(carouselRef.current);
+    }
+    
+    return () => observer.disconnect();
+  }, [isMounted, products.length, calculateCardWidth]);
 
   const cloneCount = itemsPerView;
   const clonedProducts = products.length > 0
@@ -160,7 +190,7 @@ export const LiquidacionProduct = () => {
 
   if (loading || products.length === 0) {
     return (
-      <section className="featured-section">
+      <section key={componentKey} className="featured-section">
         <h1>Ofertas</h1>
         <div className="featured-carousel-wrapper">
           <div className="featured-carousel">
@@ -187,7 +217,7 @@ export const LiquidacionProduct = () => {
   }
 
   return (
-    <section className="featured-section">
+    <section key={componentKey} className="featured-section">
       <h1>Ofertas</h1>
 
       <div className="featured-carousel-wrapper">
