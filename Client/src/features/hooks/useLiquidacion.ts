@@ -32,7 +32,7 @@ export const UseLiquidacion = () => {
             setLiquidacionProductos(liquidacionTotal);
             isFirstLoad.current = false;
         }
-    }, [products]);
+    }, [products, products.length]);
 
     return {
         products: liquidacionProductos,
