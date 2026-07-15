@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { UseLiquidacion } from '../../features/hooks/useLiquidacion';
 import { OptimizedImage } from '../common/optimazeImage';
-import "../../assets/styles/destacosHome.css"
+import "../../assets/styles/liquidacion.css"
 
 export const LiquidacionProduct = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
