@@ -1,63 +1,33 @@
 // Server/config/email.js
 const { Resend } = require('resend');
 
-// Inicializar Resend con tu API key
+console.log('📧 Configurando Resend...');
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendEmail = async (to, subject, html) => {
- try {
-        const { name, email, phone, message, reason } = req.body;
+  console.log('📧 Enviando email a:', to);
+  console.log('📧 Asunto:', subject);
+  
+  try {
+    const { data, error } = await resend.emails.send({
+      from: `Bambina Petshop <onboarding@resend.dev>`,
+      to: [to],
+      subject: subject,
+      html: html
+    });
 
-        if (!name || !email || !phone || !message) {
-            return res.status(400).json({ error: 'Todos los campos son requeridos' });
-        }
-
-        let subject = '';
-        let emoji = '';
-        
-        switch (reason) {
-            case 'sugerencia':
-                subject = 'Sugerencia';
-                emoji = '💡';
-                break;
-            case 'queja':
-                subject = 'Queja / Reclamo';
-                emoji = '⚠️';
-                break;
-            default:
-                subject = 'Consulta';
-                emoji = '📝';
-        }
-
-        // Email minimalista
-        const emailHtml = `
-            <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; background: #f9fafb; border-radius: 12px; overflow: hidden;">
-                <div style="background: #722b8f; padding: 20px; text-align: center;">
-                    <h2 style="color: white; margin: 0;">${emoji} Nuevo mensaje</h2>
-                </div>
-                <div style="padding: 20px;">
-                    <p><strong> Nombre:</strong> ${name}</p>
-                    <p><strong> Email:</strong> ${email}</p>
-                    <p><strong>Teléfono:</strong> ${phone}</p>
-                    <p><strong>Tipo:</strong> ${subject}</p>
-                    <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <p style="margin: 0; font-weight: bold;">💬 Mensaje:</p>
-                        <p style="margin: 10px 0 0; white-space: pre-wrap;">${message}</p>
-                    </div>
-                    <p style="font-size: 11px; color: #6b7280; text-align: center; margin-top: 20px;">
-                        Enviado desde el formulario de contacto
-                    </p>
-                </div>
-            </div>
-        `;
-
-        await sendEmail('bambinapetshop86@gmail.com', `${emoji} Nuevo mensaje de ${name}`, emailHtml);
-
-        res.status(200).json({ message: 'Mensaje enviado con éxito' });
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Error al enviar el mensaje' });
+    if (error) {
+      console.error('❌ Error de Resend:', error);
+      return false;
     }
+
+    console.log('✅ Email enviado:', data);
+    return true;
+  } catch (error) {
+    console.error('❌ Error al enviar email:', error);
+    return false;
+  }
 };
 
 module.exports = { sendEmail };

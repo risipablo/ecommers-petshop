@@ -1,14 +1,16 @@
-// pages/ResetPasswordPage.tsx
-import { useEffect, useState } from 'react';
+// pages/resetPasswordPage.tsx
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Lock, Eye, EyeOff, Key, ArrowLeft } from 'lucide-react';
-import { useAuth } from '../context/authProvider';
+import { Lock, Eye, EyeOff, Key, ArrowLeft, CheckCircle } from 'lucide-react';
+import axios from 'axios';
+import { config } from '../config/index';
 import '../assets/styles/auth.css';
+
+const API_URL = config.Api;
 
 export const ResetPasswordPage = () => {
     const { token } = useParams<{ token: string }>();
     const navigate = useNavigate();
-    const { resetPassword } = useAuth();
     
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
@@ -20,8 +22,10 @@ export const ResetPasswordPage = () => {
     const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
 
     useEffect(() => {
-            window.scrollTo({ top: 0, behavior: 'instant' });
-        }, [location.pathname]);
+        if (!token) {
+            navigate('/');
+        }
+    }, [token, navigate]);
 
     const validatePassword = (pass: string) => {
         const errors = [];
@@ -48,13 +52,21 @@ export const ResetPasswordPage = () => {
         setError('');
         
         try {
-            await resetPassword({ token: token!, newPassword, confirmNewPassword });
-            setSuccess(true);
-            setTimeout(() => {
-                navigate('/login');
-            }, 3000);
-        } catch (err: unknown) {
-            setError((err as Error).message);
+            const response = await axios.post(`${API_URL}/auth/reset-password`, {
+                token,
+                newPassword,
+                confirmNewPassword
+            });
+            
+            if (response.data.success) {
+                setSuccess(true);
+                setTimeout(() => {
+                    navigate('/login');
+                }, 3000);
+            }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err.response?.data?.error || 'Error al restablecer la contraseña');
         } finally {
             setLoading(false);
         }
@@ -66,11 +78,13 @@ export const ResetPasswordPage = () => {
                 <div className="auth-page-card success-card">
                     <div className="auth-page-header">
                         <div className="auth-page-icon success-icon">
-                            <Key size={40} />
+                            <CheckCircle size={40} />
                         </div>
                         <h1>¡Contraseña actualizada!</h1>
                         <p>Tu contraseña ha sido cambiada exitosamente.</p>
-                        <p>Serás redirigido al inicio de sesión...</p>
+                        <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '1rem' }}>
+                            Serás redirigido al inicio de sesión...
+                        </p>
                     </div>
                     <div className="auth-page-footer">
                         <Link to="/login" className="auth-page-btn-link">

@@ -325,133 +325,104 @@ exports.changePassword = async (req, res) => {
     res.status(500).json({ success: false, error: 'Error en el servidor' });
   }
 };
-// Forgot password - enviar email de recuperación
+
+
+
+// En forgotPassword, usar sendEmail correctamente:
+// Server/controllers/authController.js (forgotPassword)
 exports.forgotPassword = async (req, res) => {
   try {
+    console.log('📩 Recibida solicitud de recuperación:', req.body);
+    
     const { email } = req.body;
     
     if (!email) {
+      console.log('❌ Email no proporcionado');
       return res.status(400).json({ 
         success: false, 
         error: 'El email es obligatorio' 
       });
     }
     
+    console.log('🔍 Buscando usuario con email:', email);
     const user = await User.findOne({ email });
+    
     if (!user) {
+      console.log('❌ Usuario no encontrado');
       return res.status(404).json({ 
         success: false, 
         error: 'No existe una cuenta con este email' 
       });
     }
     
+    console.log('✅ Usuario encontrado:', user.email);
+    
     // Generar token de recuperación
     const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenExpires = Date.now() + 3600000; // 1 hora
+    const resetTokenExpires = Date.now() + 3600000;
+    
+    console.log('🔑 Token generado:', resetToken);
     
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = resetTokenExpires;
     await user.save();
     
-    // Construir URL de recuperación
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    console.log('✅ Token guardado en la base de datos');
     
-    // Template HTML del email
+    // Construir URL de recuperación
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password/${resetToken}`;
+    console.log('🔗 URL de recuperación:', resetUrl);
+    
     const emailHtml = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>Restablecer Contraseña</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-          }
-          .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f9fafb;
-            border-radius: 12px;
-          }
-          .header {
-            text-align: center;
-            padding: 20px 0;
-            background: #722b8f;
-            border-radius: 12px 12px 0 0;
-            color: white;
-          }
-          .content {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            margin-top: 20px;
-          }
-          .button {
-            display: inline-block;
-            padding: 12px 24px;
-            background: #f97316;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            margin: 20px 0;
-          }
-          .footer {
-            text-align: center;
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 20px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>🐾 Bambina Petshop</h1>
-          </div>
-          <div class="content">
-            <h2>Hola ${user.name}!</h2>
-            <p>Recibimos una solicitud para restablecer tu contraseña. Haz clic en el siguiente botón para crear una nueva contraseña:</p>
-            <p style="text-align: center;">
-              <a href="${resetUrl}" class="button">Restablecer Contraseña</a>
-            </p>
-            <p>Este enlace expirará en <strong>1 hora</strong>.</p>
-            <p>Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
-            <hr />
-            <p><strong>Importante:</strong> Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
-            <p style="background: #f3f4f6; padding: 10px; border-radius: 8px; word-break: break-all;">${resetUrl}</p>
-          </div>
-          <div class="footer">
-            <p>Bambina Petshop - Tu tienda de mascotas favorita</p>
-            <p>© 2024 Bambina Petshop. Todos los derechos reservados.</p>
-          </div>
-        </div>
-      </body>
-      </html>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2 style="color: #6d4ba3;">Restablecer Contraseña</h2>
+        <p>Hola ${user.name},</p>
+        <p>Recibimos una solicitud para restablecer tu contraseña.</p>
+        <a href="${resetUrl}" style="display: inline-block; padding: 12px 24px; background: #f97316; color: white; text-decoration: none; border-radius: 8px; margin: 20px 0;">
+          Restablecer Contraseña
+        </a>
+        <p>Este enlace expirará en 1 hora.</p>
+        <p>Si no solicitaste este cambio, ignora este mensaje.</p>
+      </div>
     `;
     
-    // Enviar email con Resend
+    console.log('📧 Enviando email a:', email);
+    
+    // Verificar que sendEmail existe
+    if (typeof sendEmail !== 'function') {
+      console.error('❌ sendEmail no es una función');
+      return res.status(500).json({ 
+        success: false, 
+        error: 'Error en la configuración del email' 
+      });
+    }
+    
     const emailSent = await sendEmail(email, 'Restablecer Contraseña - Bambina Petshop', emailHtml);
     
     if (!emailSent) {
+      console.error('❌ Error al enviar el email');
       return res.status(500).json({ 
         success: false, 
         error: 'Error al enviar el email de recuperación' 
       });
     }
     
+    console.log('✅ Email enviado exitosamente');
     res.json({ 
       success: true, 
-      message: 'Se ha enviado un email con las instrucciones para restablecer tu contraseña' 
+      message: 'Se ha enviado un email con las instrucciones' 
     });
     
   } catch (error) {
-    console.error('Error en forgot password:', error);
-    res.status(500).json({ success: false, error: 'Error en el servidor' });
+    console.error('❌ Error en forgotPassword:', error);
+    console.error('❌ Stack:', error.stack);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message || 'Error en el servidor' 
+    });
   }
 };
+
 
 // Reset password - crear nueva contraseña con token
 exports.resetPassword = async (req, res) => {
