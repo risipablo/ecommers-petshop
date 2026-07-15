@@ -37,7 +37,7 @@ export const LiquidacionProduct = () => {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [fetch]);
 
   // Reiniciar índice cuando cambian los productos
   useEffect(() => {
@@ -67,7 +67,7 @@ export const LiquidacionProduct = () => {
       setIsMounted(true);
     }, 250);
     return () => clearTimeout(timer);
-  }, [itemsPerView, products.length]);
+  }, [calculateCardWidth, itemsPerView, products.length]);
 
   // 🔥 Recalcular cuando cambia el tamaño
   useEffect(() => {
