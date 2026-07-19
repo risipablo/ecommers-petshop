@@ -219,6 +219,8 @@ const API_URL = config.Api;
         setSelectedImageIndex((prev) => (prev - 1 + images.length) % images.length);
     };
 
+    
+
     if (!product) return null
     const productImage = product.imageUrl || product.images?.[0]?.url
     const productUrl = `https://ecommers-petshop.vercel.app/item/${product._id}`
