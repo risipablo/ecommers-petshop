@@ -6,6 +6,7 @@ const allowedOrigins = [
     'http://localhost:5174',
     'https://ecommers-petshop.vercel.app',
     'https://ecommers-petshop.up.railway.app/',
+    'https://ecommers-petshop-mb08.onrender.com/',
     'https://api.bambinapetshop.com',
     'https://bambinapetshop.com', 
     'https://www.bambinapetshop.com'
