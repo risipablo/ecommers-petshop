@@ -1,6 +1,6 @@
-import { useState } from "react";
-
 // components/common/OptimizedImage.tsx
+import { useState, useEffect, useRef } from "react";
+
 interface OptimizedImageProps {
     src?: string;
     alt: string;
@@ -24,11 +24,11 @@ export const OptimizedImage = ({
 }: OptimizedImageProps) => {
     const [error, setError] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+    const imgRef = useRef<HTMLImageElement>(null);
 
     const getOptimizedUrl = (url: string) => {
         if (!url) return fallback;
         
-        // Si es de Supabase, usar transformaciones
         if (url.includes('supabase.co')) {
             const baseUrl = url.split('?')[0];
             return `${baseUrl}?width=${width}&height=${height}&quality=${quality}&format=webp&fit=cover`;
@@ -37,12 +37,30 @@ export const OptimizedImage = ({
         return url;
     };
 
+    useEffect(() => {
+        
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setIsLoaded(false);
+        setError(false);
+        
+        
+        if (src) {
+            const cachedImage = new Image();
+            cachedImage.src = getOptimizedUrl(src);
+            
+            if (cachedImage.complete) {
+                setIsLoaded(true);
+            }
+        }
+    }, [src]);
+
     return (
         <div className={`optimized-image-wrapper ${className}`}>
-            {!isLoaded && (
+            {!isLoaded && !error && (
                 <div className="image-placeholder skeleton-loading" />
             )}
             <img
+                ref={imgRef}
                 src={error ? fallback : getOptimizedUrl(src || '')}
                 alt={alt}
                 loading={loading}
@@ -53,7 +71,7 @@ export const OptimizedImage = ({
                 onError={() => setError(true)}
                 style={{
                     opacity: isLoaded ? 1 : 0,
-                    transition: 'opacity 0.3s ease',
+                    transition: 'opacity 0.2s ease',
                     width: '100%',
                     height: '100%',
                     objectFit: 'contain'

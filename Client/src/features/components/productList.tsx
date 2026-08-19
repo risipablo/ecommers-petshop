@@ -13,7 +13,8 @@ import { Filters } from './filters';
 import type { Product } from '../types/product.type';
 import { SEO } from '../../components/common/SEO';
 import { SortControls } from './filterPrice';
-import { OptimizedImage } from '../../components/common/optimazeImage';
+import { OptimizedImage } from '../../components/common/optimizedImage';
+
 
  const ProductList = () => {
     const { filteredProducts: contextFilteredProducts, searchTerms, searchQuery, isLoading, deleteProduct } = useProducts();

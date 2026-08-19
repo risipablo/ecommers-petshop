@@ -14,7 +14,7 @@ export const UseLiquidacion = () => {
         setLoading(false);
     }, [fetchProducts]);
 
-    // 🔥 Filtrar productos cada vez que cambian
+    
     useEffect(() => {
         if (products.length === 0) return;
         

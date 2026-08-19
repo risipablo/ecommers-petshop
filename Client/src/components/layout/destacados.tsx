@@ -6,13 +6,15 @@ import { useNavigate } from 'react-router-dom';
 import '../../assets/styles/destacosHome.css';
 import '../../assets/styles/productList.css';
 import { UseDestacados } from '../../features/hooks/useDestacados';
-import { OptimizedImage } from '../common/optimazeImage';
+import { OptimizedImage } from '../common/optimizedImage';
+
 
 export const Destacados = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [cardWidth, setCardWidth] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -34,7 +36,19 @@ export const Destacados = () => {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [fetch]);
+
+    useEffect(() => {
+    if (products.length > 0) {
+      setCurrentIndex(0);
+      // Forzar actualización del slider
+      setTimeout(() => {
+        calculateCardWidth();
+        setIsMounted(true);
+      }, 100);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [products.length]);
 
   const calculateCardWidth = useCallback(() => {
     if (!carouselRef.current) return;
@@ -43,11 +57,14 @@ export const Destacados = () => {
     setCardWidth((containerWidth - totalGap) / itemsPerView);
   }, [itemsPerView]);
 
-  useEffect(() => {
-    calculateCardWidth();
-    window.addEventListener('resize', calculateCardWidth);
-    return () => window.removeEventListener('resize', calculateCardWidth);
-  }, [calculateCardWidth]);
+   useEffect(() => {
+    setIsMounted(false);
+    const timer = setTimeout(() => {
+      calculateCardWidth();
+      setIsMounted(true);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [calculateCardWidth, itemsPerView, products.length]);
 
   useEffect(() => {
     const timer = setTimeout(calculateCardWidth, 50);
@@ -104,6 +121,28 @@ export const Destacados = () => {
       return () => clearTimeout(timer);
     }
   }, [isTransitioning]);
+
+    useEffect(() => {
+    if (!isMounted || products.length === 0) return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setTimeout(() => {
+            calculateCardWidth();
+          }, 100);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    if (carouselRef.current) {
+      observer.observe(carouselRef.current);
+    }
+    
+    return () => observer.disconnect();
+  }, [isMounted, products.length, calculateCardWidth]);
+
 
   const next = () => {
     stopAutoplay();
